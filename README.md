@@ -13,15 +13,36 @@ Everything for the Dukkani validation project is in this folder.
 | `dukkani-outreach-messages.txt` | Arabic/English outreach, follow-up, and WhatsApp reply templates. |
 | `app-opportunities.md` | The original idea research and scoring that led to Dukkani. |
 
+## Repository
+
+**https://github.com/mohannadjarad/dukkani-app** (private)
+
+The zip is not tracked (it is a build artifact — see `.gitignore`). To save work:
+
+```bash
+git add -A
+git commit -m "what changed"
+git push
+```
+
 ## Live site
 
 **https://dukkani-app.netlify.app**
 
-To update it:
+Two ways to update it.
+
+**A. With the repo connected (do this once, then just `git push`):**
+
+1. Netlify → **dukkani-app** site → **Site configuration** → **Build & deploy**.
+2. **Link repository** → GitHub → authorize → pick **dukkani-app**.
+3. Branch: `main`. Build command: leave empty. Publish directory: `dukkani-landing`.
+4. Deploy. From then on every `git push` publishes automatically.
+
+**B. Manual (dragging):**
 
 1. Open https://app.netlify.com and select the **dukkani-app** site.
 2. Go to **Deploys**.
-3. Drag the `dukkani-landing` folder or `dukkani-landing.zip` onto the deploy area.
+3. Drag the `dukkani-landing` folder onto the deploy area.
 4. Wait for **Published**, then hard-refresh the page.
 
 Do **not** drag this parent `dukkani` folder to Netlify — it has no `index.html` at its root.
