@@ -1,0 +1,13 @@
+# OS / editor junk
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*~
+
+# Office lock files
+.~lock.*
+
+# Local build artifacts
+*.zip
+*.log
