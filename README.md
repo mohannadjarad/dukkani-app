@@ -10,7 +10,9 @@ Everything for the Dukkani validation project is in this folder.
 | `dukkani-landing.zip` | Ready-to-deploy zip. Has `index.html` at the root. |
 | `dukkani-spec.md` | Product and technical spec for the Laravel MVP. |
 | `dukkani-validation-kit.md` | Interview script, scorecard, concierge pilot SOP, decision memo. |
-| `dukkani-outreach-messages.txt` | Arabic/English outreach, follow-up, and WhatsApp reply templates. |
+| `dukkani-outreach-messages.txt` | Arabic/English outreach, follow-up, WhatsApp reply and quick-reply templates. |
+| `dukkani-outreach-messages.pdf` | The same file as a readable, printable document (bold, larger type). |
+| `dukkani-outreach-messages.docx` | Editable version of the PDF (opens in Word/LibreOffice). |
 | `app-opportunities.md` | The original idea research and scoring that led to Dukkani. |
 
 ## Repository
