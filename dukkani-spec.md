@@ -736,8 +736,8 @@ tests/
 
 | Plan | Price | Limits | Features |
 |---|---|---|---|
-| **Free** | 0 JOD | 15 orders/month | Storefront, 1 seller, basic order board, `wa.me` templates |
-| **Starter** | 25 JOD/month | Unlimited orders | Customer book, analytics, deposit tracking, all templates |
+| **Free** | 0 JOD | 15 orders/month | Storefront, 1 seller, basic order board |
+| **Starter** | 25 JOD/month | Unlimited orders | Customer book, analytics, deposit tracking, WhatsApp templates (`wa.me`) |
 | **Pro** | 45 JOD/month | Unlimited + 3 staff | Custom domain, staff accounts, delivery labels, priority support |
 | **Founding seller** | 15 JOD/month | Unlimited | First 20 sellers only, in exchange for feedback + a case study |
 

@@ -232,7 +232,7 @@ Ask:
 - **رابط متجر احترافي:** صفحة أنيقة تعرض منتجاتك وأسعارك.
 - **لوحة طلبات:** من «جديد» إلى «تم التسليم» — كل شيء واضح.
 - **تذكير بالعربون:** لا تتذكري من دفع؟ دكاني يتذكر.
-- **رسائل واتساب جاهزة:** قوالب جاهزة بالعربي، بضغطة واحدة.
+- **رسائل واتساب جاهزة (ستارتر وما فوق):** قوالب جاهزة بالعربي، بضغطة واحدة.
 - **سجل الزبائن:** تاريخ كل زبونة، طلباتها، وملاحظاتها.
 - **تقارير بسيطة:** الأكثر مبيعًا، الإيرادات، والزبائن المتكررون.
 
@@ -303,7 +303,7 @@ Dukkani gives home businesses a simple storefront and order board. Capture order
 - **Professional storefront link:** A clean page with your products and prices.
 - **Order board:** From "new" to "delivered" — everything is clear.
 - **Deposit tracking:** Can't remember who paid? Dukkani does.
-- **Ready-made WhatsApp messages:** Arabic templates, one tap away.
+- **Ready-made WhatsApp messages (Starter and up):** Arabic templates, one tap away.
 - **Customer book:** Every customer's history, orders, and notes.
 - **Simple reports:** Best sellers, revenue, and repeat customers.
 
