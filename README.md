@@ -8,6 +8,7 @@ Everything for the Dukkani validation project is in this folder.
 |---|---|
 | `dukkani-landing/` | Landing page source (`index.html`, previews, README). |
 | `dukkani-landing.zip` | Ready-to-deploy zip. Has `index.html` at the root. |
+| `brand/` | Profile image (light recommended, plus terracotta/circular) and SVG sources. |
 | `dukkani-spec.md` | Product and technical spec for the Laravel MVP. |
 | `dukkani-validation-kit.md` | Interview script, scorecard, concierge pilot SOP, decision memo. |
 | `dukkani-outreach-messages.txt` | Arabic/English outreach, follow-up, WhatsApp reply and quick-reply templates. |

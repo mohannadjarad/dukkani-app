@@ -7,6 +7,7 @@ A single-file, Arabic-first (RTL) landing page for validating the Dukkani idea.
 **Files**
 
 - `index.html` — the page (HTML + CSS + vanilla JS, no build step).
+- `assets/` — light profile image, favicon, Apple touch icon, and 1200×630 social card.
 - `preview.png` — desktop preview.
 - `preview-mobile.png` — mobile preview.
 
@@ -150,13 +151,13 @@ Change one thing at a time. Use two URLs (`?v=1`, `?v=2`) and compare.
 - [ ] Custom domain (`dukkani.jo`)
 - [x] Contact email (`mohannadjarad6@gmail.com`)
 - [ ] Brand name if "Dukkani" is taken
-- [ ] Logo/avatar (currently a CSS mark)
+- [x] Logo/avatar (light profile image in `../brand/`; favicon and Apple touch icon in `assets/`)
 - [ ] Privacy policy and terms links
 - [x] Real WhatsApp number for support (`+972 56 999 1081`)
 - [x] Waitlist endpoint (Formspree)
 - [ ] Analytics (Plausible, Umami, or GA4)
-- [ ] Open Graph image (1200×630)
-- [ ] Favicon (currently an inline SVG)
+- [x] Open Graph image (`assets/dukkani-og.png`, 1200×630)
+- [x] Favicon (light SVG + 32px PNG)
 
 ---
 

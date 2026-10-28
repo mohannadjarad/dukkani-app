@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">دكاني — طلبات منظّمة لمشاريع المنزل</title>
+  <desc id="desc">Dukkani social share card with the light profile image and Arabic tagline.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fffaf3"/>
+      <stop offset="1" stop-color="#f3e2cd"/>
+    </linearGradient>
+    <clipPath id="avatarClip">
+      <rect x="90" y="125" width="380" height="380" rx="28"/>
+    </clipPath>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <circle cx="1050" cy="70" r="220" fill="#c2410c" opacity="0.055"/>
+  <circle cx="110" cy="610" r="190" fill="#5f7a5b" opacity="0.06"/>
+
+  <image href="dukkani-profile-light.png" x="90" y="125" width="380" height="380" clip-path="url(#avatarClip)"/>
+  <rect x="90" y="125" width="380" height="380" rx="28" fill="none" stroke="#e9dcc9" stroke-width="2"/>
+
+  <g font-family="Tajawal" direction="rtl" text-anchor="start">
+    <text x="1110" y="192" font-size="26" font-weight="700" fill="#c2410c">دكاني · DUKKANI</text>
+    <text x="1110" y="305" font-size="64" font-weight="800" fill="#2b2119">طلبات منظّمة</text>
+    <text x="1110" y="385" font-size="64" font-weight="800" fill="#2b2119">لمشاريع المنزل</text>
+    <text x="1110" y="462" font-size="30" font-weight="500" fill="#7a6a5b">متجر بسيط ولوحة طلبات — بدون عمولة.</text>
+  </g>
+  <text x="1110" y="532" text-anchor="end" font-family="FreeSans" font-size="26" font-weight="bold" fill="#c2410c" direction="ltr">dukkani-app.netlify.app</text>
+</svg>
