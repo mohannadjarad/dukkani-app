@@ -240,7 +240,7 @@ Ask:
 
 - **مجاني:** 0 د.أ — حتى 15 طلبًا شهريًا، متجر ورابط، لوحة طلبات أساسية.
 - **ستارتر:** 25 د.أ/شهر — طلبات غير محدودة، سجل زبائن، قوالب واتساب، تقارير. (15 د.أ/شهر لأول 20 مشروعًا.)
-- **برو:** 60 د.أ/شهر — كل مزايا ستارتر، دومين خاص، حسابات فريق، دعم أولوية.
+- **برو:** 45 د.أ/شهر — كل مزايا ستارتر، دومين خاص، حسابات فريق، دعم أولوية.
 
 **Note:** سعر التأسيس لأول 20 مشروعًا فقط. بدون عمولة على الطلبات.
 
@@ -311,7 +311,7 @@ Dukkani gives home businesses a simple storefront and order board. Capture order
 
 - **Free:** 0 JOD — up to 15 orders/month, storefront link, basic order board.
 - **Starter:** 25 JOD/month — unlimited orders, customer book, WhatsApp templates, reports. (15 JOD/month for the first 20 sellers.)
-- **Pro:** 60 JOD/month — everything in Starter, custom domain, team accounts, priority support.
+- **Pro:** 45 JOD/month — everything in Starter, custom domain, team accounts, priority support.
 
 **Note:** Founding price for the first 20 sellers only. No commission on orders.
 

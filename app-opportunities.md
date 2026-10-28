@@ -185,7 +185,7 @@ Why bakers first:
 
 - Free: up to 15 orders/month, basic storefront.
 - Starter: 25 JOD/month (~$35) for unlimited orders, WhatsApp notifications, analytics.
-- Pro: 60 JOD/month for multiple staff, custom domain, delivery labels, priority support.
+- Pro: 45 JOD/month for multiple staff, custom domain, delivery labels, priority support.
 - Founding seller: 15 JOD/month for the first 20 sellers.
 - Later: 1–2% per order, payment processing, delivery partnerships.
 

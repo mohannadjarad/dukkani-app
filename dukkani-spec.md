@@ -17,7 +17,7 @@
 | **Problem** | Orders get buried in DMs, deposits are forgotten, delivery dates clash, and customer history is lost |
 | **Solution** | An Arabic/RTL storefront link + order board + WhatsApp message templates + customer book |
 | **Wedge** | Start with home bakers; expand to caterers, crafts, cosmetics, and other home businesses |
-| **Business model** | 25 JOD/month starter, 60 JOD/month pro, free plan up to 15 orders/month; first 20 sellers get starter at 15 JOD/month |
+| **Business model** | 25 JOD/month starter, 45 JOD/month pro, free plan up to 15 orders/month; first 20 sellers get starter at 15 JOD/month |
 | **MVP build time** | 4–6 weeks after validation |
 | **First milestone** | 3 paying pilot sellers — not a finished app |
 | **Stack** | Laravel 12 + MySQL + Blade/Tailwind/Alpine.js + WhatsApp deep links first, Cloud API later |
@@ -738,7 +738,7 @@ tests/
 |---|---|---|---|
 | **Free** | 0 JOD | 15 orders/month | Storefront, 1 seller, basic order board, `wa.me` templates |
 | **Starter** | 25 JOD/month | Unlimited orders | Customer book, analytics, deposit tracking, all templates |
-| **Pro** | 60 JOD/month | Unlimited + 3 staff | Custom domain, staff accounts, delivery labels, priority support |
+| **Pro** | 45 JOD/month | Unlimited + 3 staff | Custom domain, staff accounts, delivery labels, priority support |
 | **Founding seller** | 15 JOD/month | Unlimited | First 20 sellers only, in exchange for feedback + a case study |
 
 - 14-day trial on Starter; no credit card.
