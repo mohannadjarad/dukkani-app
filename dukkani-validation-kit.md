@@ -13,7 +13,7 @@ You are not testing "do people like the idea?" You are testing:
 1. **Frequency** — does the pain happen weekly?
 2. **Cost** — does it cost money, orders, or reputation?
 3. **Workaround** — are they already using a notebook, Excel, or chat search?
-4. **Willingness to pay** — will they pay 5–10 JOD/month after a pilot?
+4. **Willingness to pay** — will they pay 15–25 JOD/month after a pilot?
 5. **Reachability** — can you find 20 more sellers through the same channel?
 
 If the answer to 3, 4, and 5 is yes, build. If not, change the niche or the offer.
@@ -106,13 +106,13 @@ Start with permission:
 ### Willingness to pay
 
 17. If a tool captured every order, reminded you about deposits, and gave you a storefront link, what would that be worth per month?
-18. Would you pay 5 JOD/month? 10? 15? (Ask directly; don't accept "maybe.")
+18. Would you pay 15 JOD/month? 25? 35? (Ask directly; don't accept "maybe.")
 19. What would make you say "this is too expensive"?
 20. Who else do you know who has this problem?
 
 ### Close
 
-> "I'm running a free 2-week pilot for 5 bakers. You'd share a link, I'd set up your storefront, and we'd manage your orders together. After 2 weeks, if it saves you time, it's 5 JOD/month for 6 months. Interested?"
+> "I'm running a free 2-week pilot for 5 bakers. You'd share a link, I'd set up your storefront, and we'd manage your orders together. After 2 weeks, if it saves you time, it's 15 JOD/month for the first 20 sellers (normally 25 JOD/month). Interested?"
 
 **Record:** name, phone, Instagram, orders/week, current tools, biggest pain, willingness to pay, referral.
 
@@ -128,7 +128,7 @@ Rate each interview 1–5:
 | Cost of pain | Annoyance | Some lost time | Lost orders/money |
 | Workaround | None | Notebook/Excel | Chaotic chat search |
 | Urgency | "Someday" | "Would be nice" | "I need this now" |
-| Willingness to pay | 0 | 5 JOD | 10+ JOD |
+| Willingness to pay | 0 | 15 JOD | 25+ JOD |
 | Reachability | Hard | Some groups | Active community |
 
 **Green light:** average ≥ 4 on pain, cost, and willingness to pay across 10+ interviews.
@@ -184,13 +184,13 @@ Rate each interview 1–5:
 | Time saved | Seller's estimate before/after |
 | Deposits collected | Amount and percentage |
 | Seller satisfaction | 1–5 after 2 weeks |
-| Willingness to pay | Ask for 5 JOD/month |
+| Willingness to pay | Ask for 15 JOD/month (founding price) |
 
 ### After 2 weeks
 
 Ask:
 
-> "This is the pilot. If you want to keep using it, it's 5 JOD/month for 6 months. Should I set up your subscription?"
+> "This is the pilot. If you want to keep using it, it's 15 JOD/month for the first 20 sellers (normally 25 JOD/month). Should I set up your subscription?"
 
 **Payment is the validation.** A "yes" without payment is a no.
 
@@ -239,10 +239,10 @@ Ask:
 ### Pricing
 
 - **مجاني:** 0 د.أ — حتى 15 طلبًا شهريًا، متجر ورابط، لوحة طلبات أساسية.
-- **ستارتر:** 10 د.أ/شهر — طلبات غير محدودة، سجل زبائن، قوالب واتساب، تقارير.
-- **برو:** 25 د.أ/شهر — كل مزايا ستارتر، دومين خاص، حسابات فريق، دعم أولوية.
+- **ستارتر:** 25 د.أ/شهر — طلبات غير محدودة، سجل زبائن، قوالب واتساب، تقارير. (15 د.أ/شهر لأول 20 مشروعًا.)
+- **برو:** 60 د.أ/شهر — كل مزايا ستارتر، دومين خاص، حسابات فريق، دعم أولوية.
 
-**Note:** أسعار إطلاق لمشاريع المنزل. بدون عمولة على الطلبات.
+**Note:** سعر التأسيس لأول 20 مشروعًا فقط. بدون عمولة على الطلبات.
 
 ### FAQ
 
@@ -310,10 +310,10 @@ Dukkani gives home businesses a simple storefront and order board. Capture order
 ### Pricing
 
 - **Free:** 0 JOD — up to 15 orders/month, storefront link, basic order board.
-- **Starter:** 10 JOD/month — unlimited orders, customer book, WhatsApp templates, reports.
-- **Pro:** 25 JOD/month — everything in Starter, custom domain, team accounts, priority support.
+- **Starter:** 25 JOD/month — unlimited orders, customer book, WhatsApp templates, reports. (15 JOD/month for the first 20 sellers.)
+- **Pro:** 60 JOD/month — everything in Starter, custom domain, team accounts, priority support.
 
-**Note:** Launch pricing for home businesses. No commission on orders.
+**Note:** Founding price for the first 20 sellers only. No commission on orders.
 
 ### FAQ
 
@@ -365,7 +365,7 @@ Update after every conversation. Review weekly.
 - [ ] Finish 10–15 interviews.
 - [ ] Start 5 concierge pilots.
 - [ ] Measure orders/week and time saved.
-- [ ] Ask for 5 JOD/month after the pilot.
+- [ ] Ask for 15 JOD/month (founding price) after the pilot.
 - [ ] Write a one-page findings summary.
 - [ ] Decide: build, pivot, or stop.
 
