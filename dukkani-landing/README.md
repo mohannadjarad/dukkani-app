@@ -92,7 +92,7 @@ The number is not typed with its country code. The visitor picks the code from a
 | `+962` الأردن | `791234567` | `+962791234567` |
 | `+962` الأردن | `0791234567` | `+962791234567` |
 | `+962` الأردن | `00962791234567` | `+962791234567` |
-| `+972` فلسطين | `569991081` | `+972569991081` |
+| `+970` فلسطين | `569991081` | `+970569991081` |
 
 Spaces, dashes and parentheses are stripped. A leading `0` and a repeated country code are removed automatically, so a pasted full number still works.
 
@@ -153,7 +153,7 @@ Change one thing at a time. Use two URLs (`?v=1`, `?v=2`) and compare.
 - [ ] Brand name if "Dukkani" is taken
 - [x] Logo/avatar (light profile image in `../brand/`; favicon and Apple touch icon in `assets/`)
 - [ ] Privacy policy and terms links
-- [x] Real WhatsApp number for support (`+972 56 999 1081`)
+- [x] Real WhatsApp number for support (`+970 56 999 1081`)
 - [x] Waitlist endpoint (Formspree)
 - [ ] Analytics (Plausible, Umami, or GA4)
 - [x] Open Graph image (`assets/dukkani-og.png`, 1200×630)
@@ -165,7 +165,7 @@ Change one thing at a time. Use two URLs (`?v=1`, `?v=2`) and compare.
 
 - Founder: Mohannad Jarad
 - Email: `mohannadjarad6@gmail.com`
-- WhatsApp: `+972 56 999 1081`
+- WhatsApp: `+970 56 999 1081`
 - The page includes a floating WhatsApp button and a footer contact link.
 
 ---
@@ -176,7 +176,7 @@ Change one thing at a time. Use two URLs (`?v=1`, `?v=2`) and compare.
 - The phone and dashboard mockups are pure CSS/SVG — no images needed.
 - The page respects `prefers-reduced-motion`.
 - All CTAs scroll to `#waitlist`.
-- The form accepts local numbers (`07X XXXXXXX`) and international numbers with a country code (`+962...`, `+972...`).
+- The form accepts local numbers (`07X XXXXXXX`) and international numbers with a country code (`+962...`, `+970...`, `+972...`).
 
 ---
 
