@@ -21,7 +21,6 @@ services:
     dockerContext: ./dukkani-app
     healthCheckPath: /up
     autoDeployTrigger: commit
-    maxShutdownDelaySeconds: 60
 
     disk:
       name: dukkani-data
