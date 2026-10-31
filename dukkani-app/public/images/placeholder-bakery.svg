@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-labelledby="title desc">
+  <title id="title">أمل بيكنز</title>
+  <desc id="desc">صورة مؤقتة لحلويات أمل بيكنز</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f8f3ea"/>
+      <stop offset="1" stop-color="#f0dfcd"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="42%" r="55%">
+      <stop offset="0" stop-color="#fffdf9" stop-opacity=".95"/>
+      <stop offset="1" stop-color="#fffdf9" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="900" fill="url(#bg)"/>
+  <rect width="1200" height="900" fill="url(#glow)"/>
+  <g fill="none" stroke="#b25c38" stroke-linecap="round" stroke-linejoin="round" opacity=".8">
+    <path d="M390 570h420v-95c0-22-18-40-40-40H430c-22 0-40 18-40 40v95Z" fill="#f6e7dd" stroke-width="7"/>
+    <path d="M430 435v-37c0-22 18-40 40-40h260c22 0 40 18 40 40v37" stroke-width="7"/>
+    <path d="M470 435v-28c0-17 14-31 31-31h198c17 0 31 14 31 31v28" stroke-width="5" opacity=".55"/>
+    <path d="M390 520c40 18 80 18 105 0 30-22 60-22 90 0 30 22 60 22 90 0 30-22 60-22 90 0 15 8 30 12 45 12" stroke="#c9a15a" stroke-width="6" opacity=".75"/>
+    <path d="M600 300v-48m-22 22 22-22 22 22" stroke="#c9a15a" stroke-width="6"/>
+    <circle cx="600" cy="300" r="13" fill="#b25c38" stroke="none"/>
+    <path d="M510 640h180" stroke="#e9dece" stroke-width="8"/>
+  </g>
+  <g font-family="Tajawal, sans-serif" text-anchor="middle">
+    <text x="600" y="712" font-size="44" font-weight="700" fill="#8e4425">أمل بيكنز</text>
+    <text x="600" y="758" font-size="22" font-weight="500" fill="#837164" letter-spacing="6">AMAL BAKES</text>
+  </g>
+</svg>

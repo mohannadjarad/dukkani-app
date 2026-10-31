@@ -50,6 +50,16 @@ Two ways to update it.
 
 Do **not** drag this parent `dukkani` folder to Netlify — it has no `index.html` at its root.
 
+## Laravel demo (`dukkani-app/`)
+
+The working product demo lives in `dukkani-app/`: an Arabic-first storefront and
+seller dashboard for the Amal Bakes pilot store.
+
+- Run it locally: see [`dukkani-app/README.md`](dukkani-app/README.md).
+- Deploy it: [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) (Render + Docker).
+- Read the walkthrough: [`docs/CASE_STUDY.md`](docs/CASE_STUDY.md) (English) and
+  [`docs/CASE_STUDY.ar.md`](docs/CASE_STUDY.ar.md) (العربية).
+
 ## Start here
 
 1. Read `dukkani-validation-kit.md`.

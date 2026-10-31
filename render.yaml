@@ -1,0 +1,92 @@
+# Render Blueprint for the Dukkani demo.
+#
+# The blueprint lives at the repository root and builds the Laravel app in
+# dukkani-app/. If you split the app into its own repository, move this file
+# into that repository and drop rootDir / dockerfilePath / dockerContext.
+#
+# The app ships with SQLite, so it needs a persistent disk to keep demo data
+# and uploaded images between deploys. On a free service, remove the `disk`
+# block and set plan to `free`; the entrypoint will reseed an empty database
+# on every boot.
+
+services:
+  - type: web
+    name: dukkani-demo
+    runtime: docker
+    plan: 0.5c-512mb
+    region: frankfurt
+    branch: main
+    rootDir: dukkani-app
+    dockerfilePath: ./dukkani-app/Dockerfile
+    dockerContext: ./dukkani-app
+    healthCheckPath: /up
+    autoDeployTrigger: commit
+    maxShutdownDelaySeconds: 60
+
+    disk:
+      name: dukkani-data
+      mountPath: /var/data
+      sizeGB: 1
+
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: APP_LOCALE
+        value: ar
+      - key: APP_FALLBACK_LOCALE
+        value: ar
+      - key: APP_FAKER_LOCALE
+        value: ar_JO
+      - key: APP_TIMEZONE
+        value: Asia/Amman
+      - key: TZ
+        value: Asia/Amman
+
+      # Demo controls: one-click login and visible sample-data labels.
+      - key: DEMO_MODE
+        value: "true"
+      - key: DEMO_SEED
+        value: "true"
+
+      # SQLite on the persistent disk. WAL keeps reads and writes cheap while
+      # the dashboard and storefront are used at the same time.
+      - key: DB_CONNECTION
+        value: sqlite
+      - key: DB_DATABASE
+        value: /var/data/database.sqlite
+      - key: DB_BUSY_TIMEOUT
+        value: "5000"
+      - key: DB_JOURNAL_MODE
+        value: WAL
+      - key: DB_SYNCHRONOUS
+        value: NORMAL
+
+      - key: SESSION_DRIVER
+        value: database
+      - key: SESSION_SECURE_COOKIE
+        value: "true"
+      - key: SESSION_SAME_SITE
+        value: lax
+      - key: CACHE_STORE
+        value: database
+      - key: QUEUE_CONNECTION
+        value: sync
+      - key: FILESYSTEM_DISK
+        value: local
+
+      - key: LOG_CHANNEL
+        value: stderr
+      - key: LOG_LEVEL
+        value: info
+      - key: MAIL_MAILER
+        value: log
+      - key: BCRYPT_ROUNDS
+        value: "12"
+      - key: APP_MAINTENANCE_DRIVER
+        value: file
+
+    # APP_KEY is generated once and stored on the disk by the entrypoint.
+    # APP_URL is taken from Render's RENDER_EXTERNAL_URL automatically.
+    # Set either variable here if you prefer to manage them yourself.
