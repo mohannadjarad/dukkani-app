@@ -29,8 +29,8 @@ services:
     region: frankfurt
     branch: main
     rootDir: dukkani-app
-    dockerfilePath: ./dukkani-app/Dockerfile
-    dockerContext: ./dukkani-app
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
     healthCheckPath: /up
     autoDeployTrigger: commit
 
