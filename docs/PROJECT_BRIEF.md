@@ -93,10 +93,11 @@ seeded store and a demo login.
 - [x] **Milestone 6 — Deploy and portfolio** (completed Oct 31, 2026)
   - Production container: multi-stage Dockerfile (Vite assets → Composer → Apache
     + PHP 8.4), Apache vhost, PHP production ini, and a boot entrypoint
-  - `render.yaml` Blueprint: Docker web service, 1 GB persistent disk, health
+  - `render.yaml` Blueprint: Docker web service on Render's free plan, health
     check, and the full production environment
-  - Entrypoint handles disk setup, uploads symlink, stable `APP_KEY`, migrations,
+  - Entrypoint handles storage setup, uploads symlink, stable `APP_KEY`, migrations,
     one-time demo seed, and config/route/view caching
+  - Deployed and verified live at `https://dukkani-demo.onrender.com`
   - `APP_URL` follows `RENDER_EXTERNAL_URL`; trusted proxy headers and HTTPS URLs
   - Self-hosted Amiri + Tajawal fonts and local bakery photos; no external assets
   - Screenshot suite (storefront, dashboard, mobile) captured by a Playwright

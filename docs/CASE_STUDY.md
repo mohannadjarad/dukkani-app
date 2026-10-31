@@ -14,7 +14,7 @@
 | **Stack** | Laravel 12, PHP 8.4, Blade, Tailwind CSS 4, Alpine.js, Chart.js, Vite 7, SQLite |
 | **Language** | Arabic only, RTL throughout |
 | **Scale** | 1 store, 4 categories, 10 products, 14 customers, 32 orders, 75 tests |
-| **Hosting** | Render (Docker + persistent disk) |
+| **Hosting** | Render (Docker, free tier) — [live demo](https://dukkani-demo.onrender.com) |
 
 ## The problem
 
@@ -211,15 +211,18 @@ Storefront (public)                     Dashboard (auth)
 
 The demo ships as a Docker image with a multi-stage build (Vite assets,
 Composer vendor, Apache + PHP 8.4). A `render.yaml` Blueprint creates the web
-service and a 1 GB persistent disk; the entrypoint prepares the disk, runs
-migrations, seeds the demo once, generates and stores `APP_KEY`, caches config,
-routes and views, and starts Apache on Render's port. See
-[`DEPLOYMENT.md`](DEPLOYMENT.md).
+service on Render's free plan; the entrypoint prepares storage, runs migrations,
+seeds the demo once, generates and stores `APP_KEY`, caches config, routes and
+views, and starts Apache on Render's port. The Blueprint validates against the
+Render API and the reference deployment is live at
+**https://dukkani-demo.onrender.com**. See [`DEPLOYMENT.md`](DEPLOYMENT.md).
 
 ## Trade-offs and what I would build next
 
-- **SQLite on a persistent disk** keeps the demo a single cheap service. A
-  multi-tenant production build would move to Postgres and object storage.
+- **SQLite in the container on Render's free plan** keeps the demo a single free
+  service; it is ephemeral, so the demo reseeds on restart. Persistence is a
+  one-line Blueprint change plus a paid instance. A multi-tenant production build
+  would move to Postgres and object storage.
 - **WhatsApp is a template launcher and logger**, not the Cloud API. The
   messages are real and copy-paste ready, but nothing is sent automatically.
 - **One owner account per store.** Staff accounts, roles and invitations are the

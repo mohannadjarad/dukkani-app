@@ -86,7 +86,7 @@ php artisan migrate:fresh --seed
 - [x] Analytics: period comparison, revenue trend, status/fulfillment/payment breakdowns, top products and customers, busiest days
 - [x] Arabic copy and RTL pass, custom favicon, final test coverage
 - [x] Self-hosted Amiri + Tajawal fonts and local bakery photos (no external asset dependencies)
-- [x] Production Docker image, `render.yaml` Blueprint, persistent-disk SQLite, and a deploy entrypoint
+- [x] Production Docker image, `render.yaml` Blueprint (Render free tier), and a deploy entrypoint
 - [x] Screenshot suite, portfolio case study (English + Arabic), and a paste-ready portfolio card
 
 ## Storefront and checkout
@@ -201,14 +201,16 @@ Unsplash or Google Fonts:
 ## Deployment
 
 The demo ships as a production Docker image and deploys to
-[Render](https://render.com) from the repository's `render.yaml` Blueprint:
+[Render](https://render.com) from the repository's `render.yaml` Blueprint
+(free plan by default; add a disk and a paid instance to persist data). It is
+live at **https://dukkani-demo.onrender.com**.
 
 - `dukkani-app/Dockerfile` — multi-stage build (Vite assets → Composer vendor →
   `php:8.4-apache`).
-- `dukani-app/docker/entrypoint.sh` — prepares the persistent disk, generates and
+- `dukkanni-app/docker/entrypoint.sh` — prepares storage, generates and
   stores `APP_KEY`, runs migrations, seeds the demo once, caches config/routes/views,
   and starts Apache on Render's `$PORT`.
-- `dukani-app/docker/apache.conf`, `dukani-app/docker/php.ini` — vhost and
+- `dukkanni-app/docker/apache.conf`, `dukkanni-app/docker/php.ini` — vhost and
   production PHP settings.
 - `.env.production.example` — the production environment reference.
 
