@@ -4,16 +4,28 @@
 # dukkani-app/. If you split the app into its own repository, move this file
 # into that repository and drop rootDir / dockerfilePath / dockerContext.
 #
-# The app ships with SQLite, so it needs a persistent disk to keep demo data
-# and uploaded images between deploys. On a free service, remove the `disk`
-# block and set plan to `free`; the entrypoint will reseed an empty database
-# on every boot.
+# This file targets Render's free plan, so there is no persistent disk: the
+# container filesystem is ephemeral and starts empty on every deploy/restart.
+# The entrypoint creates the SQLite file, migrates, and seeds the demo on the
+# first boot, so the demo is always usable.
+#
+# To keep data between deploys (and keep the service always on), add a payment
+# method to the workspace, set plan to a paid instance type, and restore the
+# disk block below.
+#
+#     plan: starter
+#     disk:
+#       name: dukkani-data
+#       mountPath: /var/data
+#       sizeGB: 1
+#
+# Note: maxShutdownDelaySeconds is not allowed on a service that mounts a disk.
 
 services:
   - type: web
     name: dukkani-demo
     runtime: docker
-    plan: 0.5c-512mb
+    plan: free
     region: frankfurt
     branch: main
     rootDir: dukkani-app
@@ -21,11 +33,6 @@ services:
     dockerContext: ./dukkani-app
     healthCheckPath: /up
     autoDeployTrigger: commit
-
-    disk:
-      name: dukkani-data
-      mountPath: /var/data
-      sizeGB: 1
 
     envVars:
       - key: APP_ENV
@@ -49,8 +56,8 @@ services:
       - key: DEMO_SEED
         value: "true"
 
-      # SQLite on the persistent disk. WAL keeps reads and writes cheap while
-      # the dashboard and storefront are used at the same time.
+      # SQLite in the container (ephemeral on the free plan). WAL keeps reads
+      # and writes cheap while the dashboard and storefront are used together.
       - key: DB_CONNECTION
         value: sqlite
       - key: DB_DATABASE
@@ -86,6 +93,6 @@ services:
       - key: APP_MAINTENANCE_DRIVER
         value: file
 
-    # APP_KEY is generated once and stored on the disk by the entrypoint.
+    # APP_KEY is generated once and stored under /var/data by the entrypoint.
     # APP_URL is taken from Render's RENDER_EXTERNAL_URL automatically.
     # Set either variable here if you prefer to manage them yourself.
