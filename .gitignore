@@ -14,3 +14,9 @@ desktop.ini
 
 # Local PHP extension build (platform-specific binaries)
 .php-ext/
+
+# Local secrets (social publishing tokens live here)
+.env
+.env.*
+!.env.example
+
