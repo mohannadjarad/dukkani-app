@@ -9,7 +9,12 @@
     <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body x-data="{ sidebar: false }" class="min-h-screen bg-canvas">
+<body
+    x-data="{ sidebar: false }"
+    x-on:pageshow.window="sidebar = false"
+    @keydown.escape.window="sidebar = false"
+    class="min-h-screen bg-canvas"
+>
     @php
         $store = auth()->user()->store;
         $navItems = [
@@ -22,7 +27,7 @@
         ];
     @endphp
 
-    <div x-show="sidebar" x-transition.opacity class="fixed inset-0 z-40 bg-ink/40 backdrop-blur-sm lg:hidden" @click="sidebar = false" x-cloak></div>
+    <div x-show="sidebar" x-transition.opacity class="fixed inset-0 z-40 cursor-pointer bg-ink/40 backdrop-blur-sm lg:hidden" @click="sidebar = false" x-cloak></div>
 
     <div class="flex min-h-screen">
         <aside
@@ -54,7 +59,7 @@
                 <p class="px-3 pb-2 text-[10px] font-bold uppercase tracking-[0.18em] text-muted/55">إدارة المتجر</p>
 
                 @foreach ($navItems as $item)
-                    <a href="{{ route($item['route']) }}" class="sidebar-link {{ $item['active'] ? 'sidebar-link-active' : '' }}">
+                    <a href="{{ route($item['route']) }}" @click="sidebar = false" class="sidebar-link {{ $item['active'] ? 'sidebar-link-active' : '' }}">
                         <svg class="size-[19px] shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">{!! $item['icon'] !!}</svg>
                         <span class="flex-1">{{ $item['label'] }}</span>
                         @if (! empty($item['badge']))
@@ -68,7 +73,7 @@
 
                 <div class="my-3 border-t border-line/70"></div>
 
-                <a href="{{ route('storefront.home', $store) }}" target="_blank" class="sidebar-link">
+                <a href="{{ route('storefront.home', $store) }}" target="_blank" @click="sidebar = false" class="sidebar-link">
                     <svg class="size-[19px] shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path d="M3 9h18M9 21V9M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"/></svg>
                     <span class="flex-1">عرض المتجر</span>
                     <svg class="size-3.5 shrink-0 text-muted/50" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 19.5 15-15m0 0H8.25m11.25 0v11.25"/></svg>

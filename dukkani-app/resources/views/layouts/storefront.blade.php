@@ -9,7 +9,12 @@
     <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="min-h-screen bg-canvas" x-data="{ mobile: false }">
+<body
+    class="min-h-screen bg-canvas"
+    x-data="{ mobile: false }"
+    x-on:pageshow.window="mobile = false"
+    @keydown.escape.window="mobile = false"
+>
     <div class="bg-ink text-white/70">
         <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-2 text-[10px] sm:px-8">
             <p class="flex min-w-0 items-center gap-2">
@@ -27,7 +32,7 @@
         </div>
     </div>
 
-    <header class="sticky top-0 z-40 border-b border-line/70 bg-canvas/90 backdrop-blur-xl">
+    <header class="sticky top-0 z-40 border-b border-line/70 bg-canvas/90 backdrop-blur-xl" @click.outside="mobile = false">
         <div class="mx-auto flex h-[4.5rem] max-w-6xl items-center gap-4 px-5 sm:px-8">
             <a href="{{ route('storefront.home', $store) }}" class="flex shrink-0 items-center gap-2.5">
                 <span class="flex size-10 items-center justify-center rounded-2xl bg-brand font-display text-lg font-bold text-white shadow-[0_8px_18px_-10px_rgba(142,68,37,0.9)]">{{ mb_substr($store->name, 0, 1) }}</span>
@@ -66,12 +71,12 @@
 
         <div x-show="mobile" x-transition.origin.top x-cloak class="border-t border-line/70 bg-surface lg:hidden">
             <nav class="mx-auto flex max-w-6xl flex-col gap-1 px-5 py-4 sm:px-8">
-                <a href="{{ route('storefront.home', $store) }}" class="sidebar-link">الرئيسية</a>
-                <a href="{{ route('storefront.menu', $store) }}" class="sidebar-link">المنيو</a>
-                <a href="{{ route('storefront.home', $store) }}#about" class="sidebar-link">عن المتجر</a>
-                <a href="{{ route('storefront.home', $store) }}#contact" class="sidebar-link">تواصلي معنا</a>
+                <a href="{{ route('storefront.home', $store) }}" @click="mobile = false" class="sidebar-link">الرئيسية</a>
+                <a href="{{ route('storefront.menu', $store) }}" @click="mobile = false" class="sidebar-link">المنيو</a>
+                <a href="{{ route('storefront.home', $store) }}#about" @click="mobile = false" class="sidebar-link">عن المتجر</a>
+                <a href="{{ route('storefront.home', $store) }}#contact" @click="mobile = false" class="sidebar-link">تواصلي معنا</a>
                 <div class="my-1 border-t border-line/70"></div>
-                <a href="{{ auth()->check() ? route('dashboard') : route('login') }}" class="btn-secondary mt-1 w-full">
+                <a href="{{ auth()->check() ? route('dashboard') : route('login') }}" @click="mobile = false" class="btn-secondary mt-1 w-full">
                     {{ auth()->check() ? 'لوحة التحكم' : 'دخول البائعة' }}
                 </a>
             </nav>
