@@ -33,11 +33,14 @@
 @layer base {
     html {
         scroll-behavior: smooth;
+        /* Keep off-canvas panels from widening the mobile layout viewport. */
+        overflow-x: clip;
     }
 
     body {
         @apply bg-canvas text-ink antialiased;
         font-feature-settings: 'kern';
+        overflow-x: clip;
     }
 
     [x-cloak] {

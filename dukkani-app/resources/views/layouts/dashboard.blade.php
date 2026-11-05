@@ -31,8 +31,9 @@
 
     <div class="flex min-h-screen">
         <aside
-            class="fixed inset-y-0 start-0 z-50 flex w-[18rem] shrink-0 flex-col border-e border-line/80 bg-surface px-4 py-5 transition-transform duration-300 lg:sticky lg:top-0 lg:h-screen lg:translate-x-0"
+            class="no-scrollbar fixed inset-y-0 start-0 z-50 flex w-[18rem] max-w-[86vw] shrink-0 flex-col overflow-y-auto overscroll-contain border-e border-line/80 bg-surface px-4 py-5 transition-transform duration-300 lg:sticky lg:top-0 lg:h-screen lg:translate-x-0"
             :class="sidebar ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'"
+            aria-label="قائمة التنقل"
         >
             <div class="flex items-center justify-between px-2">
                 <x-brand-mark size="sm" />
@@ -55,7 +56,7 @@
                 </div>
             </div>
 
-            <nav class="mt-7 flex-1 space-y-1 overflow-y-auto no-scrollbar">
+            <nav id="dashboard-nav" class="mt-7 flex-1 space-y-1">
                 <p class="px-3 pb-2 text-[10px] font-bold uppercase tracking-[0.18em] text-muted/55">إدارة المتجر</p>
 
                 @foreach ($navItems as $item)
@@ -114,7 +115,7 @@
         <div class="flex min-w-0 flex-1 flex-col">
             <header class="sticky top-0 z-30 border-b border-line/70 bg-canvas/85 backdrop-blur-xl">
                 <div class="flex h-[4.4rem] items-center gap-3 px-5 sm:px-8">
-                    <button class="icon-btn lg:hidden" @click="sidebar = true" aria-label="فتح القائمة">
+                    <button class="icon-btn lg:hidden" @click="sidebar = true" aria-label="فتح القائمة" :aria-expanded="sidebar" aria-controls="dashboard-nav">
                         <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke-width="1.7" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/></svg>
                     </button>
 

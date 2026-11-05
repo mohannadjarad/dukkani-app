@@ -35,7 +35,7 @@
         </div>
     </div>
 
-    <div class="mt-7 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+    <div class="mt-7 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <div class="card card-hover p-5">
             <div class="flex items-start justify-between">
                 <span class="kpi-icon bg-brand-soft text-brand">
@@ -85,7 +85,7 @@
         </div>
     </div>
 
-    <div class="mt-4 grid gap-4 xl:grid-cols-3">
+    <div class="mt-4 grid grid-cols-1 gap-4 xl:grid-cols-3">
         <div class="card p-5 sm:p-6 xl:col-span-2">
             <div class="flex flex-wrap items-start justify-between gap-3">
                 <div>
@@ -151,7 +151,7 @@
         </div>
     </div>
 
-    <div class="mt-4 grid gap-4 xl:grid-cols-5">
+    <div class="mt-4 grid grid-cols-1 gap-4 xl:grid-cols-5">
         <div class="card p-5 sm:p-6 xl:col-span-2">
             <div class="flex items-start justify-between">
                 <div>
