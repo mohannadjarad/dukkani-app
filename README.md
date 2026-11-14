@@ -65,7 +65,7 @@ seller dashboard for the Amal Bakes pilot store.
 1. Read `dukkani-validation-kit.md`.
 2. Send 15 personalised messages using `dukkani-outreach-messages.txt`.
 3. Book 10 interviews and run 5 concierge pilots.
-4. Ask for **15 JOD/month** (founding price for the first 20 sellers; standard price is 25 JOD/month).
+4. Ask for **29 JOD/month** (founding price for the first 20 sellers; standard price is 39 JOD/month).
 5. Build the Laravel MVP only after **3 paid commitments**.
 
 The page is already live and the waitlist is connected to Formspree. The next number that matters is paid sellers, not page views.

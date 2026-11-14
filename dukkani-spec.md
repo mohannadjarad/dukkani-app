@@ -17,7 +17,7 @@
 | **Problem** | Orders get buried in DMs, deposits are forgotten, delivery dates clash, and customer history is lost |
 | **Solution** | An Arabic/RTL storefront link + order board + WhatsApp message templates + customer book |
 | **Wedge** | Start with home bakers; expand to caterers, crafts, cosmetics, and other home businesses |
-| **Business model** | 25 JOD/month starter, 45 JOD/month pro, free plan up to 15 orders/month; first 20 sellers get starter at 15 JOD/month |
+| **Business model** | 39 JOD/month starter, 79 JOD/month pro, free plan up to 15 orders/month; first 20 sellers get starter at 29 JOD/month |
 | **MVP build time** | 4–6 weeks after validation |
 | **First milestone** | 3 paying pilot sellers — not a finished app |
 | **Stack** | Laravel 12 + MySQL + Blade/Tailwind/Alpine.js + WhatsApp deep links first, Cloud API later |
@@ -77,7 +77,7 @@
 - How much time per day is spent on order admin?
 - What do they currently pay for tools, ads, or delivery?
 - Have they tried Salla/Zid/Shopify/Google Forms? Why did they stop?
-- Would they pay 15–25 JOD/month after a 2-week pilot? (25 JOD is the standard starter price; 15 JOD is the founding price.)
+- Would they pay 29–39 JOD/month after a 2-week pilot? (39 JOD is the standard starter price; 29 JOD is the founding price.)
 
 ---
 
@@ -737,16 +737,17 @@ tests/
 | Plan | Price | Limits | Features |
 |---|---|---|---|
 | **Free** | 0 JOD | 15 orders/month | Storefront, 1 seller, basic order board |
-| **Starter** | 25 JOD/month | Unlimited orders | Customer book, analytics, deposit tracking, WhatsApp templates (`wa.me`) |
-| **Pro** | 45 JOD/month | Unlimited + 3 staff | Custom domain, staff accounts, delivery labels, priority support |
-| **Founding seller** | 15 JOD/month | Unlimited | First 20 sellers only, in exchange for feedback + a case study |
+| **Starter** | 39 JOD/month | Unlimited orders | Customer book, analytics, deposit tracking, WhatsApp templates (`wa.me`) |
+| **Pro** | 79 JOD/month | Unlimited + 3 staff | Custom domain, staff accounts, delivery labels, priority support |
+| **Founding seller** | 29 JOD/month | Unlimited | First 20 sellers only, in exchange for feedback + a case study |
 
 - 14-day trial on Starter; no credit card.
 - Annual: 2 months free.
 - Payment: CliQ / bank transfer initially; card via a local provider later.
 - Do not discount forever; the founding price is limited to the first 20 sellers.
+- Multi-country display (14/11/2026): 1 JOD ≈ 4.53 ILS ≈ 75.35 EGP ≈ 5.29 SAR ≈ 5.18 AED ≈ 0.435 KWD. Local equivalents on the landing page are approximate; billing stays in JOD.
 
-**Unit economics check:** at 25 JOD/month, you need ~100 paying stores for 2,500 JOD/month (~$3,500). That is realistic only if support is low. Keep the product simple and the onboarding self-serve.
+**Unit economics check:** at 39 JOD/month, 100 paying stores = 3,900 JOD/month (~$5,500). That is realistic only if support is low. Keep the product simple and the onboarding self-serve.
 
 ---
 
@@ -769,7 +770,7 @@ tests/
 
 ### 12.3 Offer
 
-> "We'll set up your storefront and move your first 10 orders for free. If you like it, it's 15 JOD/month for the first 20 sellers (normally 25 JOD/month)."
+> "We'll set up your storefront and move your first 10 orders for free. If you like it, it's 29 JOD/month for the first 20 sellers (normally 39 JOD/month)."
 
 ### 12.4 Sales script (DM/phone)
 
@@ -800,7 +801,7 @@ tests/
 2. **Interview** using the script in section 12.4; record pain, frequency, spend, workarounds.
 3. **Concierge MVP:** 5 sellers send you their orders; you manage them in a shared Google Sheet and send WhatsApp confirmations using templates.
 4. **Measure:** orders/week, time saved, missed orders, deposit collection.
-5. **Ask for payment:** 15 JOD/month (founding price) to continue after 2 weeks.
+5. **Ask for payment:** 29 JOD/month (founding price) to continue after 2 weeks.
 6. **Decide:** build only if 3+ pay or commit.
 
 ### Landing page
@@ -958,7 +959,7 @@ tests/
 6. **Data protection:** What are Jordan's requirements for storing customer phone numbers/addresses?
 7. **WhatsApp:** Direct Cloud API vs a provider (360dialog, Twilio)? What are the current Jordan message rates?
 8. **Hosting:** Local hosting requirement for some clients, or cloud?
-9. **Pricing:** Is 25 JOD/month realistic for this audience? Test 15/25/35.
+9. **Pricing:** Is 39 JOD/month realistic for this audience? Test 29/39/49.
 10. **Your time:** How many hours/week can you commit for 6 weeks?
 
 ---
@@ -973,7 +974,7 @@ tests/
 
 **Still to do, in order:**
 
-1. **Validate** — talk to 15 bakers, run 5 concierge pilots for 2 weeks, ask for 15 JOD/month (founding price). Do not build until 3 sellers pay or commit.
+1. **Validate** — talk to 15 bakers, run 5 concierge pilots for 2 weeks, ask for 29 JOD/month (founding price). Do not build until 3 sellers pay or commit.
 2. **Scaffold the app** — Laravel project, auth, stores, products, public storefront, order form, order board.
 3. **Or switch** — if the clinic SaaS or emigration navigator fits you better, I can produce the same spec for that.
 
