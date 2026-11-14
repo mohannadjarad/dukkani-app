@@ -745,7 +745,7 @@ tests/
 - Annual: 2 months free.
 - Payment: CliQ / bank transfer initially; card via a local provider later.
 - Do not discount forever; the founding price is limited to the first 20 sellers.
-- Multi-country display (14/11/2026): 1 JOD ≈ 4.53 ILS ≈ 75.35 EGP ≈ 5.29 SAR ≈ 5.18 AED ≈ 0.435 KWD. Local equivalents on the landing page are approximate; billing stays in JOD.
+- Multi-country display (14/11/2026): 1 JOD ≈ 4.53 ILS ≈ 75.35 EGP. Local equivalents on the landing page are approximate; billing stays in JOD.
 
 **Unit economics check:** at 39 JOD/month, 100 paying stores = 3,900 JOD/month (~$5,500). That is realistic only if support is low. Keep the product simple and the onboarding self-serve.
 
