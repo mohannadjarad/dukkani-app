@@ -74,6 +74,7 @@ The form sends JSON:
   "phoneCountry": "+962",
   "businessType": "other",
   "businessTypeOther": "شموع معطّرة",
+  "plan": "starter",
   "instagram": "@amal.bakes",
   "source": "dukkani-landing",
   "submittedAt": "2026-10-26T12:00:00.000Z",
@@ -82,6 +83,8 @@ The form sends JSON:
 ```
 
 When the visitor selects **أخرى** (`other`), a text field appears and its value is sent as `businessTypeOther`. For any other type, that field is empty.
+
+The **الخطة** (`plan`) field is required and is sent as `free`, `starter`, or `pro`. Clicking a pricing card scrolls to the form and pre-selects that plan.
 
 ### Phone rules
 
@@ -153,7 +156,7 @@ Change one thing at a time. Use two URLs (`?v=1`, `?v=2`) and compare.
 - [ ] Brand name if "Dukkani" is taken
 - [x] Logo/avatar (light profile image in `../brand/`; favicon and Apple touch icon in `assets/`)
 - [ ] Privacy policy and terms links
-- [x] Real WhatsApp number for support (`+970 56 999 1081`)
+- [x] Real WhatsApp number for support (`+972 56 999 1081`)
 - [x] Waitlist endpoint (Formspree)
 - [ ] Analytics (Plausible, Umami, or GA4)
 - [x] Open Graph image (`assets/dukkani-og.png`, 1200×630)
@@ -165,7 +168,7 @@ Change one thing at a time. Use two URLs (`?v=1`, `?v=2`) and compare.
 
 - Founder: Mohannad Jarad
 - Email: `mohannadjarad6@gmail.com`
-- WhatsApp: `+970 56 999 1081`
+- WhatsApp: `+972 56 999 1081`
 - The page includes a floating WhatsApp button and a footer contact link.
 
 ---
