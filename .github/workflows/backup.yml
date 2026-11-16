@@ -1,0 +1,54 @@
+name: Database backup
+
+on:
+  schedule:
+    # Every day at 02:00 UTC.
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: database-backup
+  cancel-in-progress: false
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Install PostgreSQL client
+        run: |
+          set -euo pipefail
+          sudo install -d /usr/share/postgresql-common/pgdg
+          sudo curl -fsSL -o /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc \
+            https://www.postgresql.org/media/keys/ACCC4CF8.asc
+          . /etc/os-release
+          echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] https://apt.postgresql.org/pub/repos/apt ${VERSION_CODENAME}-pgdg main" \
+            | sudo tee /etc/apt/sources.list.d/pgdg.list
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
+          pg_dump --version
+
+      - name: Dump the Neon database
+        env:
+          NEON_URL: ${{ secrets.NEON_URL }}
+        run: |
+          set -euo pipefail
+          if [ -z "${NEON_URL}" ]; then
+            echo "The NEON_URL repository secret is not set." >&2
+            exit 1
+          fi
+          stamp="$(date -u +%Y%m%d-%H%M%S)"
+          pg_dump "${NEON_URL}" --no-owner --format=custom | gzip > "dukkani-${stamp}.dump.gz"
+          test -s "dukkani-${stamp}.dump.gz"
+
+      - name: Upload backup artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dukkani-db-${{ github.run_id }}
+          path: dukkani-*.dump.gz
+          retention-days: 90
+          if-no-files-found: error
