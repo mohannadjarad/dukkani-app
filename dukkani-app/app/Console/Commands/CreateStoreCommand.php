@@ -23,7 +23,8 @@ class CreateStoreCommand extends Command
                             {--city= : Store city}
                             {--currency= : Store currency code (defaults to the country currency)}
                             {--country-code=962 : Store country dial code, for example 962 or 970}
-                            {--timezone= : Store timezone (defaults to the country timezone)}';
+                            {--timezone= : Store timezone (defaults to the country timezone)}
+                            {--no-trial : Skip the free 7-day Starter trial}';
 
     protected $description = 'Create a store with its owner account and default opening hours';
 
@@ -113,6 +114,10 @@ class CreateStoreCommand extends Command
             return [$user, $store];
         });
 
+        if (! $this->option('no-trial')) {
+            app(\App\Services\PlanService::class)->startTrial($store);
+        }
+
         $this->newLine();
         $this->components->info('Store created successfully.');
         $this->table(['Field', 'Value'], [
@@ -123,6 +128,7 @@ class CreateStoreCommand extends Command
             ['Phone', $store->phone],
             ['Currency', $store->currency],
             ['Country code', $store->country_code],
+            ['Plan', $store->is_trial ? 'Starter trial (ends '.($store->plan_expires_at?->toDateString() ?? '—').')' : ucfirst($store->plan)],
         ]);
 
         return self::SUCCESS;

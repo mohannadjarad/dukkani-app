@@ -40,6 +40,13 @@
             </div>
         </div>
 
+        @if ($atProductLimit)
+            <div class="mt-5 rounded-2xl border border-gold/30 bg-gold-soft/60 px-4 py-3">
+                <p class="text-xs font-bold text-[#7a5a22]">وصلتِ حد {{ $productLimit }} منتجاً في الخطة المجانية.</p>
+                <p class="mt-0.5 text-[10px] leading-5 text-[#8a672c]">رقّي الخطة لإضافة منتجات أكثر، أو احذفي منتجاً لإفساح مجال لمنتج جديد.</p>
+            </div>
+        @endif
+
         <div class="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
             <div class="card flex items-center gap-3 p-4">
                 <span class="kpi-icon size-10 bg-brand-soft text-brand"><svg class="size-5" fill="none" viewBox="0 0 24 24" stroke-width="1.7" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m21 8-9-5-9 5v8l9 5 9-5V8Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m3.3 8.3 8.7 4.9 8.7-4.9M12 21v-7.8"/></svg></span>

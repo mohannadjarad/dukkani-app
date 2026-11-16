@@ -39,6 +39,12 @@ class LoginController extends Controller
 
         $request->session()->regenerate();
 
+        $request->user()->forceFill(['last_login_at' => now()])->save();
+
+        if ($request->user()->is_admin) {
+            return redirect()->intended(route('admin.stores.index'));
+        }
+
         return redirect()->intended(route('dashboard'));
     }
 

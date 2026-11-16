@@ -145,6 +145,14 @@ services:
       - key: DEFAULT_STORE_SLUG
         sync: false
 
+      # Platform support contact shown on the storefront "store is full" page
+      # and on the owner upgrade prompts. Set DUKKANI_SUPPORT_WHATSAPP to the
+      # real support number in international format, for example 970599123456.
+      - key: DUKKANI_SUPPORT_WHATSAPP
+        sync: false
+      - key: DUKKANI_SUPPORT_NAME
+        value: دعم دكّاني
+
       - key: DB_CONNECTION
         value: pgsql
       - key: DB_HOST

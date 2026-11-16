@@ -102,6 +102,12 @@ prints it.
    | `DB_PASSWORD` | Neon password |
    | `DB_SSLMODE` | `require` |
    | `CLOUDINARY_URL` | Full Cloudinary URL |
+   | `DUKKANI_SUPPORT_WHATSAPP` | Platform support number, international format without `+` |
+   | `DEFAULT_STORE_SLUG` | Leave blank until the first real store exists, then set it to the store slug |
+
+   `DUKKANI_SUPPORT_WHATSAPP` powers the upgrade CTAs and the "store is full"
+   page. Until it is set, the buttons fall back to the placeholder in
+   `config/plans.php`; set it before launch.
 
 5. Generate `APP_KEY` **once** and paste it. The value must be `base64:`
    followed by exactly 32 decoded bytes:
@@ -152,13 +158,28 @@ php artisan dukkani:store:create
 ```
 
 The command prompts for the store name, public slug, owner name, email,
-password, phone, WhatsApp, and city, then creates the user, the store, and
-seven opening hours in one transaction. It refuses duplicate emails or slugs.
+password, phone, WhatsApp, city, and country, then creates the user, the store,
+and seven opening hours in one transaction. It refuses duplicate emails or
+slugs. A brand-new store also gets a free 7-day Starter trial.
 
 For automation, pass `--store-name`, `--slug`, `--owner-name`, `--email`,
-`--password`, `--phone`, `--whatsapp`, and `--city`, then add
-`--no-interaction`. `--currency` defaults to `JOD` and `--timezone` to
-`Asia/Amman`.
+`--password`, `--phone`, `--whatsapp`, `--city`, and `--country-code`, then add
+`--no-interaction`. `--country-code` defaults to `962`; pass `970` for
+Palestine. `--currency` and `--timezone` default to the country's values (`ILS`
+and `Asia/Hebron` for `970`; `JOD` and `Asia/Amman` for `962`). Add `--no-trial`
+to skip the free trial and start on the Free limits.
+
+### Granting platform-admin access
+
+There is no admin UI to create the first admin, so promote an existing account:
+
+```bash
+php artisan dukkani:admin:grant owner@example.com
+```
+
+Add `--revoke` to remove access. Admins sign in and land on `/admin/stores`,
+where they can change a store's plan, grant extra orders, or suspend a store.
+
 
 For the M1 exit gate, create a **throwaway** account, verify login and image
 uploads, then remove it:
@@ -263,7 +284,33 @@ the database stores their URLs and public IDs.
 If you ever add a paid disk, the Blueprint comments show the disk block; do not
 add `maxShutdownDelaySeconds` to a service that mounts a disk.
 
-## 10. Local development
+## 10. Plans and admin panel
+
+Plan limits live in `config/plans.php` and can be edited without code changes.
+The three plans are Free (15 orders, 12 products, 1 user), Starter (unlimited),
+and Pro (unlimited).
+
+- A new store starts on a free 7-day Starter trial. When the trial ends the
+  store drops to the Free limits automatically.
+- `PlanService` checks expiry **in real time** on every relevant request, so the
+  limits hold even without a scheduler. The `plans:expire` command is only a
+  daily cleanup that rewrites the stored `stores.plan` column; it is scheduled
+  in `routes/console.php` and does not need a running cron to be correct.
+- A paid plan keeps working for a 7-day grace period after its expiry date,
+  giving the owner time to renew.
+- When a store hits its monthly order limit, checkout is blocked and the
+  customer sees a friendly page with a WhatsApp button to the store and a second
+  one to platform support. The owner sees warning banners at 12/15 and a red
+  banner at 15/15.
+- Customer log and analytics are locked on Free; the owner gets a 403 upgrade
+  screen instead.
+
+The admin panel at `/admin/stores` (admin users only) lists every store with its
+owner, plan, monthly usage, and last login, and lets you change the plan,
+grant extra orders (`order_limit_override`, added on top of the free base),
+suspend, or reopen a store.
+
+## 11. Local development
 
 Local development stays on SQLite. The Docker image adds `pdo_pgsql`, but local
 PHP does not need it.
@@ -285,7 +332,7 @@ Image uploads use Cloudinary when `CLOUDINARY_URL` is set. With an empty
 `testing`. Any other environment, including production, returns a clear Arabic
 validation error instead of storing the file on an ephemeral disk.
 
-## 11. Troubleshooting
+## 12. Troubleshooting
 
 | Symptom | Cause / fix |
 |---|---|

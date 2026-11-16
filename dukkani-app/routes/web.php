@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\StoreController as AdminStoreController;
 use App\Http\Controllers\Auth\DemoLoginController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Dashboard\AnalyticsController;
@@ -28,7 +29,7 @@ Route::get('/', function () {
         : redirect()->route('login');
 })->name('home');
 
-Route::prefix('s/{store:slug}')->name('storefront.')->group(function () {
+Route::prefix('s/{store:slug}')->name('storefront.')->middleware('store.active')->group(function () {
     Route::get('/', [ShopController::class, 'home'])->name('home');
     Route::get('/menu', [ShopController::class, 'menu'])->name('menu');
     Route::get('/product/{product:slug}', [ShopController::class, 'product'])->name('product');
@@ -39,6 +40,7 @@ Route::prefix('s/{store:slug}')->name('storefront.')->group(function () {
     Route::delete('/cart/{key}', [CartController::class, 'remove'])->name('cart.remove');
     Route::post('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
 
+    Route::get('/checkout/limit', [CheckoutController::class, 'limit'])->name('checkout.limit');
     Route::get('/checkout', [CheckoutController::class, 'create'])->name('checkout');
     Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
 });
@@ -55,7 +57,9 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
-    Route::get('/dashboard/analytics', AnalyticsController::class)->name('analytics.index');
+    Route::get('/dashboard/analytics', AnalyticsController::class)
+        ->name('analytics.index')
+        ->middleware('plan.feature:analytics');
     Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
 
     Route::prefix('dashboard/orders')->name('orders.')->group(function () {
@@ -83,7 +87,7 @@ Route::middleware('auth')->group(function () {
         Route::delete('/{product:id}', [ProductController::class, 'destroy'])->name('destroy');
     });
 
-    Route::prefix('dashboard/customers')->name('customers.')->group(function () {
+    Route::prefix('dashboard/customers')->name('customers.')->middleware('plan.feature:customers')->group(function () {
         Route::get('/', [CustomerController::class, 'index'])->name('index');
         Route::get('/{customer}', [CustomerController::class, 'show'])->name('show');
         Route::patch('/{customer}', [CustomerController::class, 'update'])->name('update');
@@ -98,4 +102,12 @@ Route::middleware('auth')->group(function () {
         Route::post('/blocked-dates', [SettingsController::class, 'storeBlockedDate'])->name('blocked.store');
         Route::delete('/blocked-dates/{blockedDate}', [SettingsController::class, 'destroyBlockedDate'])->name('blocked.destroy');
     });
+});
+
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/stores', [AdminStoreController::class, 'index'])->name('stores.index');
+    Route::post('/stores/{store}/plan', [AdminStoreController::class, 'updatePlan'])->name('stores.plan');
+    Route::post('/stores/{store}/override', [AdminStoreController::class, 'updateOverride'])->name('stores.override');
+    Route::post('/stores/{store}/suspend', [AdminStoreController::class, 'suspend'])->name('stores.suspend');
+    Route::post('/stores/{store}/activate', [AdminStoreController::class, 'activate'])->name('stores.activate');
 });

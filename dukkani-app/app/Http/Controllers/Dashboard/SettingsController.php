@@ -8,6 +8,7 @@ use App\Models\BlockedDate;
 use App\Models\Store;
 use App\Models\StoreHour;
 use App\Services\ImageService;
+use App\Services\PlanService;
 use App\Support\Money;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -19,7 +20,10 @@ use Throwable;
 
 class SettingsController extends Controller
 {
-    public function __construct(private readonly ImageService $images) {}
+    public function __construct(
+        private readonly ImageService $images,
+        private readonly PlanService $plans,
+    ) {}
 
     public function index(): View
     {
@@ -38,7 +42,28 @@ class SettingsController extends Controller
             'store' => $store,
             'hours' => $hours,
             'blockedDates' => $store->blockedDates()->get(),
+            'planUsage' => $this->plans->ordersUsage($store),
+            'planConfig' => $this->plans->plan($store),
+            'productLimit' => $this->plans->productLimit($store),
+            'productsUsed' => $this->plans->monthlyProducts($store),
+            'comingSoon' => (array) config('plans.plans.pro.coming_soon', []),
+            'upgradeLink' => $this->upgradeLink($store),
         ]);
+    }
+
+    protected function upgradeLink(Store $store): ?string
+    {
+        $number = (string) config('plans.support.whatsapp');
+
+        if ($number === '') {
+            return null;
+        }
+
+        return \App\Support\Phone::whatsappLink(
+            $number,
+            'مرحباً، بدي أرقّي متجر "'.$store->name.'" من الخطة المجانية.',
+            $store->dialCode(),
+        );
     }
 
     public function updateProfile(Request $request): RedirectResponse

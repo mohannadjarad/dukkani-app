@@ -83,4 +83,49 @@ class CreateStoreCommandTest extends TestCase
         $this->assertSame('Asia/Hebron', $store->timezone);
         $this->assertSame('970', $store->country_code);
     }
+
+    public function test_it_starts_a_seven_day_starter_trial(): void
+    {
+        $this->artisan('dukkani:store:create', [
+            '--store-name' => 'حلويات جنين',
+            '--slug' => 'jinin-sweets',
+            '--owner-name' => 'سارة أحمد',
+            '--email' => 'sara@example.com',
+            '--password' => 'secret-pass',
+            '--phone' => '0599123456',
+            '--city' => 'جنين',
+            '--country-code' => '970',
+            '--no-interaction' => true,
+        ])->assertSuccessful();
+
+        $store = Store::where('slug', 'jinin-sweets')->firstOrFail();
+
+        $this->assertSame('starter', $store->plan);
+        $this->assertTrue($store->is_trial);
+        $this->assertNotNull($store->plan_expires_at);
+        $this->assertTrue($store->plan_expires_at->between(now()->addDays(6), now()->addDays(8)));
+        $this->assertNull(app(\App\Services\PlanService::class)->orderLimit($store));
+    }
+
+    public function test_the_trial_can_be_skipped(): void
+    {
+        $this->artisan('dukkani:store:create', [
+            '--store-name' => 'حلويات جنين',
+            '--slug' => 'jinin-sweets',
+            '--owner-name' => 'سارة أحمد',
+            '--email' => 'sara@example.com',
+            '--password' => 'secret-pass',
+            '--phone' => '0599123456',
+            '--city' => 'جنين',
+            '--no-trial' => true,
+            '--no-interaction' => true,
+        ])->assertSuccessful();
+
+        $store = Store::where('slug', 'jinin-sweets')->firstOrFail();
+
+        $this->assertSame('free', $store->plan);
+        $this->assertFalse($store->is_trial);
+        $this->assertNull($store->plan_expires_at);
+        $this->assertSame(15, app(\App\Services\PlanService::class)->orderLimit($store));
+    }
 }

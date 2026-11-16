@@ -26,6 +26,13 @@
             ['label' => 'التحليلات', 'route' => 'analytics.index', 'active' => request()->routeIs('analytics.*'), 'badge' => null, 'icon' => '<path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/>'],
             ['label' => 'الإعدادات', 'route' => 'settings.index', 'active' => request()->routeIs('settings.*'), 'badge' => null, 'icon' => '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1 1.55V21a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-1-1.55 1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-1.55-1H3a2 2 0 1 1 0-4h.09a1.7 1.7 0 0 0 1.55-1 1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 9 4.6h.09a1.7 1.7 0 0 0 1-1.55V3a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 1 1.55 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.7 1.7 0 0 0 19.4 9v.09a1.7 1.7 0 0 0 1.55 1H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.51 1Z"/>'],
         ];
+
+        $planService = app(\App\Services\PlanService::class);
+        $planUsage = $store ? $planService->ordersUsage($store) : null;
+        $planSupportNumber = (string) config('plans.support.whatsapp');
+        $planUpgradeLink = ($planSupportNumber && $store)
+            ? \App\Support\Phone::whatsappLink($planSupportNumber, 'مرحباً، بدي أرقّي متجر "'.$store->name.'" من الخطة المجانية.', $store->dialCode())
+            : null;
     @endphp
 
     <div x-show="sidebar" x-transition.opacity class="fixed inset-0 z-40 cursor-pointer bg-ink/40 backdrop-blur-sm lg:hidden" @click="sidebar = false" x-cloak></div>
@@ -48,9 +55,16 @@
                     <span class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-brand-soft font-display text-lg font-bold text-brand-dark">{{ mb_substr($store?->name ?? $brandName, 0, 1) }}</span>
                     <div class="min-w-0 flex-1">
                         <p class="truncate text-[13px] font-bold text-ink">{{ $store?->name ?? $brandName }}</p>
-                        <p class="mt-0.5 flex items-center gap-1.5 text-[10px] text-muted">
+                        <p class="mt-0.5 flex flex-wrap items-center gap-1.5 text-[10px] text-muted">
                             <span class="size-1.5 rounded-full bg-emerald-500"></span>
                             متجر نشط
+                            @if ($planUsage)
+                                @if ($planUsage['at_limit'])
+                                    <span class="rounded-full bg-danger-soft px-1.5 py-0.5 text-[9px] font-bold text-danger">{{ $planUsage['used'] }}/{{ $planUsage['limit'] }}</span>
+                                @else
+                                    <span class="rounded-full bg-brand-soft px-1.5 py-0.5 text-[9px] font-bold text-brand-dark">{{ $planUsage['label'] }}</span>
+                                @endif
+                            @endif
                         </p>
                     </div>
                     <svg class="size-4 shrink-0 text-muted/60" fill="none" viewBox="0 0 24 24" stroke-width="1.7" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m8 9 4-4 4 4M8 15l4 4 4-4"/></svg>
@@ -103,6 +117,12 @@
                         <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Z"/></svg>
                     </button>
                     <div x-show="open" x-transition x-cloak class="absolute bottom-full end-0 z-50 mb-2 w-48 rounded-2xl border border-line bg-surface p-1.5 shadow-[var(--shadow-lift)]">
+                        @if (auth()->user()->is_admin)
+                            <a href="{{ route('admin.stores.index') }}" class="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-xs font-bold text-ink-soft transition hover:bg-canvas">
+                                <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke-width="1.7" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>
+                                لوحة الإدارة
+                            </a>
+                        @endif
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <button class="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-xs font-bold text-danger transition hover:bg-danger-soft">
@@ -188,6 +208,10 @@
             </header>
 
             <main class="mx-auto w-full max-w-[1440px] flex-1 px-5 py-7 sm:px-8 lg:py-9">
+                @if ($planUsage)
+                    @include('dashboard.partials.plan-banner', ['usage' => $planUsage, 'upgradeLink' => $planUpgradeLink])
+                @endif
+
                 @yield('content')
 
                 <footer class="mt-10 flex flex-col gap-2 border-t border-line/60 pt-5 text-[10px] text-muted/60 sm:flex-row sm:items-center sm:justify-between">

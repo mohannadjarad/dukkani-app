@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Storefront;
 
 use App\Models\Store;
 use App\Services\OrderService;
+use App\Services\PlanService;
 use App\Services\ScheduleService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -13,8 +14,12 @@ use Illuminate\View\View;
 
 class CheckoutController extends StorefrontController
 {
-    public function create(Store $store, ScheduleService $schedule): View|RedirectResponse
+    public function create(Store $store, ScheduleService $schedule, PlanService $plans): View|RedirectResponse
     {
+        if (! $plans->canAcceptOrder($store)) {
+            return redirect()->route('storefront.checkout.limit', $store);
+        }
+
         $items = $this->cart->items($store);
 
         if ($items->isEmpty()) {
@@ -55,8 +60,12 @@ class CheckoutController extends StorefrontController
         ]);
     }
 
-    public function store(Request $request, Store $store, ScheduleService $schedule, OrderService $orders): RedirectResponse
+    public function store(Request $request, Store $store, ScheduleService $schedule, OrderService $orders, PlanService $plans): RedirectResponse
     {
+        if (! $plans->canAcceptOrder($store)) {
+            return redirect()->route('storefront.checkout.limit', $store);
+        }
+
         if ($this->cart->isEmpty($store)) {
             return redirect()
                 ->route('storefront.menu', $store)
@@ -111,5 +120,29 @@ class CheckoutController extends StorefrontController
         return redirect()
             ->route('track.show', $order->public_token)
             ->with('status', 'وصلنا طلبك! احتفظي برابط المتابعة لمتابعة التحضير.');
+    }
+
+    /**
+     * Shown to the customer instead of the checkout form once the store has
+     * used up its monthly order allowance. Offers a direct WhatsApp to the store
+     * and a second WhatsApp to platform support.
+     */
+    public function limit(Store $store, PlanService $plans): View|RedirectResponse
+    {
+        if ($plans->canAcceptOrder($store)) {
+            return redirect()->route('storefront.checkout', $store);
+        }
+
+        $items = $this->cart->items($store);
+        $lines = $items->map(fn ($item) => '• '.$item['product']->name.' ×'.$item['quantity'])->implode("\n");
+
+        return $this->render($store, 'storefront.checkout-limit', [
+            'items' => $items,
+            'storeMessage' => $lines
+                ? "مرحباً، المتجر وصل حده الشهري وأنا بدي أطلب:\n".$lines
+                : 'مرحباً، بدي أستفسر عن الطلب.',
+            'supportWhatsapp' => (string) config('plans.support.whatsapp'),
+            'supportName' => (string) config('plans.support.name'),
+        ]);
     }
 }

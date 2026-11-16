@@ -22,6 +22,7 @@ class Store extends Model
         'delivery_enabled', 'lead_time_hours', 'bank_name', 'bank_account_name',
         'bank_iban', 'timezone',
         'status', 'onboarding_completed_at',
+        'plan', 'plan_expires_at', 'is_trial', 'order_limit_override',
     ];
 
     protected function casts(): array
@@ -32,6 +33,9 @@ class Store extends Model
             'delivery_enabled' => 'boolean',
             'lead_time_hours' => 'integer',
             'onboarding_completed_at' => 'datetime',
+            'plan_expires_at' => 'datetime',
+            'is_trial' => 'boolean',
+            'order_limit_override' => 'integer',
         ];
     }
 

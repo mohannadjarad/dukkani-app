@@ -20,6 +20,12 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->web(append: [
             \App\Http\Middleware\SetStoreContext::class,
         ]);
+
+        $middleware->alias([
+            'admin' => \App\Http\Middleware\EnsureAdmin::class,
+            'plan.feature' => \App\Http\Middleware\EnsurePlanFeature::class,
+            'store.active' => \App\Http\Middleware\EnsureStoreActive::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

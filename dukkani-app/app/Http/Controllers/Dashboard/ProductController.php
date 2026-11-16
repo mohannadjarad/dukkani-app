@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\Store;
 use App\Services\ImageService;
+use App\Services\PlanService;
 use App\Support\Money;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -21,7 +22,10 @@ use Throwable;
 
 class ProductController extends Controller
 {
-    public function __construct(private readonly ImageService $images) {}
+    public function __construct(
+        private readonly ImageService $images,
+        private readonly PlanService $plans,
+    ) {}
 
     public function index(Request $request): View
     {
@@ -77,12 +81,20 @@ class ProductController extends Controller
             'categories' => $categories,
             'filters' => $filters,
             'stats' => $stats,
+            'productLimit' => $this->plans->productLimit($store),
+            'atProductLimit' => $this->plans->isAtProductLimit($store),
         ]);
     }
 
-    public function create(): View
+    public function create(): View|RedirectResponse
     {
         $store = $this->currentStore();
+
+        if (! $this->plans->canAddProduct($store)) {
+            return redirect()
+                ->route('products.index')
+                ->with('status', $this->productLimitMessage($store));
+        }
 
         return view('dashboard.products.form', [
             'store' => $store,
@@ -95,6 +107,13 @@ class ProductController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $store = $this->currentStore();
+
+        if (! $this->plans->canAddProduct($store)) {
+            throw ValidationException::withMessages([
+                'name' => $this->productLimitMessage($store),
+            ]);
+        }
+
         $data = $this->validated($request, $store);
         $image = $this->resolveImage($request);
 
@@ -414,6 +433,13 @@ class ProductController extends Controller
     protected function currentStore(): Store
     {
         return auth()->user()->store()->firstOrFail();
+    }
+
+    protected function productLimitMessage(Store $store): string
+    {
+        $limit = $this->plans->productLimit($store) ?? 12;
+
+        return 'وصلتِ حد الخطة المجانية ('.$limit.' منتجاً). رقّي الخطة لإضافة منتجات أكثر.';
     }
 
     protected function authorizeProduct(Product $product): Store

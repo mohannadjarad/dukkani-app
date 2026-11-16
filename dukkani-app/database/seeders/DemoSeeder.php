@@ -51,6 +51,7 @@ class DemoSeeder extends Seeder
                 'bank_iban' => 'JO94CBJO0010000000000131000302',
                 'timezone' => 'Asia/Amman',
                 'status' => 'active',
+                'plan' => 'pro',
                 'onboarding_completed_at' => now(),
             ]
         );
