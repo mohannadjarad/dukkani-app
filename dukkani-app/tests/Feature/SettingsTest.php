@@ -8,6 +8,7 @@ use App\Models\StoreHour;
 use App\Models\User;
 use Database\Seeders\DemoSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
 class SettingsTest extends TestCase
@@ -41,7 +42,69 @@ class SettingsTest extends TestCase
             ->assertSee('معلومات المتجر')
             ->assertSee('التوصيل والدفع')
             ->assertSee('ساعات العمل')
+            ->assertSee('الحساب والأمان')
             ->assertSee('التواريخ المحظورة');
+    }
+
+    public function test_the_password_form_appears_outside_demo_mode(): void
+    {
+        config(['app.demo_mode' => false]);
+
+        $this->actingAs($this->owner)
+            ->get(route('settings.index', ['tab' => 'account']))
+            ->assertOk()
+            ->assertSee('كلمة المرور الحالية')
+            ->assertSee('تحديث كلمة المرور');
+    }
+
+    public function test_the_password_form_is_hidden_in_demo_mode(): void
+    {
+        $this->actingAs($this->owner)
+            ->get(route('settings.index', ['tab' => 'account']))
+            ->assertOk()
+            ->assertSee('الحساب والأمان')
+            ->assertDontSee('كلمة المرور الحالية');
+    }
+
+    public function test_the_password_can_be_changed_from_settings(): void
+    {
+        $this->actingAs($this->owner)
+            ->patch(route('settings.password'), [
+                'current_password' => 'demo1234',
+                'password' => 'new-secret-pass',
+                'password_confirmation' => 'new-secret-pass',
+            ])
+            ->assertRedirect(route('settings.index', ['tab' => 'account']));
+
+        $this->assertTrue(Hash::check('new-secret-pass', $this->owner->refresh()->password));
+    }
+
+    public function test_the_password_change_requires_the_current_password(): void
+    {
+        $this->actingAs($this->owner)
+            ->from(route('settings.index', ['tab' => 'account']))
+            ->patch(route('settings.password'), [
+                'current_password' => 'wrong-password',
+                'password' => 'new-secret-pass',
+                'password_confirmation' => 'new-secret-pass',
+            ])
+            ->assertSessionHasErrors('current_password');
+
+        $this->assertTrue(Hash::check('demo1234', $this->owner->refresh()->password));
+    }
+
+    public function test_the_password_change_requires_a_matching_confirmation(): void
+    {
+        $this->actingAs($this->owner)
+            ->from(route('settings.index', ['tab' => 'account']))
+            ->patch(route('settings.password'), [
+                'current_password' => 'demo1234',
+                'password' => 'new-secret-pass',
+                'password_confirmation' => 'something-else',
+            ])
+            ->assertSessionHasErrors('password');
+
+        $this->assertTrue(Hash::check('demo1234', $this->owner->refresh()->password));
     }
 
     public function test_the_store_profile_can_be_updated(): void

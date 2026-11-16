@@ -94,6 +94,7 @@ Route::middleware('auth')->group(function () {
         Route::patch('/profile', [SettingsController::class, 'updateProfile'])->name('profile');
         Route::patch('/store', [SettingsController::class, 'updateStore'])->name('store');
         Route::patch('/hours', [SettingsController::class, 'updateHours'])->name('hours');
+        Route::patch('/password', [SettingsController::class, 'updatePassword'])->name('password');
         Route::post('/blocked-dates', [SettingsController::class, 'storeBlockedDate'])->name('blocked.store');
         Route::delete('/blocked-dates/{blockedDate}', [SettingsController::class, 'destroyBlockedDate'])->name('blocked.destroy');
     });

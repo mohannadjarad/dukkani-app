@@ -221,6 +221,26 @@ class SettingsController extends Controller
             ->with('status', 'تم حفظ ساعات العمل.');
     }
 
+    public function updatePassword(Request $request): RedirectResponse
+    {
+        $data = $request->validate([
+            'current_password' => ['required', 'current_password'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+        ], [
+            'current_password.required' => 'أدخلي كلمة المرور الحالية.',
+            'current_password.current_password' => 'كلمة المرور الحالية غير صحيحة.',
+            'password.required' => 'أدخلي كلمة المرور الجديدة.',
+            'password.min' => 'كلمة المرور يجب ألا تقل عن 8 أحرف.',
+            'password.confirmed' => 'كلمتا المرور غير متطابقتين.',
+        ]);
+
+        $request->user()->update(['password' => $data['password']]);
+
+        return redirect()
+            ->route('settings.index', ['tab' => 'account'])
+            ->with('status', 'تم تحديث كلمة المرور.');
+    }
+
     public function storeBlockedDate(Request $request): RedirectResponse
     {
         $store = $this->store();
