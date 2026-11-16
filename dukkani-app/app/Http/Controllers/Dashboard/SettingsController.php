@@ -46,7 +46,7 @@ class SettingsController extends Controller
             'planConfig' => $this->plans->plan($store),
             'productLimit' => $this->plans->productLimit($store),
             'productsUsed' => $this->plans->monthlyProducts($store),
-            'comingSoon' => (array) config('plans.plans.pro.coming_soon', []),
+            'comingSoon' => $this->plans->comingSoon(),
             'upgradeLink' => $this->upgradeLink($store),
         ]);
     }

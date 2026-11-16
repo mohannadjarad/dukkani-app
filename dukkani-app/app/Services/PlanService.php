@@ -18,12 +18,6 @@ use App\Models\Store;
  */
 class PlanService
 {
-    public const FEATURE_CUSTOMERS = 'customers';
-
-    public const FEATURE_ANALYTICS = 'analytics';
-
-    public const FEATURE_VERIFIED_BADGE = 'verified_badge';
-
     /** @return array<string, array<string, mixed>> */
     public function plans(): array
     {
@@ -214,10 +208,15 @@ class PlanService
         return (bool) ($this->plan($store)['features'][$feature] ?? false);
     }
 
-    /** @return array<int, string> */
-    public function comingSoon(Store $store): array
+    /**
+     * Pro features that are still being built, shown with a "قريباً" badge.
+     * Platform-level: every store sees the full roadmap list.
+     *
+     * @return array<int, string>
+     */
+    public function comingSoon(): array
     {
-        return (array) ($this->plan($store)['coming_soon'] ?? []);
+        return (array) config('plans.plans.pro.coming_soon', []);
     }
 
     /**
