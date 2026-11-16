@@ -175,9 +175,14 @@ Render Free suspends after about 15 minutes of inactivity. Use
 [cron-job.org](https://cron-job.org):
 
 1. Create a job for `https://dukkani-prod.onrender.com/up`.
-2. Schedule every **10 minutes**, active **06:00–20:00 UTC**.
-3. Accept any 2xx response; the health route does not touch Postgres.
-4. Do not create a second job for `dukkani-demo`.
+2. Schedule every **10 minutes** (`*/10 6-19 * * *`) in the **UTC** timezone,
+   active **06:00–19:50 UTC**.
+3. Set the request timeout to **30 seconds** (cron-job.org's maximum). The first
+   ping after an overnight sleep can time out while Render cold-starts, but the
+   request still wakes the service; the next ping succeeds. Set failure
+   notifications to fire only after 2–3 consecutive failures.
+4. Accept any 2xx response; the health route does not touch Postgres.
+5. Do not create a second job for `dukkani-demo`.
 
 A 14-hour daily window costs roughly 420 instance-hours per month, leaving room
 for the demo inside the shared 750-hour workspace budget.
@@ -238,7 +243,9 @@ the database stores their URLs and public IDs.
 - [x] `pg_dump` + `pg_restore` into a fresh Neon database succeeded. (178 dump
       objects restored into `dukkani_restore_test`; table and row counts matched
       production, then the database was dropped.)
-- [ ] `/up` returns 200 and the cron-job.org pinger reports success.
+- [x] `/up` returns 200 and the cron-job.org pinger reports success. (Job
+      `Dukkani prod keep-warm` is live; Render's access log shows
+      `GET /up` 200 from the `cron-job.org` user agent every 10 minutes.)
 - [x] No reliance on local SQLite or container-local uploads in production.
 
 ## 9. Demo service
