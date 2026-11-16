@@ -13,7 +13,7 @@ You are not testing "do people like the idea?" You are testing:
 1. **Frequency** — does the pain happen weekly?
 2. **Cost** — does it cost money, orders, or reputation?
 3. **Workaround** — are they already using a notebook, Excel, or chat search?
-4. **Willingness to pay** — will they pay 29 JOD/month after a free trial?
+4. **Willingness to pay** — will they pay the Starter price after a free trial (29 JOD, or 2,200 EGP in Egypt)?
 5. **Reachability** — can you find 20 more sellers through the same channel?
 
 If the answer to 3, 4, and 5 is yes, build. If not, change the niche or the offer.
@@ -24,7 +24,7 @@ If the answer to 3, 4, and 5 is yes, build. If not, change the niche or the offe
 
 ### Where to find 15 home bakers
 
-- Facebook groups for home businesses, bakers, and women entrepreneurs in Jordan.
+- Facebook groups for home businesses, bakers, and women entrepreneurs in Jordan — and in Palestine and Egypt (expansion markets).
 - Instagram hashtags: `#حلويات_منزلية #كيك_عمان #مشاريع_منزلية #صانعة_منزل`
 - WhatsApp communities for home businesses.
 - Baking workshops and supply shops.
@@ -106,13 +106,13 @@ Start with permission:
 ### Willingness to pay
 
 17. If a tool captured every order, reminded you about delivery dates, and gave you a storefront link, what would that be worth per month?
-18. Would you pay 29 JOD/month? (Ask directly; don't accept "maybe.")
+18. Would you pay the Starter price (29 JOD, or 2,200 EGP in Egypt) per month? (Ask directly; don't accept "maybe.")
 19. What would make you say "this is too expensive"?
 20. Who else do you know who has this problem?
 
 ### Close
 
-> "I'm running a free 3-day trial for 5 bakers. You'd share a link, I'd set up your storefront, and we'd manage your orders together. After the trial, if it saves you time, it's 29 JOD/month. Interested?"
+> "I'm running a free 3-day trial for 5 bakers. You'd share a link, I'd set up your storefront, and we'd manage your orders together. After the trial, if it saves you time, it's 29 JOD/month (2,200 EGP in Egypt). Interested?"
 
 **Record:** name, phone, Instagram, orders/week, current tools, biggest pain, willingness to pay, referral.
 
@@ -128,7 +128,7 @@ Rate each interview 1–5:
 | Cost of pain | Annoyance | Some lost time | Lost orders/money |
 | Workaround | None | Notebook/Excel | Chaotic chat search |
 | Urgency | "Someday" | "Would be nice" | "I need this now" |
-| Willingness to pay | 0 | 29 JOD | 39+ JOD |
+| Willingness to pay | 0 | Starter price (29 JOD / 2,200 EGP) | Above Starter price |
 | Reachability | Hard | Some groups | Active community |
 
 **Green light:** average ≥ 4 on pain, cost, and willingness to pay across 10+ interviews.
@@ -184,13 +184,13 @@ Rate each interview 1–5:
 | Time saved | Seller's estimate before/after |
 | Payments collected | Amount and percentage |
 | Seller satisfaction | 1–5 after the trial |
-| Willingness to pay | Ask for 29 JOD/month |
+| Willingness to pay | Ask for the Starter price (29 JOD / 2,200 EGP) |
 
 ### After the trial
 
 Ask:
 
-> "This is the trial. If you want to keep using it, it's 29 JOD/month. Should I set up your subscription?"
+> "This is the trial. If you want to keep using it, it's 29 JOD/month (2,200 EGP in Egypt). Should I set up your subscription?"
 
 **Payment is the validation.** A "yes" without payment is a no.
 
@@ -200,7 +200,7 @@ Ask:
 
 ### Hero
 
-**Badge:** صُنع لمشاريع المنزل في الأردن
+**Badge:** صُنع لمشاريع المنزل في الأردن وفلسطين ومصر
 
 **Headline:**  
 حوّلي رسائل الواتساب إلى **طلبات منظّمة**
@@ -238,9 +238,9 @@ Ask:
 
 ### Pricing
 
-- **مجاني:** 0 د.أ — حتى 15 طلبًا شهريًا، متجر ورابط، لوحة طلبات أساسية.
-- **ستارتر:** 29 د.أ/شهر — طلبات غير محدودة، سجل زبائن، قوالب واتساب، تقارير.
-- **برو:** 59 د.أ/شهر — قريبًا (كل مزايا ستارتر، دومين خاص، حسابات فريق، دعم أولوية).
+- **مجاني:** 0 — حتى 15 طلبًا شهريًا، متجر ورابط، لوحة طلبات أساسية.
+- **ستارتر:** 29 د.أ · 131 ₪ · 2,200 ج.م شهريًا — طلبات غير محدودة، سجل زبائن، قوالب واتساب، تقارير.
+- **برو:** 59 د.أ · 265 ₪ · 4,470 ج.م شهريًا — قريبًا (كل مزايا ستارتر، دومين خاص، حسابات فريق، دعم أولوية).
 
 **Note:** الخطة المجانية مجانية للأبد، وأول شهر على ستارتر فيه 7 أيام إضافية. بدون عمولة على الطلبات.
 
@@ -309,9 +309,9 @@ Dukkani gives home businesses a simple storefront and order board. Capture order
 
 ### Pricing
 
-- **Free:** 0 JOD — up to 15 orders/month, storefront link, basic order board.
-- **Starter:** 29 JOD/month — unlimited orders, customer book, WhatsApp templates, reports.
-- **Pro:** 59 JOD/month — coming soon (everything in Starter, custom domain, team accounts, priority support).
+- **Free:** 0 — up to 15 orders/month, storefront link, basic order board.
+- **Starter:** 29 JOD · 131 ILS · 2,200 EGP per month — unlimited orders, customer book, WhatsApp templates, reports.
+- **Pro:** 59 JOD · 265 ILS · 4,470 EGP per month — coming soon (everything in Starter, custom domain, team accounts, priority support).
 
 **Note:** The free plan stays free forever, and the first Starter month includes 7 extra free days. No commission on orders.
 
@@ -342,7 +342,7 @@ Fields: Name, WhatsApp number, business type, Instagram link (optional).
 
 Create a simple Google Sheet:
 
-| Date | Name | Instagram | Phone | Orders/week | Current tools | Biggest pain | WTP (JOD) | Pilot? | Paid? | Notes |
+| Date | Name | Instagram | Phone | Orders/week | Current tools | Biggest pain | WTP (local) | Pilot? | Paid? | Notes |
 |---|---|---|---|---|---|---|---|---|---|---|
 
 Update after every conversation. Review weekly.

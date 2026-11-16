@@ -10,7 +10,8 @@ return [
     | Editable without touching code. A limit of null means "unlimited".
     | Prices are stored per currency so the upgrade screens can show a local
     | figure without a live exchange rate. `features` are boolean switches used
-    | by the gates and the "coming soon" badges.
+    | by the gates and the "coming soon" badges. The EGP figure is the JOD
+    | price converted (1 JOD ≈ 75.8 EGP, Nov 2026).
     |
     */
 
@@ -53,7 +54,7 @@ return [
         'free' => [
             'label' => 'المجانية',
             'label_latin' => 'Free',
-            'price' => ['JOD' => 0, 'ILS' => 0],
+            'price' => ['JOD' => 0, 'ILS' => 0, 'EGP' => 0],
             'order_limit' => 15,
             'product_limit' => 12,
             'user_limit' => 1,
@@ -69,7 +70,7 @@ return [
         'starter' => [
             'label' => 'Starter',
             'label_latin' => 'Starter',
-            'price' => ['JOD' => 29, 'ILS' => 131],
+            'price' => ['JOD' => 29, 'ILS' => 131, 'EGP' => 2200],
             'order_limit' => null,
             'product_limit' => null,
             'user_limit' => 1,
@@ -87,7 +88,7 @@ return [
         'pro' => [
             'label' => 'Pro',
             'label_latin' => 'Pro',
-            'price' => ['JOD' => 59, 'ILS' => 265],
+            'price' => ['JOD' => 59, 'ILS' => 265, 'EGP' => 4470],
             'order_limit' => null,
             'product_limit' => null,
             'user_limit' => 3,

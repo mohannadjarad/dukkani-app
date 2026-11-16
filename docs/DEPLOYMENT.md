@@ -160,14 +160,15 @@ php artisan dukkani:store:create
 The command prompts for the store name, public slug, owner name, email,
 password, phone, WhatsApp, city, and country, then creates the user, the store,
 and seven opening hours in one transaction. It refuses duplicate emails or
-slugs. A brand-new store also gets a free 7-day Starter trial.
+slugs. A brand-new store also gets a free 3-day Starter trial.
 
 For automation, pass `--store-name`, `--slug`, `--owner-name`, `--email`,
 `--password`, `--phone`, `--whatsapp`, `--city`, and `--country-code`, then add
 `--no-interaction`. `--country-code` defaults to `962`; pass `970` for
-Palestine. `--currency` and `--timezone` default to the country's values (`ILS`
-and `Asia/Hebron` for `970`; `JOD` and `Asia/Amman` for `962`). Add `--no-trial`
-to skip the free trial and start on the Free limits.
+Palestine or `20` for Egypt. `--currency` and `--timezone` default to the
+country's values (`ILS` and `Asia/Hebron` for `970`; `JOD` and `Asia/Amman` for
+`962`; `EGP` and `Africa/Cairo` for `20`). Add `--no-trial` to skip the free
+trial and start on the Free limits.
 
 ### Granting platform-admin access
 
@@ -290,7 +291,7 @@ Plan limits live in `config/plans.php` and can be edited without code changes.
 The three plans are Free (15 orders, 12 products, 1 user), Starter (unlimited),
 and Pro (unlimited).
 
-- A new store starts on a free 7-day Starter trial. When the trial ends the
+- A new store starts on a free 3-day Starter trial. When the trial ends the
   store drops to the Free limits automatically.
 - `PlanService` checks expiry **in real time** on every relevant request, so the
   limits hold even without a scheduler. The `plans:expire` command is only a

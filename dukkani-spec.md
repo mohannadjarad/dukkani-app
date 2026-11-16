@@ -13,11 +13,11 @@
 
 | Item | Decision |
 |---|---|
-| **Who** | Home bakers and dessert sellers in Amman who take custom orders via Instagram/WhatsApp |
+| **Who** | Home bakers and dessert sellers who take custom orders via Instagram/WhatsApp — launching in Amman, with Palestine and Egypt as expansion markets |
 | **Problem** | Orders get buried in DMs, deposits are forgotten, delivery dates clash, and customer history is lost |
 | **Solution** | An Arabic/RTL storefront link + order board + WhatsApp message templates + customer book |
 | **Wedge** | Start with home bakers; expand to caterers, crafts, cosmetics, and other home businesses |
-| **Business model** | Free plan up to 15 orders/month; Starter 29 JOD/month; Pro 59 JOD/month (coming soon, not for sale at launch) |
+| **Business model** | Free plan up to 15 orders/month; Starter 29 JOD · 131 ILS · 2,200 EGP per month; Pro 59 JOD · 265 ILS · 4,470 EGP per month (coming soon, not for sale at launch) |
 | **MVP build time** | 4–6 weeks after validation |
 | **First milestone** | 3 paying pilot sellers — not a finished app |
 | **Stack** | Laravel 12 + MySQL + Blade/Tailwind/Alpine.js + WhatsApp deep links first, Cloud API later |
@@ -30,7 +30,7 @@
 ### 2.1 Persona: "Amal the home baker"
 
 - **Age:** 28–40
-- **Location:** Amman (later Irbid, Zarqa, Aqaba)
+- **Location:** Amman (later Irbid, Zarqa, Aqaba); expansion markets: Palestine and Egypt
 - **Business:** Home-based cakes, desserts, and occasion orders
 - **Volume:** 20–100 orders/month, with spikes around weekends, Ramadan, Eid, weddings, and graduations
 - **Average order:** 15–80 JOD
@@ -736,16 +736,16 @@ tests/
 
 | Plan | Price | Limits | Features |
 |---|---|---|---|
-| **Free** | 0 JOD | 15 orders/month, 12 products | Storefront, 1 seller, basic order board |
-| **Starter** | 29 JOD/month | Unlimited orders | Customer book, analytics, WhatsApp templates (`wa.me`) |
-| **Pro** | 59 JOD/month | Unlimited + 3 staff | Coming soon: custom domain, staff accounts, delivery labels, priority support |
+| **Free** | 0 (all currencies) | 15 orders/month, 12 products | Storefront, 1 seller, basic order board |
+| **Starter** | 29 JOD · 131 ILS · 2,200 EGP per month | Unlimited orders | Customer book, analytics, WhatsApp templates (`wa.me`) |
+| **Pro** | 59 JOD · 265 ILS · 4,470 EGP per month | Unlimited + 3 staff | Coming soon: custom domain, staff accounts, delivery labels, priority support |
 
 - Every new store starts on a 3-day full-feature Starter trial; no credit card. After that it falls back to the Free limits.
 - The first paid Starter month includes 7 extra free days (granted once per store).
 - Annual: 2 months free.
-- Payment: CliQ / bank transfer initially; card via a local provider later.
+- Payment: **Jordan** CliQ / bank transfer; **Palestine and Egypt** bank transfer (CliQ is Jordan-only — `config/payments.php`); card via a local provider later.
 - Pro is on the roadmap only and is not for sale at launch.
-- Multi-country display (14/11/2026): 1 JOD ≈ 4.5 ILS. Local equivalents on the landing page are approximate; billing stays in JOD.
+- Multi-currency (16/11/2026): prices are stored per currency in `config/plans.php` (`JOD`, `ILS`, `EGP`), and each store's currency comes from its dial code in `config/app.php` (`962` → JOD, `970` → ILS, `20` → EGP). The upgrade screen shows the store's local figure with no live exchange rate. The ILS and EGP figures are straight conversions (1 JOD ≈ 4.5 ILS ≈ 75.8 EGP, Nov 2026), rounded.
 
 **Unit economics check:** at 29 JOD/month, 100 paying stores = 2,900 JOD/month (~$4,100). That is realistic only if support is low. Keep the product simple and the onboarding self-serve.
 
@@ -755,7 +755,7 @@ tests/
 
 ### 12.1 Niche launch
 
-- **City:** Amman first.
+- **City:** Amman first; Palestine and Egypt follow as expansion markets.
 - **Segment:** Home bakers and dessert sellers.
 - **Goal:** 20 early sellers in 60 days; 5 paying in the first 30.
 

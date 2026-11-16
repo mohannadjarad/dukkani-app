@@ -164,7 +164,7 @@ A store has a plan that caps what it can do each month. `PlanService` is the sin
 
 - **Free:** 15 orders/month, 12 products, 1 user, 0% commission. The 16th order is blocked with a friendly page and two WhatsApp buttons (the store and platform support).
 - **Starter / Pro:** unlimited orders and products; Pro adds the features that are still being built, each shown with a "قريباً" badge.
-- **Trials:** a 7-day Starter trial; paid plans keep a 7-day grace period after expiry. `order_limit_override` adds orders on top of a finite base.
+- **Trials:** a 3-day Starter trial; paid plans keep a 7-day grace period after expiry. `order_limit_override` adds orders on top of a finite base.
 
 Platform admins (`users.is_admin`) reach `/admin/stores` to list every store with its owner, plan, monthly usage, and last login, and to change the plan, grant extra orders, suspend, or reopen a store. Grant admin with:
 
