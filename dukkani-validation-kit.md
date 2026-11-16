@@ -33,13 +33,13 @@ If the answer to 3, 4, and 5 is yes, build. If not, change the niche or the offe
 ### Outreach message (Arabic)
 
 > مرحبًا [الاسم]،  
-> أنا مهند، أطوّر أداة بسيطة تساعد مشاريع الحلويات المنزلية على تنظيم الطلبات والعربون بدل ما تضيع في رسائل الواتساب.  
+> أنا مهند، أطوّر أداة بسيطة تساعد مشاريع الحلويات المنزلية على تنظيم الطلبات بدل ما تضيع في رسائل الواتساب.  
 > ما بحاجة منك إلا 15 دقيقة من وقتك، وبالمقابل بجهّز لك متجر إلكتروني بسيط مجانًا إذا حبيتِ.  
 > ممكن نحكي اليوم أو بكرة؟
 
 ### Outreach message (English)
 
-> Hi [Name], I'm building a simple tool that helps home bakers organise orders and deposits instead of losing them in WhatsApp chats. Could I ask you 15 minutes of questions? In return, I'll set up a free storefront for you if you're interested.
+> Hi [Name], I'm building a simple tool that helps home bakers organise their orders instead of losing them in WhatsApp chats. Could I ask you 15 minutes of questions? In return, I'll set up a free storefront for you if you're interested.
 
 ### Follow-up
 
@@ -64,7 +64,7 @@ Ask before booking the interview:
 4. Do you take deposits? (Always / sometimes / never)
 5. Who manages the orders? (Me / family member / no one)
 
-**Qualify:** at least 6 orders/week and takes deposits.  
+**Qualify:** at least 6 orders/week.  
 **Disqualify:** hobby only, no paying customers.
 
 ---
@@ -105,7 +105,7 @@ Start with permission:
 
 ### Willingness to pay
 
-17. If a tool captured every order, reminded you about deposits, and gave you a storefront link, what would that be worth per month?
+17. If a tool captured every order, reminded you about delivery dates, and gave you a storefront link, what would that be worth per month?
 18. Would you pay 29 JOD/month? 39? 49? (Ask directly; don't accept "maybe.")
 19. What would make you say "this is too expensive"?
 20. Who else do you know who has this problem?
@@ -149,7 +149,7 @@ Rate each interview 1–5:
    - Date and time
    - Address (if delivery)
    - Notes / inspiration photo upload
-   - Deposit amount
+   - Payment method (cash / bank transfer)
 2. Create a Google Sheet with columns:
    - Order ID
    - Date received
@@ -158,13 +158,13 @@ Rate each interview 1–5:
    - Product
    - Quantity
    - Total
-   - Deposit status
+   - Payment status
    - Delivery date/time
    - Address
    - Status
    - Notes
 3. Create a WhatsApp message template for each status:
-   - **New order:** "أهلًا [الاسم]، وصلنا طلبك: [المنتج] ليوم [التاريخ]. العربون [المبلغ] د.أ. من فضلك حوّلي العربون لتأكيد الطلب."
+   - **New order:** "أهلًا [الاسم]، وصلنا طلبك: [المنتج] ليوم [التاريخ]. المجموع [المبلغ] د.أ. لتأكيد الطلب، حوّلي المبلغ كاملاً بالتحويل البنكي وأرسلي صورة التحويل، أو اختاري الدفع عند الاستلام."
    - **Confirmed:** "تم تأكيد طلبك [رقم الطلب] ليوم [التاريخ]. شكرًا!"
    - **Ready:** "طلبك جاهز! [تفاصيل الاستلام/التوصيل]."
    - **Thank you:** "شكرًا لطلبك! إذا حبيتِ، شاركينا صورة الكيكة ووسمينا."
@@ -172,7 +172,7 @@ Rate each interview 1–5:
 ### Daily routine
 
 - Morning: review new orders, confirm availability, reply to customers.
-- Afternoon: update the sheet, check deposits, send reminders.
+- Afternoon: update the sheet, check payment status, send reminders.
 - Evening: send the seller a summary of tomorrow's orders.
 
 ### What to measure
@@ -182,7 +182,7 @@ Rate each interview 1–5:
 | Orders captured | Count per week |
 | Orders lost/missed | Ask the seller at the end of each day |
 | Time saved | Seller's estimate before/after |
-| Deposits collected | Amount and percentage |
+| Payments collected | Amount and percentage |
 | Seller satisfaction | 1–5 after 2 weeks |
 | Willingness to pay | Ask for 29 JOD/month (founding price) |
 
@@ -206,7 +206,7 @@ Ask:
 حوّلي رسائل الواتساب إلى **طلبات منظّمة**
 
 **Subhead:**  
-دكاني متجر بسيط ولوحة طلبات لمشاريع المنزل. سجّلي الطلبات، تابعي العربون، وذكّري زبائنك — كل ذلك من رابط واحد.
+دكاني متجر بسيط ولوحة طلبات لمشاريع المنزل. سجّلي الطلبات، أكّديها، وذكّري زبائنك — كل ذلك من رابط واحد. العربون اختياري حسب طلب كل متجر.
 
 **CTA:** ابدئي مجانًا  
 **Secondary:** شاهدي كيف يعمل
@@ -218,20 +218,20 @@ Ask:
 **Headline:** كل طلب يبدأ برسالة… وينتهي بفوضى
 
 - **طلبات مدفونة:** رسائل إنستغرام وواتساب تختلط مع الطلبات القديمة. الطلب الجديد يضيع، والزبونة تنتظر.
-- **عربون منسي:** من دفع؟ ومن لم يدفع؟ دفتر الملاحظات لا يخبرك.
+- **تأكيدات ضائعة:** من أكّدت طلبها؟ ومن لسا تنتظر؟ دفتر الملاحظات لا يخبرك.
 - **مواعيد متضاربة:** عيد ميلاد يوم السبت، وتوصيل يوم الجمعة، وطلب ثالث نسيته. السمعة تدفع الثمن.
 
 ### How it works
 
 1. **أنشئي متجرك:** أضيفي منتجاتك، أسعارك، وصورك في دقائق.
 2. **شاركي الرابط:** حطّيه في البايو أو أرسليه للزبائن على واتساب.
-3. **استلمي الطلبات:** كل طلب يصل إلى لوحة واحدة، مع تفاصيله وعربونه.
+3. **استلمي الطلبات:** كل طلب يصل إلى لوحة واحدة، مع تفاصيله وموعده.
 
 ### Features
 
 - **رابط متجر احترافي:** صفحة أنيقة تعرض منتجاتك وأسعارك.
 - **لوحة طلبات:** من «جديد» إلى «تم التسليم» — كل شيء واضح.
-- **تذكير بالعربون:** لا تتذكري من دفع؟ دكاني يتذكر.
+- **تذكير بالمواعيد:** لا تنسي موعد تسليم؟ دكاني يذكّرك. (العربون اختياري حسب طلب كل متجر.)
 - **رسائل واتساب جاهزة (ستارتر وما فوق):** قوالب جاهزة بالعربي، بضغطة واحدة.
 - **سجل الزبائن:** تاريخ كل زبونة، طلباتها، وملاحظاتها.
 - **تقارير بسيطة:** الأكثر مبيعًا، الإيرادات، والزبائن المتكررون.
@@ -277,7 +277,7 @@ Fields: الاسم، رقم الواتساب، نوع المشروع، رابط 
 Turn WhatsApp messages into **organised orders**
 
 **Subhead:**  
-Dukkani gives home businesses a simple storefront and order board. Capture orders, track deposits, and remind customers — all from one link.
+Dukkani gives home businesses a simple storefront and order board. Capture orders, confirm them, and remind customers — all from one link. Deposits are optional per store on request.
 
 **CTA:** Start free  
 **Secondary:** See how it works
@@ -289,20 +289,20 @@ Dukkani gives home businesses a simple storefront and order board. Capture order
 **Headline:** Every order starts with a message… and ends in chaos
 
 - **Buried orders:** Instagram and WhatsApp messages mix with old conversations. New orders get lost, and customers wait.
-- **Forgotten deposits:** Who paid? Who didn't? A notebook won't tell you.
+- **Missing confirmations:** Who confirmed? Who is still waiting? A notebook won't tell you.
 - **Clashing dates:** A birthday on Saturday, a delivery on Friday, and a third order you forgot. Your reputation pays the price.
 
 ### How it works
 
 1. **Create your store:** Add your products, prices, and photos in minutes.
 2. **Share the link:** Put it in your bio or send it on WhatsApp.
-3. **Receive orders:** Every order lands on one board with its details and deposit.
+3. **Receive orders:** Every order lands on one board with its details and due date.
 
 ### Features
 
 - **Professional storefront link:** A clean page with your products and prices.
 - **Order board:** From "new" to "delivered" — everything is clear.
-- **Deposit tracking:** Can't remember who paid? Dukkani does.
+- **Delivery reminders:** Never miss a due date. (Deposits are optional per store on request.)
 - **Ready-made WhatsApp messages (Starter and up):** Arabic templates, one tap away.
 - **Customer book:** Every customer's history, orders, and notes.
 - **Simple reports:** Best sellers, revenue, and repeat customers.
@@ -401,5 +401,5 @@ If build, the first 3 features are:
 - Don't promise features you haven't built.
 - Don't fake testimonials or user counts.
 - Protect phone numbers and addresses; don't share screenshots without permission.
-- If someone says "I'd pay," ask them to pay a deposit or commit to the pilot. Words are cheap.
+- If someone says "I'd pay," ask them to commit to the pilot. Words are cheap.
 - If 3 people don't pay, that's a valid result. Stop or change the niche.

@@ -13,14 +13,14 @@
 | **Year** | 2026 |
 | **Stack** | Laravel 12, PHP 8.4, Blade, Tailwind CSS 4, Alpine.js, Chart.js, Vite 7, SQLite |
 | **Language** | Arabic only, RTL throughout |
-| **Scale** | 1 store, 4 categories, 10 products, 14 customers, 32 orders, 75 tests |
+| **Scale** | 1 store, 4 categories, 10 products, 14 customers, 32 orders, 143 tests |
 | **Hosting** | Render (Docker, free tier) — [live demo](https://dukkani-demo.onrender.com) |
 
 ## The problem
 
 Home businesses in Jordan run their orders in WhatsApp. A baker receives photos,
-voice notes, delivery addresses and deposit screenshots in one long chat, then
-tries to remember who confirmed, who paid a deposit, what time the order is due,
+voice notes, delivery addresses and transfer screenshots in one long chat, then
+tries to remember who confirmed, who has paid, what time the order is due,
 and which cake had the nut allergy note.
 
 The result is missed messages, double-booked days, and a seller who cannot
@@ -39,12 +39,13 @@ subscriptions) a home baker will never use.
   delivery or pickup, and a tracking link customers can keep.
 - A seller dashboard: KPIs, an order board with a real workflow, products,
   customers, store settings, and analytics.
-- A deposit model that matches how home businesses actually get paid: cash on
-  delivery or a CliQ / bank transfer deposit.
+- A payment model that matches how home businesses actually get paid: cash on
+  delivery, or a full CliQ / bank transfer with a transfer screenshot. Deposits
+  are optional per store on request.
 
 **Out of scope**
 
-- Self-serve registration, plans and billing, an admin panel.
+- Self-serve registration and online payment (a platform admin activates plans manually).
 - Real WhatsApp Cloud API messages, email, or an online payment gateway.
 - Staff accounts, custom domains, a marketplace, and a mobile app.
 
@@ -64,8 +65,8 @@ work can be judged in seconds.
 ### 1. A storefront that feels like a neighbourhood shop
 
 The home page leads with the store's story and a single "order card" that answers
-the practical questions immediately: lead time, delivery fee, deposit
-percentage, opening hours, and whether the shop is open right now.
+the practical questions immediately: lead time, delivery fee, payment
+options, opening hours, and whether the shop is open right now.
 
 ![Amal Bakes storefront home](screenshots/01-storefront-home.jpg)
 
@@ -86,8 +87,8 @@ placed.
 
 ### 2. An order desk built around the workflow
 
-The dashboard opens with the day's picture: revenue, orders, deposits waiting,
-today's schedule, and the products selling best.
+The dashboard opens with the day's picture: revenue, orders, orders awaiting
+confirmation, today's schedule, and the products selling best.
 
 ![Dashboard home](screenshots/09-dashboard-home.jpg)
 
@@ -97,7 +98,7 @@ Orders can be worked as a **list** with tabs, filters and sorting, or as a
 ![Orders board](screenshots/10-orders-board.jpg)
 
 An order detail page holds everything in one place: the workflow stepper, quick
-status actions, items and totals, the customer card, the deposit card, WhatsApp
+status actions, items and totals, the customer card, the payment details, WhatsApp
 templates, internal notes, and a full activity timeline.
 
 ![Order detail](screenshots/12-order-detail.jpg)
@@ -131,8 +132,8 @@ customers link straight into their profile.
 
 ### 5. Settings that match real business rules
 
-Delivery and pickup toggles, delivery fee, deposit percentage, lead time,
-deposit instructions, seven-day working hours, and blocked dates — all editable,
+Delivery and pickup toggles, delivery fee, lead time, bank-transfer details,
+seven-day working hours, and blocked dates — all editable,
 with at least one fulfillment method always required.
 
 | Store profile | Delivery rules | Working hours |
@@ -157,7 +158,7 @@ consistent:
   `#c9a15a`, sage `#6c7f65`, plus soft variants and two elevation shadows.
 - **Type:** Amiri for display headings, Tajawal for UI — both self-hosted and
   subset to Arabic + Latin.
-- **Components:** brand mark, product card, status badge, deposit badge, order
+- **Components:** brand mark, product card, status badge, payment badge, order
   card, avatar, pagination, empty states, and a shared button/input/badge layer.
 - **RTL discipline:** logical properties (`start`/`end`, `ms-`/`me-`) rather than
   left/right, and charts configured to read right-to-left.
@@ -188,17 +189,17 @@ Storefront (public)                     Dashboard (auth)
   returns 404.
 - **Money as integers.** All amounts are stored in fils (`1 JOD = 1000 fils`) and
   formatted by `App\Support\Money`.
-- **Enums for truth.** `OrderStatus`, `FulfillmentType`, `DepositStatus` and
+- **Enums for truth.** `OrderStatus`, `FulfillmentType` and
   `PaymentMethod` are PHP enums, so status labels, transitions and badges cannot
   drift apart.
 - **Services, not fat controllers.** `CartService` (session cart), `OrderService`
-  (placement, transitions, deposits, notes, message logging), `ScheduleService`
+  (placement, transitions, notes, message logging), `ScheduleService`
   (lead time, hours, blocked dates, 30-minute slots), `WhatsAppService`
-  (templates), and `AnalyticsService` (period metrics).
+  (templates), `PlanService` (plan limits, trials, grace), and `AnalyticsService` (period metrics).
 
 ## Quality
 
-- **75 feature tests, 296 assertions**, all green, covering the storefront,
+- **143 feature tests, 600 assertions**, all green, covering the storefront,
   cart, checkout and scheduling rules, public tracking, auth and dashboard,
   the orders board and workflow, catalog, customers, settings, analytics, and
   cross-store isolation.

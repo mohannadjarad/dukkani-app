@@ -15,14 +15,14 @@ A working Laravel demo for Amal Bakes, a home bakery in Amman.
 A vertical slice of a small-business SaaS: a public Arabic RTL storefront with
 cart, scheduling and order tracking, plus a seller dashboard for orders,
 products, customers, settings and analytics. Built end to end with Laravel 12,
-Tailwind CSS 4, Alpine.js and Chart.js, and covered by 75 feature tests.
+Tailwind CSS 4, Alpine.js and Chart.js, and covered by 143 feature tests.
 
 **Highlights**
 
 - Replaced WhatsApp order-taking with a storefront + order workflow: statuses,
-  deposits, notes, WhatsApp templates and a full activity timeline.
+  payment details, notes, WhatsApp templates and a full activity timeline.
 - Modelled the real business rules — lead time, opening hours, blocked dates,
-  30-minute slots, delivery/pickup, and deposit percentage — and enforced them
+  30-minute slots, delivery/pickup, and bank-transfer details — and enforced them
   on the server.
 - Shipped period-aware analytics (7/30/90 days with previous-period comparison),
   top products and customers, and mobile-first RTL design.
@@ -58,14 +58,14 @@ e-commerce · SQLite · Docker · Render
 شريحة عمودية كاملة من تطبيق SaaS صغير: متجر عام بالعربية من اليمين إلى اليسار،
 سلة ومواعيد وتتبّع طلبات، ولوحة تحكم للبائعة فيها الطلبات والمنتجات والعملاء
 والإعدادات والتحليلات. مبني من الصفر بـ Laravel 12 وTailwind CSS 4 وAlpine.js
-وChart.js، ومغطّى بـ 75 اختباراً.
+وChart.js، ومغطّى بـ 143 اختباراً.
 
 **أبرز النقاط**
 
-- استبدال إدارة الطلبات عبر واتساب بمتجر ومسار عمل: حالات، عرابين، ملاحظات،
+- استبدال إدارة الطلبات عبر واتساب بمتجر ومسار عمل: حالات، تفاصيل دفع، ملاحظات،
   قوالب واتساب، وسجل نشاط كامل.
 - تجسيد قواعد العمل الفعلية: مدة التحضير، ساعات العمل، الأيام المُغلقة، مواعيد
-  30 دقيقة، توصيل/استلام، ونسبة العربون — والتحقق منها على الخادم.
+  30 دقيقة، توصيل/استلام، وبيانات التحويل البنكي — والتحقق منها على الخادم.
 - تحليلات حسب الفترة (7/30/90 يوماً مع مقارنة بالفترة السابقة)، أفضل المنتجات
   والعملاء، وتصميم يبدأ من الجوال وبالعربية.
 - مخطط جاهز لتعدّد المتاجر (`store_id`) بعزل صارم، ومبالغ بالفلس، وEnums لكل
@@ -94,7 +94,7 @@ Laravel · PHP · Tailwind CSS · Alpine.js · Chart.js · RTL · تجربة ع�
 > businesses, demoed with a real home bakery in Amman. 🧁
 >
 > Storefront with options, scheduling and tracking. Seller dashboard with an
-> order workflow, deposits, products, customers and 7/30/90-day analytics.
+> order workflow, payment details, products, customers and 7/30/90-day analytics.
 >
-> Laravel 12 · Tailwind 4 · Alpine · Chart.js · 75 tests · RTL throughout.
+> Laravel 12 · Tailwind 4 · Alpine · Chart.js · 143 tests · RTL throughout.
 > Live demo: https://dukkani-demo.onrender.com
