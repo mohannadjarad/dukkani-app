@@ -105,7 +105,7 @@
                     <a href="{{ route('storefront.menu', $store) }}" class="btn-primary mt-4 w-full">
                         ابدئي الطلب
                     </a>
-                    <p class="mt-2.5 text-center text-[9px] text-muted/70">الدفع عند الاستلام أو تحويل CliQ — دون دفع إلكتروني</p>
+                    <p class="mt-2.5 text-center text-[9px] text-muted/70">الدفع عند الاستلام{{ in_array('cliq', $store->allowedPaymentMethods(), true) ? ' أو تحويل CliQ' : ' أو بالحوالة البنكية' }} — دون دفع إلكتروني</p>
                 </div>
             </div>
         </div>

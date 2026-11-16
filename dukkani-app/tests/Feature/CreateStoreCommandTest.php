@@ -62,4 +62,25 @@ class CreateStoreCommandTest extends TestCase
         $this->assertDatabaseMissing('users', ['email' => 'owner@example.com']);
         $this->assertSame(1, Store::count());
     }
+
+    public function test_it_derives_currency_and_timezone_from_the_country(): void
+    {
+        $this->artisan('dukkani:store:create', [
+            '--store-name' => 'حلويات جنين',
+            '--slug' => 'jinin-sweets',
+            '--owner-name' => 'سارة أحمد',
+            '--email' => 'sara@example.com',
+            '--password' => 'secret-pass',
+            '--phone' => '0599123456',
+            '--city' => 'جنين',
+            '--country-code' => '970',
+            '--no-interaction' => true,
+        ])->assertSuccessful();
+
+        $store = Store::where('slug', 'jinin-sweets')->firstOrFail();
+
+        $this->assertSame('ILS', $store->currency);
+        $this->assertSame('Asia/Hebron', $store->timezone);
+        $this->assertSame('970', $store->country_code);
+    }
 }

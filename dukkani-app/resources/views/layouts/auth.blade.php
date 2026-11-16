@@ -7,6 +7,7 @@
     <meta name="robots" content="noindex">
     <title>@yield('title', 'تسجيل الدخول') — {{ $brandName }}</title>
     <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
+    @include('partials.money-script')
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="min-h-screen bg-canvas">

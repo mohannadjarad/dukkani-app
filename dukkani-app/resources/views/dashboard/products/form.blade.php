@@ -71,7 +71,7 @@
                         </div>
 
                         <div>
-                            <label class="label" for="price">السعر (د.أ)</label>
+                            <label class="label" for="price">السعر ({{ $store->currencySymbol() }})</label>
                             <input id="price" type="number" name="price" value="{{ $priceValue }}" step="0.001" min="0.1" max="5000" class="input" placeholder="18.500" required>
                             @error('price') <p class="field-error">{{ $message }}</p> @enderror
                         </div>
@@ -201,7 +201,7 @@
                                             <input type="text" :name="'options['+oIndex+'][values]['+vIndex+'][value]'" x-model="value.value" class="input !py-2 !text-xs" placeholder="القيمة، مثال: وسط" maxlength="80">
                                             <div class="flex w-[7rem] shrink-0 items-center justify-start rounded-2xl border border-line bg-white px-2.5 py-2 shadow-[0_1px_1px_rgba(42,28,21,0.03)] transition focus-within:border-brand/60 focus-within:ring-4 focus-within:ring-brand/10">
                                                 <input type="number" step="0.001" min="0" :name="'options['+oIndex+'][values]['+vIndex+'][price_delta]'" x-model.number="value.price_delta" class="min-w-[3.5ch] max-w-full border-0 bg-transparent p-0 text-right text-xs font-medium text-ink tabular-nums placeholder:text-muted/55 focus:outline-none focus:ring-0 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none" style="field-sizing: content;" x-effect="$el.style.width = Math.max(3.5, (value.price_delta === null || value.price_delta === '' ? 5.5 : String(value.price_delta).length + 0.5)) + 'ch'" placeholder="0.000">
-                                                <span class="pointer-events-none shrink-0 ps-1 text-[9px] text-muted/60">د.أ</span>
+                                                <span class="pointer-events-none shrink-0 ps-1 text-[9px] text-muted/60">{{ $store->currencySymbol() }}</span>
                                             </div>
                                             <button type="button" @click="removeValue(option, vIndex)" class="icon-btn !size-9 shrink-0 text-muted hover:text-danger" aria-label="حذف القيمة">
                                                 <svg class="size-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>

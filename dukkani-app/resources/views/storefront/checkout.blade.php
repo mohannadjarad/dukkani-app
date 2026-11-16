@@ -184,25 +184,21 @@
                     </div>
 
                     <div class="mt-4 space-y-2">
-                        @foreach ([
-                            ['cash', 'نقداً عند الاستلام', 'تدفعين عند استلام الطلب أو وصوله.', 'M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Z'],
-                            ['cliq', 'تحويل CliQ', 'تحويل فوري، ويتطلب عربوناً للتأكيد.', 'M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Z'],
-                            ['bank_transfer', 'حوالة بنكية', 'تحويل بنكي، ويتطلب عربوناً للتأكيد.', 'M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0 0 12 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75Z'],
-                        ] as [$value, $title, $subtitle, $icon])
+                        @foreach (collect(config('payments.methods'))->only($store->allowedPaymentMethods()) as $value => $method)
                             <label class="flex cursor-pointer items-start gap-3 rounded-2xl border p-3.5 transition"
                                    :class="payment === '{{ $value }}' ? 'border-brand bg-brand-soft/40 ring-1 ring-brand/15' : 'border-line bg-white hover:border-brand/30'">
                                 <input type="radio" name="payment_method" value="{{ $value }}" x-model="payment" class="sr-only">
                                 <span class="flex size-9 shrink-0 items-center justify-center rounded-xl" :class="payment === '{{ $value }}' ? 'bg-brand text-white' : 'bg-canvas text-muted'">
-                                    <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke-width="1.7" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="{{ $icon }}"/></svg>
+                                    <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke-width="1.7" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="{{ $method['icon'] }}"/></svg>
                                 </span>
                                 <span class="min-w-0 flex-1">
                                     <span class="flex flex-wrap items-center gap-2">
-                                        <span class="text-xs font-bold text-ink">{{ $title }}</span>
+                                        <span class="text-xs font-bold text-ink">{{ $method['label'] }}</span>
                                         @if ($value !== 'cash' && $store->deposit_percent > 0)
                                             <span class="rounded-full bg-gold-soft px-2 py-0.5 text-[8px] font-bold text-[#8a672c]">عربون {{ $store->deposit_percent }}%</span>
                                         @endif
                                     </span>
-                                    <span class="mt-0.5 block text-[10px] leading-5 text-muted">{{ $subtitle }}</span>
+                                    <span class="mt-0.5 block text-[10px] leading-5 text-muted">{{ $method['hint'] }}</span>
                                 </span>
                             </label>
                         @endforeach

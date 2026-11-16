@@ -7,6 +7,7 @@
     <meta name="description" content="{{ $store->tagline ?? $store->name }}">
     <title>@yield('title', $store->name) — {{ $store->name }}</title>
     <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
+    @include('partials.money-script')
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body

@@ -15,6 +15,11 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         // Render terminates TLS in front of the container.
         $middleware->trustProxies(at: '*');
+
+        // Apply the resolved store's currency and timezone per request.
+        $middleware->web(append: [
+            \App\Http\Middleware\SetStoreContext::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

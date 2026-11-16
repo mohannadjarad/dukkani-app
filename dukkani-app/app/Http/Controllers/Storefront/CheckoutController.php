@@ -71,7 +71,7 @@ class CheckoutController extends StorefrontController
             'delivery_address' => ['nullable', 'required_if:fulfillment_type,delivery', 'string', 'min:8', 'max:300'],
             'scheduled_date' => ['required', 'date_format:Y-m-d'],
             'scheduled_time' => ['required', 'date_format:H:i'],
-            'payment_method' => ['required', Rule::in(['cash', 'cliq', 'bank_transfer'])],
+            'payment_method' => ['required', Rule::in($store->allowedPaymentMethods())],
             'customer_notes' => ['nullable', 'string', 'max:500'],
             'consent' => ['accepted'],
         ], [

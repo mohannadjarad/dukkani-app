@@ -131,9 +131,9 @@ services:
       - key: APP_FAKER_LOCALE
         value: ar_JO
       - key: APP_TIMEZONE
-        value: Asia/Amman
+        value: Asia/Hebron
       - key: TZ
-        value: Asia/Amman
+        value: Asia/Hebron
 
       - key: DEMO_MODE
         value: "false"

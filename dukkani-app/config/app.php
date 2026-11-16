@@ -68,6 +68,43 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Default Currency
+    |--------------------------------------------------------------------------
+    |
+    | Fallback currency used by Money::format() when no store is in context
+    | (CLI commands, jobs, tests). Each store stores its own currency.
+    |
+    */
+
+    'currency' => env('APP_CURRENCY', 'JOD'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Country defaults
+    |--------------------------------------------------------------------------
+    |
+    | Dial code => the local currency and IANA timezone used when a store is
+    | created in that country. A store keeps its own currency/timezone columns,
+    | so changing a store's country later does not silently rewrite them.
+    |
+    */
+
+    'countries' => [
+        '962' => ['currency' => 'JOD', 'timezone' => 'Asia/Amman'],
+        '970' => ['currency' => 'ILS', 'timezone' => 'Asia/Hebron'],
+        '963' => ['currency' => 'SYP', 'timezone' => 'Asia/Damascus'],
+        '961' => ['currency' => 'LBP', 'timezone' => 'Asia/Beirut'],
+        '20' => ['currency' => 'EGP', 'timezone' => 'Africa/Cairo'],
+        '966' => ['currency' => 'SAR', 'timezone' => 'Asia/Riyadh'],
+        '971' => ['currency' => 'AED', 'timezone' => 'Asia/Dubai'],
+        '974' => ['currency' => 'QAR', 'timezone' => 'Asia/Qatar'],
+        '973' => ['currency' => 'BHD', 'timezone' => 'Asia/Bahrain'],
+        '965' => ['currency' => 'KWD', 'timezone' => 'Asia/Kuwait'],
+        '968' => ['currency' => 'OMR', 'timezone' => 'Asia/Muscat'],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Application URL
     |--------------------------------------------------------------------------
     |

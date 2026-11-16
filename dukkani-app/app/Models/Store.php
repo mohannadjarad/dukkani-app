@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Services\ImageService;
+use App\Support\Money;
 use App\Support\Phone;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -17,7 +18,7 @@ class Store extends Model
         'owner_id', 'name', 'slug', 'tagline', 'description', 'logo_path',
         'logo_public_id', 'cover_path', 'cover_public_id', 'phone', 'whatsapp',
         'instagram', 'city', 'address',
-        'currency', 'delivery_fee_fils', 'deposit_percent', 'pickup_enabled',
+        'currency', 'country_code', 'delivery_fee_fils', 'deposit_percent', 'pickup_enabled',
         'delivery_enabled', 'lead_time_hours', 'deposit_instructions', 'timezone',
         'status', 'onboarding_completed_at',
     ];
@@ -138,10 +139,46 @@ class Store extends Model
         return $now >= $open && $now <= $close;
     }
 
+    /**
+     * Country dial code used to normalize phone numbers, for example 962 for
+     * Jordan or 970 for Palestine.
+     */
+    public function dialCode(): string
+    {
+        return $this->country_code ?: '962';
+    }
+
+    public function currencyCode(): string
+    {
+        return strtoupper($this->currency ?: (string) config('app.currency', 'JOD'));
+    }
+
+    public function currencySymbol(): string
+    {
+        return Money::symbol($this->currencyCode());
+    }
+
+    /**
+     * Payment methods this store may offer, in display order. CliQ is only
+     * available in Jordan.
+     */
+    public function allowedPaymentMethods(): array
+    {
+        $methods = ['cash'];
+
+        if (in_array($this->dialCode(), config('payments.cliq_countries', ['962']), true)) {
+            $methods[] = 'cliq';
+        }
+
+        $methods[] = 'bank_transfer';
+
+        return $methods;
+    }
+
     public function whatsappLink(?string $text = null): string
     {
-        return Phone::whatsappLink($this->whatsapp ?: $this->phone ?: '962790000000', $text)
-            ?? 'https://wa.me/962790000000';
+        return Phone::whatsappLink($this->whatsapp ?: $this->phone, $text, $this->dialCode())
+            ?? 'https://wa.me/'.$this->dialCode().'790000000';
     }
 
     public function mapsUrl(): string

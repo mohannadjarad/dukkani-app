@@ -11,6 +11,7 @@ use App\Models\Order;
 use App\Models\Store;
 use App\Models\StoreNotification;
 use App\Models\User;
+use App\Support\Phone;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
@@ -38,8 +39,10 @@ class OrderService
         $deposit = $this->cart->depositFor($store, $total, $payment);
 
         return DB::transaction(function () use ($store, $data, $items, $fulfillment, $payment, $subtotal, $deliveryFee, $total, $deposit) {
+            $phone = Phone::normalize($data['phone'], $store->dialCode()) ?? $data['phone'];
+
             $customer = Customer::firstOrCreate(
-                ['store_id' => $store->id, 'phone' => $data['phone']],
+                ['store_id' => $store->id, 'phone' => $phone],
                 ['name' => $data['name']]
             );
 

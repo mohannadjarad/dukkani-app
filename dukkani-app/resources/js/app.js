@@ -6,6 +6,18 @@ window.Alpine = Alpine;
 
 const fontFamily = 'Tajawal, system-ui, sans-serif';
 
+// Currency metadata is injected by the layout (partials/money-script).
+function moneyMeta() {
+    return window.DukkaniMoney || { symbol: 'د.أ', decimals: 3 };
+}
+
+function currencyAmount(value, decimals = null) {
+    const meta = moneyMeta();
+    const digits = decimals === null ? meta.decimals : decimals;
+
+    return `${Number(value || 0).toFixed(digits)} ${meta.symbol}`;
+}
+
 Chart.defaults.font.family = fontFamily;
 Chart.defaults.color = '#837164';
 
@@ -59,7 +71,7 @@ function revenueChart(canvas, payload) {
                     cornerRadius: 12,
                     displayColors: false,
                     callbacks: {
-                        label: (context) => `${Number(context.parsed.y).toFixed(3)} د.أ`,
+                        label: (context) => currencyAmount(context.parsed.y),
                     },
                 },
             },
@@ -84,7 +96,7 @@ function revenueChart(canvas, payload) {
                         color: '#9a8877',
                         font: { family: fontFamily, size: 11 },
                         padding: 8,
-                        callback: (value) => `${value} د.أ`,
+                        callback: (value) => currencyAmount(value),
                     },
                 },
             },
@@ -207,12 +219,13 @@ function barChart(canvas, payload) {
 window.Dukkani = { revenueChart, doughnutChart, barChart };
 
 function money(value) {
+    const meta = moneyMeta();
     const amount = Number(value || 0) / 1000;
 
     return amount.toLocaleString('en-US', {
-        minimumFractionDigits: 3,
-        maximumFractionDigits: 3,
-    }) + ' د.أ';
+        minimumFractionDigits: meta.decimals,
+        maximumFractionDigits: meta.decimals,
+    }) + ' ' + meta.symbol;
 }
 
 function productForm(config) {

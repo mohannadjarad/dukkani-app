@@ -215,7 +215,7 @@
 
                     <div class="mt-4 grid gap-4 sm:grid-cols-3">
                         <div>
-                            <label class="label" for="delivery_fee">رسوم التوصيل (د.أ)</label>
+                            <label class="label" for="delivery_fee">رسوم التوصيل ({{ $store->currencySymbol() }})</label>
                             <input id="delivery_fee" type="number" name="delivery_fee" value="{{ old('delivery_fee', $feeValue) }}" step="0.001" min="0" max="100" class="input" required>
                             @error('delivery_fee') <p class="field-error">{{ $message }}</p> @enderror
                         </div>

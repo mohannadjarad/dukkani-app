@@ -148,9 +148,9 @@
                 <label class="label !mb-1.5 !text-[10px] !text-muted">الدفع</label>
                 <select name="payment" onchange="this.form.submit()" class="select !py-2.5">
                     <option value="all" @selected($filters['payment'] === 'all')>الكل</option>
-                    <option value="cash" @selected($filters['payment'] === 'cash')>نقداً</option>
-                    <option value="cliq" @selected($filters['payment'] === 'cliq')>CliQ</option>
-                    <option value="bank_transfer" @selected($filters['payment'] === 'bank_transfer')>حوالة بنكية</option>
+                    @foreach (collect(config('payments.methods'))->only($store->allowedPaymentMethods()) as $value => $method)
+                        <option value="{{ $value }}" @selected($filters['payment'] === $value)>{{ $method['short'] }}</option>
+                    @endforeach
                 </select>
             </div>
 
