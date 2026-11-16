@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#f8f3ea">
     <meta name="robots" content="noindex">
-    <title>@yield('title', 'لوحة التحكم') — أمل بيكنز</title>
+    <title>@yield('title', 'لوحة التحكم') — {{ $brandName }}</title>
     <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
@@ -44,9 +44,9 @@
 
             <div class="mt-6 rounded-2xl border border-line/80 bg-canvas/70 p-3">
                 <div class="flex items-center gap-3">
-                    <span class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-brand-soft font-display text-lg font-bold text-brand-dark">أ</span>
+                    <span class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-brand-soft font-display text-lg font-bold text-brand-dark">{{ mb_substr($store?->name ?? $brandName, 0, 1) }}</span>
                     <div class="min-w-0 flex-1">
-                        <p class="truncate text-[13px] font-bold text-ink">{{ $store?->name ?? 'أمل بيكنز' }}</p>
+                        <p class="truncate text-[13px] font-bold text-ink">{{ $store?->name ?? $brandName }}</p>
                         <p class="mt-0.5 flex items-center gap-1.5 text-[10px] text-muted">
                             <span class="size-1.5 rounded-full bg-emerald-500"></span>
                             متجر نشط
@@ -81,13 +81,15 @@
                 </a>
             </nav>
 
-            <div class="mt-4 rounded-2xl bg-gradient-to-bl from-gold-soft/80 to-brand-soft/50 p-3.5">
-                <div class="flex items-center gap-2 text-[10px] font-bold text-[#8a672c]">
-                    <span class="size-1.5 rounded-full bg-gold"></span>
-                    عرض تجريبي
+            @if (config('app.demo_mode'))
+                <div class="mt-4 rounded-2xl bg-gradient-to-bl from-gold-soft/80 to-brand-soft/50 p-3.5">
+                    <div class="flex items-center gap-2 text-[10px] font-bold text-[#8a672c]">
+                        <span class="size-1.5 rounded-full bg-gold"></span>
+                        عرض تجريبي
+                    </div>
+                    <p class="mt-1.5 text-[10px] leading-5 text-muted">كل البيانات هنا وهمية، ولا يتم إرسال رسائل أو مدفوعات حقيقية.</p>
                 </div>
-                <p class="mt-1.5 text-[10px] leading-5 text-muted">كل البيانات هنا وهمية، ولا يتم إرسال رسائل أو مدفوعات حقيقية.</p>
-            </div>
+            @endif
 
             <div class="mt-3 flex items-center gap-3 rounded-2xl border border-line/70 p-2.5" x-data="{ open: false }" @click.outside="open = false">
                 <x-avatar :name="auth()->user()->name" size="sm" />
@@ -129,10 +131,12 @@
                         عرض المتجر
                     </a>
 
-                    <span class="demo-pill hidden sm:inline-flex">
-                        <span class="size-1.5 rounded-full bg-gold"></span>
-                        متجر تجريبي
-                    </span>
+                    @if (config('app.demo_mode'))
+                        <span class="demo-pill hidden sm:inline-flex">
+                            <span class="size-1.5 rounded-full bg-gold"></span>
+                            متجر تجريبي
+                        </span>
+                    @endif
 
                     <div class="relative" x-data="{ open: false }" @click.outside="open = false">
                         <button class="icon-btn relative" @click="open = !open" aria-label="الإشعارات">
@@ -186,8 +190,13 @@
                 @yield('content')
 
                 <footer class="mt-10 flex flex-col gap-2 border-t border-line/60 pt-5 text-[10px] text-muted/60 sm:flex-row sm:items-center sm:justify-between">
-                    <span>أمل بيكنز — عرض تجريبي من دكّاني</span>
-                    <span>بيانات وهمية • لا مدفوعات أو رسائل حقيقية</span>
+                    @if (config('app.demo_mode'))
+                        <span>{{ $brandName }} — عرض تجريبي من دكّاني</span>
+                        <span>بيانات وهمية • لا مدفوعات أو رسائل حقيقية</span>
+                    @else
+                        <span>{{ $brandName }} — {{ $store?->name ?? 'لوحة التحكم' }}</span>
+                        <span>مدعوم بواسطة دكّاني</span>
+                    @endif
                 </footer>
             </main>
         </div>

@@ -288,7 +288,7 @@
                 </div>
 
                 <div class="rounded-2xl border border-line/70 bg-surface px-4 py-3 text-[10px] leading-5 text-muted">
-                    <span class="font-bold text-ink">رابط المتابعة:</span> احتفظي بهذا الرابط لمعرفة حالة طلبك في أي وقت. هذا عرض تجريبي، والبيانات وهمية.
+                    <span class="font-bold text-ink">رابط المتابعة:</span> احتفظي بهذا الرابط لمعرفة حالة طلبك في أي وقت.@if (config('app.demo_mode')) هذا عرض تجريبي، والبيانات وهمية.@endif
                 </div>
             </div>
         </div>

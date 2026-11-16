@@ -38,7 +38,9 @@
                 <span class="flex size-10 items-center justify-center rounded-2xl bg-brand font-display text-lg font-bold text-white shadow-[0_8px_18px_-10px_rgba(142,68,37,0.9)]">{{ mb_substr($store->name, 0, 1) }}</span>
                 <span class="hidden flex-col leading-none sm:flex">
                     <span class="font-display text-lg font-bold text-ink">{{ $store->name }}</span>
-                    <span class="mt-1 text-[8px] font-bold uppercase tracking-[0.32em] text-muted/75">Amal Bakes</span>
+                    @if (config('app.demo_mode'))
+                        <span class="mt-1 text-[8px] font-bold uppercase tracking-[0.32em] text-muted/75">{{ $brandLatin }}</span>
+                    @endif
                 </span>
             </a>
 
@@ -95,14 +97,18 @@
                         <span class="flex size-10 items-center justify-center rounded-2xl bg-brand font-display text-lg font-bold text-white">{{ mb_substr($store->name, 0, 1) }}</span>
                         <div class="leading-none">
                             <p class="font-display text-lg font-bold text-ink">{{ $store->name }}</p>
-                            <p class="mt-1 text-[8px] font-bold uppercase tracking-[0.3em] text-muted/70">Amal Bakes</p>
+                            @if (config('app.demo_mode'))
+                                <p class="mt-1 text-[8px] font-bold uppercase tracking-[0.3em] text-muted/70">{{ $brandLatin }}</p>
+                            @endif
                         </div>
                     </div>
                     <p class="mt-4 max-w-xs text-xs leading-6 text-muted">{{ $store->tagline }}</p>
-                    <span class="demo-pill mt-4">
-                        <span class="size-1.5 rounded-full bg-gold"></span>
-                        متجر تجريبي
-                    </span>
+                    @if (config('app.demo_mode'))
+                        <span class="demo-pill mt-4">
+                            <span class="size-1.5 rounded-full bg-gold"></span>
+                            متجر تجريبي
+                        </span>
+                    @endif
                 </div>
 
                 <div>
@@ -159,7 +165,11 @@
 
             <div class="mt-10 flex flex-col gap-2 border-t border-line/60 pt-5 text-[10px] text-muted/60 sm:flex-row sm:items-center sm:justify-between">
                 <span>© {{ now()->year }} {{ $store->name }} — صُنع بحب في {{ $store->city }}</span>
-                <span>عرض تجريبي من دكّاني • بيانات وهمية ولا مدفوعات أو رسائل حقيقية</span>
+                @if (config('app.demo_mode'))
+                    <span>عرض تجريبي من دكّاني • بيانات وهمية ولا مدفوعات أو رسائل حقيقية</span>
+                @else
+                    <span>مدعوم بواسطة دكّاني</span>
+                @endif
             </div>
         </div>
     </footer>

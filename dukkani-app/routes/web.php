@@ -17,6 +17,10 @@ use App\Models\Store;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
+    if (! config('app.demo_mode') && ($slug = config('app.default_store_slug'))) {
+        return redirect()->route('storefront.home', ['store' => $slug]);
+    }
+
     $store = Store::where('status', 'active')->orderBy('id')->first();
 
     return $store
@@ -44,7 +48,9 @@ Route::get('/orders/{order:public_token}', [OrderTrackingController::class, 'sho
 Route::middleware('guest')->group(function () {
     Route::get('/login', [LoginController::class, 'create'])->name('login');
     Route::post('/login', [LoginController::class, 'store'])->name('login.store');
-    Route::post('/demo-login', DemoLoginController::class)->name('demo-login');
+    if (config('app.demo_mode')) {
+        Route::post('/demo-login', DemoLoginController::class)->name('demo-login');
+    }
 });
 
 Route::middleware('auth')->group(function () {

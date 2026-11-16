@@ -56,11 +56,13 @@
                                 <p class="mt-0.5 text-[10px] text-muted">نحتاجها لتأكيد الطلب والتوصيل.</p>
                             </div>
                         </div>
-                        <button type="button" @click="fillDemo()"
-                                class="inline-flex shrink-0 items-center gap-1 rounded-full border border-line bg-canvas px-2.5 py-1.5 text-[9px] font-bold text-muted transition hover:border-brand/30 hover:text-brand">
-                            <svg class="size-3" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456Z"/></svg>
-                            تعبئة تجريبية
-                        </button>
+                        @if (config('app.demo_mode'))
+                            <button type="button" @click="fillDemo()"
+                                    class="inline-flex shrink-0 items-center gap-1 rounded-full border border-line bg-canvas px-2.5 py-1.5 text-[9px] font-bold text-muted transition hover:border-brand/30 hover:text-brand">
+                                <svg class="size-3" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456Z"/></svg>
+                                تعبئة تجريبية
+                            </button>
+                        @endif
                     </div>
 
                     <div class="mt-4 grid gap-4 sm:grid-cols-2">
@@ -177,7 +179,7 @@
                         <span class="flex size-8 shrink-0 items-center justify-center rounded-full bg-brand text-xs font-bold text-white">٤</span>
                         <div>
                             <h2 class="text-sm font-bold text-ink">طريقة الدفع</h2>
-                            <p class="mt-0.5 text-[10px] text-muted">لا يوجد دفع إلكتروني في هذا العرض التجريبي.</p>
+                            <p class="mt-0.5 text-[10px] text-muted">{{ config('app.demo_mode') ? 'لا يوجد دفع إلكتروني في هذا العرض التجريبي.' : 'اختاري طريقة الدفع المناسبة لك.' }}</p>
                         </div>
                     </div>
 
@@ -231,7 +233,7 @@
                         <input type="checkbox" name="consent" value="1" x-model="consent" required
                                class="mt-0.5 size-4 shrink-0 rounded border-line text-brand focus:ring-brand/20">
                         <span>
-                            أوافق على استخدام اسمي ورقم هاتفي وعنواني لتجهيز هذا الطلب والتواصل معي بشأنه. هذا عرض تجريبي والبيانات محلية.
+                            أوافق على استخدام اسمي ورقم هاتفي وعنواني لتجهيز هذا الطلب والتواصل معي بشأنه.@if (config('app.demo_mode')) هذا عرض تجريبي والبيانات محلية.@endif
                         </span>
                     </label>
                     @error('consent') <p class="field-error">{{ $message }}</p> @enderror
@@ -241,7 +243,11 @@
                     تأكيد الطلب — <span x-text="money(total)"></span>
                 </button>
                 <p class="pb-2 text-center text-[9px] leading-5 text-muted/60">
-                    بالضغط على «تأكيد الطلب» يتم إنشاء طلب تجريبي فقط. لا تتم أي مدفوعات أو رسائل حقيقية.
+                    @if (config('app.demo_mode'))
+                        بالضغط على «تأكيد الطلب» يتم إنشاء طلب تجريبي فقط. لا تتم أي مدفوعات أو رسائل حقيقية.
+                    @else
+                        بالضغط على «تأكيد الطلب» سنتواصل معك لتأكيد التفاصيل قبل التحضير.
+                    @endif
                 </p>
             </form>
 
@@ -302,7 +308,13 @@
 
                 <div class="flex items-start gap-2.5 rounded-2xl border border-line/70 bg-surface px-4 py-3 text-[10px] leading-5 text-muted">
                     <svg class="mt-0.5 size-4 shrink-0 text-sage" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z"/></svg>
-                    <span>طلبك محفوظ في هذا العرض التجريبي فقط. لا نشارك بياناتك مع أي طرف، ولا نرسل رسائل حقيقية.</span>
+                    <span>
+                        @if (config('app.demo_mode'))
+                            طلبك محفوظ في هذا العرض التجريبي فقط. لا نشارك بياناتك مع أي طرف، ولا نرسل رسائل حقيقية.
+                        @else
+                            بياناتك محفوظة لدينا ولا نشاركها مع أي طرف خارج المتجر.
+                        @endif
+                    </span>
                 </div>
 
                 <a href="{{ $store->whatsappLink('مرحباً، عندي سؤال قبل إتمام الطلب.') }}" target="_blank" rel="noopener"

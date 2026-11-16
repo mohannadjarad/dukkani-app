@@ -8,7 +8,7 @@
             <span class="size-1.5 rounded-full bg-brand"></span>
             لوحة تحكم البائعة
         </span>
-        <h1 class="mt-5 font-display text-[2.6rem] font-bold leading-tight text-ink">أهلاً بعودتك، أمل</h1>
+        <h1 class="mt-5 font-display text-[2.6rem] font-bold leading-tight text-ink">{{ config('app.demo_mode') ? 'أهلاً بعودتك، أمل' : 'أهلاً بعودتك' }}</h1>
         <p class="mt-3 text-sm leading-7 text-muted">
             سجّلي الدخول لمتابعة طلبات اليوم، إدارة المنتجات، ومعرفة ما يحدث في متجرك.
         </p>
@@ -61,7 +61,7 @@
                     <svg class="size-[18px]" fill="none" viewBox="0 0 24 24" stroke-width="1.6" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75"/></svg>
                 </span>
                 <input id="email" name="email" type="email" dir="ltr" autocomplete="email" required
-                       value="{{ old('email', 'demo@dukkani.jo') }}"
+                       value="{{ old('email', config('app.demo_mode') ? 'demo@dukkani.jo' : '') }}"
                        class="input py-3.5 pe-4 ps-11 text-left" placeholder="name@example.com">
             </div>
         </div>
@@ -69,14 +69,16 @@
         <div>
             <div class="mb-2 flex items-center justify-between">
                 <label for="password" class="label mb-0">كلمة المرور</label>
-                <span class="text-[11px] font-medium text-muted/70">كلمة المرور التجريبية: demo1234</span>
+                @if (config('app.demo_mode'))
+                    <span class="text-[11px] font-medium text-muted/70">كلمة المرور التجريبية: demo1234</span>
+                @endif
             </div>
             <div class="relative">
                 <span class="pointer-events-none absolute inset-y-0 right-4 flex items-center text-muted/60">
                     <svg class="size-[18px]" fill="none" viewBox="0 0 24 24" stroke-width="1.6" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z"/></svg>
                 </span>
                 <input id="password" name="password" :type="show ? 'text' : 'password'" autocomplete="current-password" required
-                       value="demo1234"
+                       value="{{ config('app.demo_mode') ? 'demo1234' : '' }}"
                        class="input py-3.5 pe-12 ps-11" placeholder="••••••••">
                 <button type="button" @click="show = !show" class="absolute inset-y-0 left-2 my-auto flex size-9 items-center justify-center rounded-full text-muted hover:bg-canvas hover:text-ink" :aria-label="show ? 'إخفاء كلمة المرور' : 'إظهار كلمة المرور'">
                     <svg x-show="!show" class="size-[18px]" fill="none" viewBox="0 0 24 24" stroke-width="1.6" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/></svg>
@@ -98,7 +100,9 @@
         </button>
     </form>
 
-    <div class="mt-7 rounded-2xl border border-line/70 bg-white/50 px-4 py-3 text-center text-[11px] leading-6 text-muted">
-        حساب العرض: <span dir="ltr" class="font-bold text-ink-soft">demo@dukkani.jo</span> — كلمة المرور: <span dir="ltr" class="font-bold text-ink-soft">demo1234</span>
-    </div>
+    @if (config('app.demo_mode'))
+        <div class="mt-7 rounded-2xl border border-line/70 bg-white/50 px-4 py-3 text-center text-[11px] leading-6 text-muted">
+            حساب العرض: <span dir="ltr" class="font-bold text-ink-soft">demo@dukkani.jo</span> — كلمة المرور: <span dir="ltr" class="font-bold text-ink-soft">demo1234</span>
+        </div>
+    @endif
 @endsection

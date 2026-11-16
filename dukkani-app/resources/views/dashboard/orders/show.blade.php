@@ -361,7 +361,9 @@
             <div class="card p-5 sm:p-6">
                 <div class="flex items-center gap-2">
                     <h2 class="text-sm font-bold text-ink">رسائل واتساب</h2>
-                    <span class="demo-pill !px-2 !py-0.5 !text-[9px]">تجريبي</span>
+                    @if (config('app.demo_mode'))
+                        <span class="demo-pill !px-2 !py-0.5 !text-[9px]">تجريبي</span>
+                    @endif
                 </div>
                 <p class="mt-1.5 text-[10px] leading-5 text-muted">اختاري قالباً ليُفتح واتساب برسالة جاهزة، مع تسجيل الرسالة في سجل الطلب.</p>
 

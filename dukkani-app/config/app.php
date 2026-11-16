@@ -55,6 +55,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Default Store Slug
+    |--------------------------------------------------------------------------
+    |
+    | In production the root URL redirects to this store instead of picking
+    | the first active store. Leave empty to keep the "first active store"
+    | behaviour (useful for local development).
+    |
+    */
+
+    'default_store_slug' => env('DEFAULT_STORE_SLUG'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Application URL
     |--------------------------------------------------------------------------
     |

@@ -140,6 +140,11 @@ services:
       - key: DEMO_SEED
         value: "false"
 
+      # Root URL target. Set this in the Render dashboard once the first real
+      # store exists (for example: amal-bakes).
+      - key: DEFAULT_STORE_SLUG
+        sync: false
+
       - key: DB_CONNECTION
         value: pgsql
       - key: DB_HOST

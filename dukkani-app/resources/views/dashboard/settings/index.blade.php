@@ -389,13 +389,15 @@
                 </dl>
             </div>
 
-            <div class="rounded-2xl bg-gradient-to-bl from-gold-soft/80 to-brand-soft/50 p-3.5">
-                <div class="flex items-center gap-2 text-[10px] font-bold text-[#8a672c]">
-                    <span class="size-1.5 rounded-full bg-gold"></span>
-                    عرض تجريبي
+            @if (config('app.demo_mode'))
+                <div class="rounded-2xl bg-gradient-to-bl from-gold-soft/80 to-brand-soft/50 p-3.5">
+                    <div class="flex items-center gap-2 text-[10px] font-bold text-[#8a672c]">
+                        <span class="size-1.5 rounded-full bg-gold"></span>
+                        عرض تجريبي
+                    </div>
+                    <p class="mt-1.5 text-[10px] leading-5 text-muted">أي تغيير هنا يظهر في المتجر التجريبي مباشرة، بدون أي تأثير حقيقي.</p>
                 </div>
-                <p class="mt-1.5 text-[10px] leading-5 text-muted">أي تغيير هنا يظهر في المتجر التجريبي مباشرة، بدون أي تأثير حقيقي.</p>
-            </div>
+            @endif
         </div>
     </div>
 @endsection

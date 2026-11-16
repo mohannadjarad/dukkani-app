@@ -7,7 +7,7 @@
         $today = $store->todayHours();
         $isOpen = $store->isOpenNow();
         $story = trim(explode("\n\n", (string) $store->description)[0] ?? '');
-        $cover = $store->coverUrl() ?: asset('images/amal-bakes/store-cover.webp');
+        $cover = $store->coverUrl() ?: asset(config('app.demo_mode') ? 'images/amal-bakes/store-cover.webp' : 'images/placeholder-bakery.svg');
     @endphp
 
     <section class="mx-auto max-w-6xl px-5 pt-6 sm:px-8 sm:pt-8">
@@ -175,7 +175,13 @@
                 </div>
                 <div class="absolute -bottom-6 start-5 max-w-[15rem] rounded-3xl border border-line bg-surface p-4 shadow-[var(--shadow-lift)]">
                     <p class="font-display text-lg font-bold leading-snug text-ink">«كل طلب يخرج من مطبخنا كأنه هدية لشخص نحبه.»</p>
-                    <p class="mt-2 text-[10px] font-bold text-brand">أمل العبادي — المؤسسة</p>
+                    <p class="mt-2 text-[10px] font-bold text-brand">
+                        @if (config('app.demo_mode'))
+                            أمل العبادي — المؤسسة
+                        @else
+                            {{ $store->owner?->name ?? $store->name }} — صاحب المتجر
+                        @endif
+                    </p>
                 </div>
             </div>
 
