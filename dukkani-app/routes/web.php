@@ -42,7 +42,9 @@ Route::prefix('s/{store:slug}')->name('storefront.')->middleware('store.active')
 
     Route::get('/checkout/limit', [CheckoutController::class, 'limit'])->name('checkout.limit');
     Route::get('/checkout', [CheckoutController::class, 'create'])->name('checkout');
-    Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
+    Route::post('/checkout', [CheckoutController::class, 'store'])
+        ->middleware('throttle:checkout')
+        ->name('checkout.store');
 });
 
 Route::get('/orders/{order:public_token}', [OrderTrackingController::class, 'show'])->name('track.show');

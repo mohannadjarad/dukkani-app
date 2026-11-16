@@ -2,7 +2,7 @@
 
 An Arabic-first storefront and seller dashboard for **أمل بيكنز / Amal Bakes**, a home bakery in Amman. This is the working demo of Dukkani: a real Laravel application with a seeded store, real order data, and a multi-tenant-ready schema — not a mockup.
 
-The public storefront and seller dashboard were built in milestones. Current status: **Milestone 6 complete** (storefront, cart, checkout, tracking, orders workflow, product catalog, customer book, store settings, analytics, and a Render deployment setup with a portfolio case study).
+The public storefront and seller dashboard were built in milestones. Current status: **Milestone 6 complete** (storefront, cart, checkout, tracking, orders workflow, product catalog, customer book, store settings, analytics, subscription plans with a platform admin panel, and a Render deployment setup with a portfolio case study).
 
 Live demo: **https://dukkani-demo.onrender.com** (see [`docs/DEPLOYMENT.md`](../docs/DEPLOYMENT.md) to deploy your own copy).
 
@@ -17,7 +17,7 @@ Live demo: **https://dukkani-demo.onrender.com** (see [`docs/DEPLOYMENT.md`](../
 | Language | Arabic only, RTL |
 | Hosting target | Render |
 
-No registration, billing, admin panel, payment gateway, or WhatsApp API. WhatsApp actions use `wa.me` links with a placeholder number.
+No self-serve registration, payment gateway, or WhatsApp API: plans are activated manually by a platform admin and paid for by bank transfer, and WhatsApp actions use `wa.me` links with the store's number.
 
 ## Demo access
 
@@ -56,7 +56,7 @@ The seed creates:
 - 10 products across 4 categories, with options and price deltas
 - 14 customers with Amman neighborhoods and tags
 - 32 orders across every workflow status, including today's schedule
-- Deposits, order events, notifications, WhatsApp logs, blocked dates, store hours
+- Order events, notifications, WhatsApp logs, blocked dates, store hours
 
 To refresh the demo data at any time:
 
@@ -75,14 +75,14 @@ php artisan migrate:fresh --seed
 - [x] Seller dashboard shell, KPIs, revenue chart, today's schedule, recent orders, notifications
 - [x] Public storefront home, full menu, product pages with options
 - [x] Session cart (add, update, remove, clear) with live totals
-- [x] Checkout with schedule picker (lead time, store hours, blocked dates), delivery/pickup, payment + deposit
+- [x] Checkout with schedule picker (lead time, store hours, blocked dates), delivery/pickup, and payment method
 - [x] Public order confirmation & tracking page
 - [x] Orders board (list + kanban board) with status tabs, search, date/fulfillment/payment filters, sorting, pagination
-- [x] Order detail and workflow: status transitions, deposit tracking, internal notes, WhatsApp templates + message log, activity timeline
+- [x] Order detail and workflow: status transitions, internal notes, WhatsApp templates + message log, activity timeline
 - [x] Dashboard links into the orders board; notification dropdown opens orders and marks them read
 - [x] Products: list/grid, search and filters, create/edit with image upload or URL, option builder, availability toggle, soft delete, category manager
 - [x] Customers: searchable customer book with tags, lifetime spend, order counts, profile page and editable notes/tags
-- [x] Settings: store profile, logo/cover, storefront link, delivery/pickup, deposit rules, lead time, working hours, blocked dates
+- [x] Settings: store profile, logo/cover, storefront link, delivery/pickup, delivery fee, bank-transfer details, lead time, working hours, blocked dates
 - [x] Analytics: period comparison, revenue trend, status/fulfillment/payment breakdowns, top products and customers, busiest days
 - [x] Arabic copy and RTL pass, custom favicon, final test coverage
 - [x] Self-hosted Amiri + Tajawal fonts and local bakery photos (no external asset dependencies)
@@ -109,14 +109,13 @@ All routes require login and are scoped to the authenticated user's store.
 - `GET /dashboard/orders` — orders board. `?view=list|board`, `?status=`, `?q=`, `?date=`, `?fulfillment=`, `?payment=`, `?sort=`.
   - **List** view: status tabs with counts, filters, sorting, 12-per-page pagination.
   - **Board** view: kanban columns for every status (جديد → تم التسليم), capped at 240 cards.
-- `GET /dashboard/orders/{order}` — order detail: workflow stepper, quick status actions, items and totals, customer card, deposit card, WhatsApp templates, internal notes, and the full activity timeline.
+- `GET /dashboard/orders/{order}` — order detail: workflow stepper, quick status actions, items and totals, customer card, payment details, WhatsApp templates, internal notes, and the full activity timeline.
 - `PATCH /dashboard/orders/{order}/status` — move an order to one of its allowed next statuses (`OrderService::transition`).
-- `PATCH /dashboard/orders/{order}/deposit` — set the deposit to paid, refunded, or pending.
 - `PATCH /dashboard/orders/{order}/notes` — save internal notes.
 - `POST /dashboard/orders/{order}/messages` — log an opened WhatsApp template (`MessageLog` + order event).
 - `POST /dashboard/notifications/read` — mark all notifications read; `POST /dashboard/notifications/{notification}` opens the related order.
 
-Status transitions are validated against `OrderStatus::nextStatuses()`, so an illegal jump (for example جديد → تم التسليم) is rejected on the server. Every action appends an `OrderEvent`, and status/deposit changes raise in-app notifications.
+Status transitions are validated against `OrderStatus::nextStatuses()`, so an illegal jump (for example جديد → تم التسليم) is rejected on the server. Every action appends an `OrderEvent`, and status changes raise in-app notifications.
 
 ## Products, customers and settings
 
@@ -145,7 +144,7 @@ Product slugs are made unique automatically, category ownership is validated, an
 
 - `GET /dashboard/settings?tab=profile|delivery|hours` — store profile, images, delivery/payment rules, working hours, and blocked dates.
 - `PATCH /dashboard/settings/profile` — name, slug, tagline, description, contact details, location, logo and cover (upload, URL, or remove).
-- `PATCH /dashboard/settings/store` — pickup/delivery toggles, delivery fee, deposit percentage, store lead time, and deposit instructions. At least one fulfillment method must stay enabled.
+- `PATCH /dashboard/settings/store` — pickup/delivery toggles, delivery fee, store lead time, and the bank-transfer details customers pay the full amount to. At least one fulfillment method must stay enabled.
 - `PATCH /dashboard/settings/hours` — seven-day opening hours; closed days are stored without times.
 - `POST /dashboard/settings/blocked-dates` / `DELETE .../{blockedDate}` — add or remove blocked dates (today or later).
 
@@ -158,6 +157,21 @@ Uploads use Cloudinary in production. Locally they fall back to Laravel's `publi
 - Charts cover the daily revenue trend, order-status mix, orders by weekday, fulfillment split, and payment-method split.
 - Tables list the top five products (by revenue or quantity) and the top five customers by delivered spend, with links into the customer profile.
 - All metrics are computed in `AnalyticsService` and scoped to the authenticated user's store. Revenue counts delivered orders only, while order-based counters exclude cancelled orders.
+
+## Plans and platform admin
+
+A store has a plan that caps what it can do each month. `PlanService` is the single source of truth, enforced in real time (there is no scheduler on the free tier).
+
+- **Free:** 15 orders/month, 12 products, 1 user, 0% commission. The 16th order is blocked with a friendly page and two WhatsApp buttons (the store and platform support).
+- **Starter / Pro:** unlimited orders and products; Pro adds the features that are still being built, each shown with a "قريباً" badge.
+- **Trials:** a 7-day Starter trial; paid plans keep a 7-day grace period after expiry. `order_limit_override` adds orders on top of a finite base.
+
+Platform admins (`users.is_admin`) reach `/admin/stores` to list every store with its owner, plan, monthly usage, and last login, and to change the plan, grant extra orders, suspend, or reopen a store. Grant admin with:
+
+```bash
+php artisan dukkani:admin:grant owner@example.com
+php artisan dukkani:admin:grant owner@example.com --revoke
+```
 
 ## Screenshots
 
@@ -207,10 +221,10 @@ live at **https://dukkani-demo.onrender.com**.
 
 - `dukkani-app/Dockerfile` — multi-stage build (Vite assets → Composer vendor →
   `php:8.4-apache`).
-- `dukkanni-app/docker/entrypoint.sh` — prepares storage, generates and
+- `dukkani-app/docker/entrypoint.sh` — prepares storage, generates and
   stores `APP_KEY`, runs migrations, seeds the demo once, caches config/routes/views,
   and starts Apache on Render's `$PORT`.
-- `dukkanni-app/docker/apache.conf`, `dukkanni-app/docker/php.ini` — vhost and
+- `dukkani-app/docker/apache.conf`, `dukkani-app/docker/php.ini` — vhost and
   production PHP settings.
 - `.env.production.example` — the production environment reference.
 
@@ -220,10 +234,11 @@ The step-by-step guide is in [`docs/DEPLOYMENT.md`](../docs/DEPLOYMENT.md).
 
 - **Multi-tenant ready:** every tenant table carries `store_id`; dashboard queries scope through the authenticated user's store.
 - **Money:** stored as integers in fils (`1 JOD = 1000 fils`) and formatted by `App\Support\Money`.
-- **Statuses:** `OrderStatus`, `FulfillmentType`, `DepositStatus`, and `PaymentMethod` are PHP enums.
-- **Services:** `CartService` (session cart), `OrderService` (placement, transitions, deposits, notes, message logging), `ScheduleService` (lead time, hours, blocked dates, slots, validation), `WhatsAppService` (templates), `AnalyticsService` (period KPIs, trends, breakdowns, top products/customers).
+- **Statuses:** `OrderStatus`, `FulfillmentType`, and `PaymentMethod` are PHP enums.
+- **Services:** `CartService` (session cart), `OrderService` (placement, transitions, notes, message logging), `ScheduleService` (lead time, hours, blocked dates, slots, validation), `WhatsAppService` (templates), `PlanService` (plan limits, trials, grace), `AnalyticsService` (period KPIs, trends, breakdowns, top products/customers).
+- **Store context:** `stores.currency`, `country_code`, and `timezone` are the source of truth and are applied per request by `SetStoreContext`.
 - **Demo mode:** `DEMO_MODE=true` enables the one-click login and sample-data labels.
-- **Business rules seeded:** 30% deposit for CliQ/bank transfers, 2 JOD delivery, 48-hour store lead time (72-hour max across products), pickup free.
+- **Business rules seeded:** 2 JOD delivery, 48-hour store lead time, pickup free, and full prepayment for CliQ/bank transfers.
 
 ## Tests
 
@@ -231,7 +246,7 @@ The step-by-step guide is in [`docs/DEPLOYMENT.md`](../docs/DEPLOYMENT.md).
 php artisan test
 ```
 
-The feature tests cover the storefront (home, menu filtering, product options, cross-store isolation), the session cart (add/update/remove, required options), checkout (schedule validation, blocked dates, lead time, delivery vs. pickup, deposits, cart clearing), public tracking, the milestone 1 auth/dashboard flow, the orders board and workflow (listing, status/search/filters, board view, cross-store isolation, status transitions, deposits, notes, WhatsApp logging, notifications), the product catalog (create/update with options, availability, categories, hidden products), the customer book (search, tags, profile, notes, scoped phone uniqueness), store settings (profile, delivery rules, hours, blocked dates, cross-store isolation), and analytics (period filtering, comparisons, top-product ranking, breakdowns, cross-store isolation). The suite currently has **75 tests and 296 assertions**.
+The feature tests cover the storefront (home, menu filtering, product options, cross-store isolation), the session cart (add/update/remove, required options), checkout (schedule validation, blocked dates, lead time, delivery vs. pickup, payment methods, cart clearing, and the per-IP throttle), public tracking, the milestone 1 auth/dashboard flow, the orders board and workflow (listing, status/search/filters, board view, cross-store isolation, status transitions, notes, WhatsApp logging, notifications), the product catalog (create/update with options, availability, categories, hidden products), the customer book (search, tags, profile, notes, scoped phone uniqueness), store settings (profile, delivery rules, hours, blocked dates, cross-store isolation), analytics (period filtering, comparisons, top-product ranking, breakdowns, cross-store isolation), currency/country behaviour (+970 spots, CliQ hidden outside Jordan), plan limits and trials, the platform admin panel, and a full launch end-to-end journey. The suite currently has **143 tests and 600 assertions**.
 
 ## Docs
 

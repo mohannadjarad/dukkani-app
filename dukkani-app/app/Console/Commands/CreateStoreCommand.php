@@ -31,7 +31,7 @@ class CreateStoreCommand extends Command
     public function handle(): int
     {
         $storeName = $this->optionOrAsk('store-name', 'Store name (as customers see it)');
-        $slug = Str::slug($this->optionOrAsk('slug', 'Store URL slug (Latin letters and dashes, e.g. amal-bakes)'));
+        $slug = Str::slug($this->optionOrAsk('slug', 'Store URL slug (Latin letters and dashes, e.g. my-bakery)'));
         $ownerName = $this->optionOrAsk('owner-name', 'Owner full name');
         $email = Str::lower($this->optionOrAsk('email', 'Owner login email'));
         $password = (string) ($this->option('password') ?? '');

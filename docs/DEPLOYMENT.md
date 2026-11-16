@@ -332,7 +332,24 @@ Image uploads use Cloudinary when `CLOUDINARY_URL` is set. With an empty
 `testing`. Any other environment, including production, returns a clear Arabic
 validation error instead of storing the file on an ephemeral disk.
 
-## 12. Troubleshooting
+## 12. Monitoring
+
+Everything runs on free tiers, so each one has a ceiling. Watch these, in order
+of how badly a breach hurts:
+
+| What | Where | Watch for | If it is hit |
+|---|---|---|---|
+| App health | `https://dukkani-prod.onrender.com/up` + the cron-job.org job | Non-2xx, or 2–3 consecutive pinger failures | Open the Render logs; usually a bad `APP_KEY` or a Neon connection error |
+| Render instance hours | Render dashboard → Billing | 750 hours/workspace/month across **both** services | The pinger window (`*/10 6-19`) keeps prod near 420 h; never pinger the demo |
+| Neon storage & egress | Neon dashboard → project → Usage | 1 GB storage, 5 GB egress / month | Images live on Cloudinary, not Neon. If egress spikes, look for a polling client |
+| Cloudinary credits | Cloudinary console → Usage | 25 credits/month, bandwidth | Delivery uses `f_auto,q_auto`; re-check before adding larger images |
+| Backups | GitHub → Actions → daily backup job | A failed or missing run | Re-run manually; download the artifact before it expires (90 days) |
+
+There is no uptime product in the stack; the cron-job.org failure notifications
+and the Render deploy log are the whole monitoring story. Keep
+`dukkani:admin:grant` handy so a second admin can always reach `/admin/stores`.
+
+## 13. Troubleshooting
 
 | Symptom | Cause / fix |
 |---|---|
