@@ -86,9 +86,26 @@ class AdminPanelTest extends TestCase
 
         $this->assertSame('starter', $this->store->plan);
         $this->assertFalse($this->store->is_trial);
+        $this->assertNotNull($this->store->first_paid_at);
         $this->assertNotNull($this->store->plan_expires_at);
-        $this->assertTrue($this->store->plan_expires_at->between(now()->addMonths(3)->subDay(), now()->addMonths(3)->addDay()));
+        // Three paid months plus the one-off first-month bonus days.
+        $this->assertTrue($this->store->plan_expires_at->between(
+            now()->addMonths(3)->addDays(6),
+            now()->addMonths(3)->addDays(8),
+        ));
         $this->assertNull(app(\App\Services\PlanService::class)->orderLimit($this->store));
+    }
+
+    public function test_the_admin_cannot_assign_pro_because_it_is_not_for_sale(): void
+    {
+        $this->actingAs($this->admin)
+            ->post(route('admin.stores.plan', $this->store), [
+                'plan' => 'pro',
+                'months' => 1,
+            ])
+            ->assertSessionHasErrors('plan');
+
+        $this->assertSame('free', $this->store->refresh()->plan);
     }
 
     public function test_the_admin_can_grant_an_order_override(): void

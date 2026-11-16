@@ -30,6 +30,25 @@ class PlanService
         return array_keys($this->plans());
     }
 
+    /**
+     * Plans that may actually be sold/assigned right now. Pro is on the
+     * roadmap only, so it is excluded until its features ship.
+     *
+     * @return array<int, string>
+     */
+    public function purchasableKeys(): array
+    {
+        return array_keys(array_filter(
+            $this->plans(),
+            fn (array $plan) => ($plan['purchasable'] ?? true) !== false,
+        ));
+    }
+
+    public function isPurchasable(string $plan): bool
+    {
+        return in_array($plan, $this->purchasableKeys(), true);
+    }
+
     /** @return array<string, mixed> */
     public function config(?string $plan): array
     {
@@ -247,25 +266,44 @@ class PlanService
     /**
      * Activate a paid plan for a number of months (null = no expiry). Clearing
      * the order override avoids carrying an old courtesy allowance forward.
+     *
+     * The first paid activation for a store also adds the first-month bonus
+     * days on top of the paid period, granted once (tracked by first_paid_at).
      */
     public function activate(Store $store, string $plan, ?int $months = null): Store
     {
+        $plan = $this->config($plan) === [] ? 'free' : $plan;
+
+        $expires = $months ? now()->addMonths($months) : null;
+        $firstPaidAt = $store->first_paid_at;
+
+        if ($plan !== 'free' && $months && $firstPaidAt === null) {
+            $bonus = (int) config('plans.first_month_bonus_days', 0);
+
+            if ($bonus > 0 && $expires !== null) {
+                $expires->addDays($bonus);
+            }
+
+            $firstPaidAt = now();
+        }
+
         $store->forceFill([
-            'plan' => $this->config($plan) === [] ? 'free' : $plan,
-            'plan_expires_at' => $months ? now()->addMonths($months) : null,
+            'plan' => $plan,
+            'plan_expires_at' => $expires,
             'is_trial' => false,
             'order_limit_override' => null,
+            'first_paid_at' => $firstPaidAt,
         ])->save();
 
         return $store;
     }
 
-    /** Put a brand-new store on the free Starter trial. */
+    /** Put a brand-new store on the free full-feature Starter trial. */
     public function startTrial(Store $store, ?int $days = null): Store
     {
         $store->forceFill([
             'plan' => 'starter',
-            'plan_expires_at' => now()->addDays($days ?? (int) config('plans.trial_days', 7)),
+            'plan_expires_at' => now()->addDays($days ?? (int) config('plans.trial_days', 3)),
             'is_trial' => true,
         ])->save();
 

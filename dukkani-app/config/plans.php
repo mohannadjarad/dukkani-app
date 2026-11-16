@@ -16,8 +16,14 @@ return [
 
     'default' => 'free',
 
-    // A brand-new store gets a free Starter trial for this many days.
-    'trial_days' => 7,
+    // A brand-new store gets a free full-feature Starter trial for this many
+    // days, then falls back to the Free limits automatically.
+    'trial_days' => 3,
+
+    // The first time a store activates a paid plan, this many extra free days
+    // are added on top of the paid period (a one-off first-month thank-you).
+    // Granted only once per store, tracked by `stores.first_paid_at`.
+    'first_month_bonus_days' => 7,
 
     // A paid plan keeps working for this many days after it expires before it
     // drops back to the Free limits (gives the owner time to renew).
@@ -51,10 +57,10 @@ return [
             'order_limit' => 15,
             'product_limit' => 12,
             'user_limit' => 1,
+            'purchasable' => true,
             'features' => [
                 'customers' => false,
                 'analytics' => false,
-                'verified_badge' => false,
                 'whatsapp_templates' => true,
             ],
             'coming_soon' => [],
@@ -67,15 +73,17 @@ return [
             'order_limit' => null,
             'product_limit' => null,
             'user_limit' => 1,
+            'purchasable' => true,
             'features' => [
                 'customers' => true,
                 'analytics' => true,
-                'verified_badge' => true,
                 'whatsapp_templates' => true,
             ],
             'coming_soon' => [],
         ],
 
+        // Pro is on the roadmap only. It is not for sale at launch: every extra
+        // feature over Starter is still being built, so it stays "قريباً".
         'pro' => [
             'label' => 'Pro',
             'label_latin' => 'Pro',
@@ -83,10 +91,10 @@ return [
             'order_limit' => null,
             'product_limit' => null,
             'user_limit' => 3,
+            'purchasable' => false,
             'features' => [
                 'customers' => true,
                 'analytics' => true,
-                'verified_badge' => true,
                 'whatsapp_templates' => true,
             ],
             'coming_soon' => ['حتى 3 مستخدمين', 'كوبونات وخصومات', 'مناطق توصيل متعددة', 'تصدير Excel/CSV', 'دومين مخصص'],

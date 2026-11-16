@@ -47,11 +47,11 @@ class StoreController extends Controller
     public function updatePlan(Request $request, Store $store): RedirectResponse
     {
         $data = $request->validate([
-            'plan' => ['required', Rule::in($this->plans->keys())],
+            'plan' => ['required', Rule::in($this->plans->purchasableKeys())],
             'months' => ['nullable', 'integer', Rule::in([1, 3, 12])],
         ], [
             'plan.required' => 'اختاري الخطة.',
-            'plan.in' => 'الخطة غير معروفة.',
+            'plan.in' => 'الخطة غير متاحة للبيع حالياً.',
             'months.in' => 'المدة يجب أن تكون 1 أو 3 أو 12 شهراً.',
         ]);
 

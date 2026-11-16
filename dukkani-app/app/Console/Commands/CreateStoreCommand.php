@@ -24,7 +24,7 @@ class CreateStoreCommand extends Command
                             {--currency= : Store currency code (defaults to the country currency)}
                             {--country-code=962 : Store country dial code, for example 962 or 970}
                             {--timezone= : Store timezone (defaults to the country timezone)}
-                            {--no-trial : Skip the free 7-day Starter trial}';
+                            {--no-trial : Skip the free 3-day Starter trial}';
 
     protected $description = 'Create a store with its owner account and default opening hours';
 

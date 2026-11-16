@@ -47,7 +47,7 @@
                 <ul class="mt-3 space-y-2 text-[11px] text-ink-soft">
                     <li class="flex items-center gap-2"><span class="text-sage">✓</span> طلبات ومنتجات بلا حد</li>
                     <li class="flex items-center gap-2"><span class="text-sage">✓</span> سجل الزبائن والتقارير</li>
-                    <li class="flex items-center gap-2"><span class="text-sage">✓</span> شارة «موثّق» ودعم واتساب 24 ساعة</li>
+                    <li class="flex items-center gap-2"><span class="text-sage">✓</span> دعم بالعربي عبر واتساب</li>
                 </ul>
                 <p class="mt-4 text-[11px] text-muted">تبدأ من <span class="font-bold text-ink">{{ $starterPrice }} {{ $symbol }}</span> شهرياً.</p>
             </div>

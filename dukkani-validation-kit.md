@@ -13,7 +13,7 @@ You are not testing "do people like the idea?" You are testing:
 1. **Frequency** — does the pain happen weekly?
 2. **Cost** — does it cost money, orders, or reputation?
 3. **Workaround** — are they already using a notebook, Excel, or chat search?
-4. **Willingness to pay** — will they pay 29–39 JOD/month after a pilot?
+4. **Willingness to pay** — will they pay 29 JOD/month after a free trial?
 5. **Reachability** — can you find 20 more sellers through the same channel?
 
 If the answer to 3, 4, and 5 is yes, build. If not, change the niche or the offer.
@@ -106,13 +106,13 @@ Start with permission:
 ### Willingness to pay
 
 17. If a tool captured every order, reminded you about delivery dates, and gave you a storefront link, what would that be worth per month?
-18. Would you pay 29 JOD/month? 39? 49? (Ask directly; don't accept "maybe.")
+18. Would you pay 29 JOD/month? (Ask directly; don't accept "maybe.")
 19. What would make you say "this is too expensive"?
 20. Who else do you know who has this problem?
 
 ### Close
 
-> "I'm running a free 2-week pilot for 5 bakers. You'd share a link, I'd set up your storefront, and we'd manage your orders together. After 2 weeks, if it saves you time, it's 29 JOD/month for the first 20 sellers (normally 39 JOD/month). Interested?"
+> "I'm running a free 3-day trial for 5 bakers. You'd share a link, I'd set up your storefront, and we'd manage your orders together. After the trial, if it saves you time, it's 29 JOD/month. Interested?"
 
 **Record:** name, phone, Instagram, orders/week, current tools, biggest pain, willingness to pay, referral.
 
@@ -183,14 +183,14 @@ Rate each interview 1–5:
 | Orders lost/missed | Ask the seller at the end of each day |
 | Time saved | Seller's estimate before/after |
 | Payments collected | Amount and percentage |
-| Seller satisfaction | 1–5 after 2 weeks |
-| Willingness to pay | Ask for 29 JOD/month (founding price) |
+| Seller satisfaction | 1–5 after the trial |
+| Willingness to pay | Ask for 29 JOD/month |
 
-### After 2 weeks
+### After the trial
 
 Ask:
 
-> "This is the pilot. If you want to keep using it, it's 29 JOD/month for the first 20 sellers (normally 39 JOD/month). Should I set up your subscription?"
+> "This is the trial. If you want to keep using it, it's 29 JOD/month. Should I set up your subscription?"
 
 **Payment is the validation.** A "yes" without payment is a no.
 
@@ -239,10 +239,10 @@ Ask:
 ### Pricing
 
 - **مجاني:** 0 د.أ — حتى 15 طلبًا شهريًا، متجر ورابط، لوحة طلبات أساسية.
-- **ستارتر:** 39 د.أ/شهر — طلبات غير محدودة، سجل زبائن، قوالب واتساب، تقارير. (29 د.أ/شهر لأول 20 مشروعًا.)
-- **برو:** 79 د.أ/شهر — كل مزايا ستارتر، دومين خاص، حسابات فريق، دعم أولوية.
+- **ستارتر:** 29 د.أ/شهر — طلبات غير محدودة، سجل زبائن، قوالب واتساب، تقارير.
+- **برو:** 59 د.أ/شهر — قريبًا (كل مزايا ستارتر، دومين خاص، حسابات فريق، دعم أولوية).
 
-**Note:** سعر التأسيس لأول 20 مشروعًا فقط. بدون عمولة على الطلبات.
+**Note:** الخطة المجانية مجانية للأبد، وأول شهر على ستارتر فيه 7 أيام إضافية. بدون عمولة على الطلبات.
 
 ### FAQ
 
@@ -251,7 +251,7 @@ Ask:
 - **هل يعمل بالعربي؟** نعم، مصمم للعربي واتجاه RTL.
 - **هل أستطيع استخدام واتساب؟** نعم. في البداية نجهز لك رسائل جاهزة بضغطة، ولاحقًا أتمتة كاملة.
 - **هل هناك عمولة على الطلبات؟** لا. تدفعين اشتراكًا شهريًا فقط.
-- **هل أستطيع تجربته قبل الدفع؟** نعم، 14 يومًا مجانًا.
+- **هل أستطيع تجربته قبل الدفع؟** نعم، 3 أيام تجربة كاملة مجانًا، وبعدها الخطة المجانية للأبد.
 
 ### Waitlist
 
@@ -310,10 +310,10 @@ Dukkani gives home businesses a simple storefront and order board. Capture order
 ### Pricing
 
 - **Free:** 0 JOD — up to 15 orders/month, storefront link, basic order board.
-- **Starter:** 39 JOD/month — unlimited orders, customer book, WhatsApp templates, reports. (29 JOD/month for the first 20 sellers.)
-- **Pro:** 79 JOD/month — everything in Starter, custom domain, team accounts, priority support.
+- **Starter:** 29 JOD/month — unlimited orders, customer book, WhatsApp templates, reports.
+- **Pro:** 59 JOD/month — coming soon (everything in Starter, custom domain, team accounts, priority support).
 
-**Note:** Founding price for the first 20 sellers only. No commission on orders.
+**Note:** The free plan stays free forever, and the first Starter month includes 7 extra free days. No commission on orders.
 
 ### FAQ
 
@@ -322,7 +322,7 @@ Dukkani gives home businesses a simple storefront and order board. Capture order
 - **Does it work in Arabic?** Yes, built for Arabic and RTL.
 - **Can I use WhatsApp?** Yes. Start with one-tap templates; automation comes later.
 - **Is there a commission?** No. You pay a monthly subscription only.
-- **Can I try it before paying?** Yes, 14 days free.
+- **Can I try it before paying?** Yes, 3 days free, then the free plan stays free forever.
 
 ### Waitlist
 
@@ -363,9 +363,9 @@ Update after every conversation. Review weekly.
 ### Week 2
 
 - [ ] Finish 10–15 interviews.
-- [ ] Start 5 concierge pilots.
+- [ ] Start 5 concierge onboardings.
 - [ ] Measure orders/week and time saved.
-- [ ] Ask for 29 JOD/month (founding price) after the pilot.
+- [ ] Ask for 29 JOD/month after the trial.
 - [ ] Write a one-page findings summary.
 - [ ] Decide: build, pivot, or stop.
 

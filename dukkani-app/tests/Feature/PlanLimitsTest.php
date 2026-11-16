@@ -202,6 +202,76 @@ class PlanLimitsTest extends TestCase
         $this->assertTrue($this->plans()->canAcceptOrder($store));
     }
 
+    // Trial and first-month bonus -------------------------------------------
+
+    public function test_a_new_store_starts_on_a_three_day_trial(): void
+    {
+        $store = $this->makeStore(['plan' => 'free']);
+
+        $this->plans()->startTrial($store);
+        $store->refresh();
+
+        $this->assertSame('starter', $store->plan);
+        $this->assertTrue($store->is_trial);
+        $this->assertTrue($this->plans()->isOnTrial($store));
+        $this->assertSame(3, $this->plans()->trialDaysLeft($store));
+        $this->assertNull($this->plans()->orderLimit($store));
+    }
+
+    public function test_the_first_paid_activation_adds_the_first_month_bonus(): void
+    {
+        $store = $this->makeStore(['plan' => 'free']);
+
+        $this->plans()->activate($store, 'starter', 1);
+        $store->refresh();
+
+        $this->assertSame('starter', $store->plan);
+        $this->assertFalse($store->is_trial);
+        $this->assertNotNull($store->first_paid_at);
+        // One paid month plus the seven-day first-month bonus.
+        $this->assertTrue($store->plan_expires_at->between(
+            now()->addMonths(1)->addDays(6),
+            now()->addMonths(1)->addDays(8),
+        ));
+    }
+
+    public function test_the_first_month_bonus_is_granted_only_once(): void
+    {
+        $store = $this->makeStore(['plan' => 'free']);
+
+        $this->plans()->activate($store, 'starter', 1);
+        $store->refresh();
+        $firstPaidAt = $store->first_paid_at->copy();
+
+        $this->plans()->activate($store, 'starter', 1);
+        $store->refresh();
+
+        $this->assertTrue($store->first_paid_at->equalTo($firstPaidAt));
+        // The second activation is a plain month, no bonus again.
+        $this->assertTrue($store->plan_expires_at->between(
+            now()->addMonths(1)->subDay(),
+            now()->addMonths(1)->addDay(),
+        ));
+    }
+
+    public function test_activating_free_never_grants_the_first_month_bonus(): void
+    {
+        $store = $this->makeStore(['plan' => 'free']);
+
+        $this->plans()->activate($store, 'free');
+        $store->refresh();
+
+        $this->assertNull($store->first_paid_at);
+        $this->assertNull($store->plan_expires_at);
+    }
+
+    public function test_pro_is_not_purchasable_at_launch(): void
+    {
+        $this->assertSame(['free', 'starter'], $this->plans()->purchasableKeys());
+        $this->assertTrue($this->plans()->isPurchasable('starter'));
+        $this->assertFalse($this->plans()->isPurchasable('pro'));
+    }
+
     // Storefront checkout ----------------------------------------------------
 
     public function test_checkout_is_redirected_to_the_limit_page_once_the_store_is_full(): void

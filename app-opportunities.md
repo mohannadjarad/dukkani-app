@@ -186,7 +186,7 @@ Why bakers first:
 - Free: up to 15 orders/month, basic storefront.
 - Starter: 25 JOD/month (~$35) for unlimited orders, WhatsApp notifications, analytics.
 - Pro: 45 JOD/month for multiple staff, custom domain, delivery labels, priority support.
-- Founding seller: 15 JOD/month for the first 20 sellers.
+- Starter: 29 JOD/month; the free plan stays free forever, up to 15 orders/month.
 - Later: 1–2% per order, payment processing, delivery partnerships.
 
 **Go-to-market:**
@@ -214,9 +214,9 @@ Why bakers first:
 **First validation (before code):**
 
 1. Talk to 15 home bakers. Ask: How many orders/week? Where do they come from? What breaks most often? What have they tried? What would they pay to fix it?
-2. Build a one-page landing site with a waitlist and a "founding seller" offer.
+2. Build a one-page landing site with a waitlist and an early-access offer.
 3. Run a **concierge MVP** for 5 sellers: they forward orders to you on WhatsApp; you manage them in a shared Google Sheet and send confirmations. Do this for 2 weeks.
-4. Ask the 5 sellers to pay 15 JOD/month (founding price) to continue. If 3 say yes, build. If not, change the niche or the offer.
+4. Ask the 5 sellers to pay 29 JOD/month to continue. If 3 say yes, build. If not, change the niche or the offer.
 
 **Why it fits you:** it is a multi-tenant CRUD app with notifications, files, roles, and analytics — extensions of what you already built in Masahati. You can use Laravel + MySQL + Blade/Tailwind (or Inertia React), WhatsApp Cloud API, queues, and Cloudinary.
 
@@ -405,7 +405,7 @@ The uncomfortable comparison:
 **A 2-week head-to-head test:**
 
 1. Talk to 10 home bakers and 10 clinic managers (20 conversations total).
-2. Offer a paid pilot to both groups: 15 JOD/month for bakers (founding price), 30 JOD/month for clinics.
+2. Offer a paid pilot to both groups: 29 JOD/month for bakers, 30 JOD/month for clinics.
 3. Whichever group produces **3 paid commitments first** is the one you build.
 4. If neither produces 3 commitments, the problem is the offer or the niche — not the app.
 

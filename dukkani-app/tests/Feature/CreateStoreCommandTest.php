@@ -84,7 +84,7 @@ class CreateStoreCommandTest extends TestCase
         $this->assertSame('970', $store->country_code);
     }
 
-    public function test_it_starts_a_seven_day_starter_trial(): void
+    public function test_it_starts_a_three_day_starter_trial(): void
     {
         $this->artisan('dukkani:store:create', [
             '--store-name' => 'حلويات جنين',
@@ -103,7 +103,7 @@ class CreateStoreCommandTest extends TestCase
         $this->assertSame('starter', $store->plan);
         $this->assertTrue($store->is_trial);
         $this->assertNotNull($store->plan_expires_at);
-        $this->assertTrue($store->plan_expires_at->between(now()->addDays(6), now()->addDays(8)));
+        $this->assertTrue($store->plan_expires_at->between(now()->addDays(2), now()->addDays(4)));
         $this->assertNull(app(\App\Services\PlanService::class)->orderLimit($store));
     }
 

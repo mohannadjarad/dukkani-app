@@ -114,7 +114,10 @@
                             <label class="label !mb-1.5 !text-[10px] !text-muted">الخطة</label>
                             <select name="plan" class="input !py-2 !text-xs">
                                 @foreach ($plans as $key => $plan)
-                                    <option value="{{ $key }}" @selected($row['plan'] === $key)>{{ $plan['label'] }}</option>
+                                    @php $sellable = ($plan['purchasable'] ?? true) !== false; @endphp
+                                    @if ($sellable || $row['plan'] === $key)
+                                        <option value="{{ $key }}" @selected($row['plan'] === $key) @disabled(! $sellable)>{{ $plan['label'] }}@unless ($sellable) — قريباً@endunless</option>
+                                    @endif
                                 @endforeach
                             </select>
                         </div>
