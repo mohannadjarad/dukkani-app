@@ -85,9 +85,9 @@
                         <div class="flex items-center justify-between gap-3 rounded-2xl bg-canvas/70 px-3.5 py-3">
                             <span class="flex items-center gap-2 text-[11px] text-muted">
                                 <svg class="size-4 text-brand" fill="none" viewBox="0 0 24 24" stroke-width="1.7" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Z"/></svg>
-                                {{ $store->deposit_percent > 0 ? 'عربون التحويل' : 'الدفع' }}
+                                الدفع
                             </span>
-                            <span class="text-xs font-bold text-ink">{{ $store->deposit_percent > 0 ? $store->deposit_percent.'%' : 'نقداً عند الاستلام' }}</span>
+                            <span class="text-xs font-bold text-ink">{{ collect(config('payments.methods'))->only($store->allowedPaymentMethods())->pluck('short')->join(' • ') }}</span>
                         </div>
                     </div>
 

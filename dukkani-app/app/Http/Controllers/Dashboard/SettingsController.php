@@ -145,17 +145,18 @@ class SettingsController extends Controller
 
         $data = $request->validate([
             'delivery_fee' => ['required', 'numeric', 'min:0', 'max:100'],
-            'deposit_percent' => ['required', 'integer', 'min:0', 'max:100'],
             'lead_time_hours' => ['required', 'integer', 'min:1', 'max:720'],
-            'deposit_instructions' => ['nullable', 'string', 'max:1000'],
+            'bank_name' => ['nullable', 'string', 'max:100'],
+            'bank_account_name' => ['nullable', 'string', 'max:120'],
+            'bank_iban' => ['nullable', 'string', 'max:60'],
         ], [
             'delivery_fee.required' => 'أدخلي رسوم التوصيل (0 إن كان مجانياً).',
             'delivery_fee.numeric' => 'رسوم التوصيل يجب أن تكون رقماً.',
-            'deposit_percent.required' => 'حددي نسبة العربون.',
-            'deposit_percent.min' => 'نسبة العربون لا يمكن أن تكون سالبة.',
-            'deposit_percent.max' => 'نسبة العربون لا يمكن أن تتجاوز 100٪.',
             'lead_time_hours.required' => 'حددي أقل مدة تحضير.',
             'lead_time_hours.min' => 'أقل مدة تحضير هي ساعة واحدة.',
+            'bank_name.max' => 'اسم البنك طويل جداً.',
+            'bank_account_name.max' => 'اسم صاحب الحساب طويل جداً.',
+            'bank_iban.max' => 'رقم الآيبان طويل جداً.',
         ]);
 
         $pickup = $request->boolean('pickup_enabled');
@@ -171,9 +172,10 @@ class SettingsController extends Controller
             'pickup_enabled' => $pickup,
             'delivery_enabled' => $delivery,
             'delivery_fee_fils' => Money::jod($data['delivery_fee']),
-            'deposit_percent' => (int) $data['deposit_percent'],
             'lead_time_hours' => (int) $data['lead_time_hours'],
-            'deposit_instructions' => $data['deposit_instructions'] ?? null,
+            'bank_name' => filled($data['bank_name'] ?? null) ? trim($data['bank_name']) : null,
+            'bank_account_name' => filled($data['bank_account_name'] ?? null) ? trim($data['bank_account_name']) : null,
+            'bank_iban' => filled($data['bank_iban'] ?? null) ? strtoupper(str_replace(' ', '', trim($data['bank_iban']))) : null,
         ]);
 
         return redirect()

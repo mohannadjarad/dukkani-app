@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Enums\DepositStatus;
 use App\Enums\FulfillmentType;
 use App\Enums\OrderStatus;
 use App\Enums\PaymentMethod;
@@ -44,11 +43,12 @@ class DemoSeeder extends Seeder
                 'address' => 'شارع الرينبو ١٤، جبل عمّان',
                 'currency' => 'JOD',
                 'delivery_fee_fils' => 2000,
-                'deposit_percent' => 30,
                 'pickup_enabled' => true,
                 'delivery_enabled' => true,
                 'lead_time_hours' => 48,
-                'deposit_instructions' => 'حوّلي العربون عبر CliQ إلى 0790000000 وأرسلي صورة التحويل على واتساب. نبدأ التحضير فور تأكيد التحويل.',
+                'bank_name' => 'البنك العربي',
+                'bank_account_name' => 'أمل بيكنز',
+                'bank_iban' => 'JO94CBJO0010000000000131000302',
                 'timezone' => 'Asia/Amman',
                 'status' => 'active',
                 'onboarding_completed_at' => now(),
@@ -362,14 +362,6 @@ class DemoSeeder extends Seeder
 
             $deliveryFee = $fulfillment === FulfillmentType::Delivery ? $store->delivery_fee_fils : 0;
             $total = $subtotal + $deliveryFee;
-            $deposit = $payment !== 'cash' ? (int) round($total * $store->deposit_percent / 100) : 0;
-
-            $depositStatus = match (true) {
-                $deposit === 0 => DepositStatus::None,
-                $status === OrderStatus::Delivered => DepositStatus::Paid,
-                $status === OrderStatus::Cancelled => DepositStatus::Refunded,
-                default => DepositStatus::Pending,
-            };
 
             $dateKey = $created->format('ymd');
             $dayCounters[$dateKey] = ($dayCounters[$dateKey] ?? 0) + 1;
@@ -387,10 +379,8 @@ class DemoSeeder extends Seeder
                 'delivery_fee_fils' => $deliveryFee,
                 'discount_fils' => 0,
                 'total_fils' => $total,
-                'deposit_fils' => $deposit,
-                'deposit_status' => $depositStatus,
                 'payment_method' => PaymentMethod::from($payment),
-                'balance_due_fils' => max(0, $total - ($depositStatus === DepositStatus::Paid ? $deposit : 0)),
+                'balance_due_fils' => $total,
                 'customer_notes' => $index % 5 === 0 ? 'يا ريت الكتابة تكون بخط صغير وهادئ.' : null,
                 'internal_notes' => $index % 7 === 0 ? 'العميل حساس من المكسرات — تم التأكيد.' : null,
                 'source' => 'storefront',
@@ -456,13 +446,6 @@ class DemoSeeder extends Seeder
 
             $previous = $next;
         }
-
-        if ($order->deposit_status === DepositStatus::Paid) {
-            $depositEvent = $order->events()->make(['type' => 'deposit_paid', 'payload' => ['amount' => $order->deposit_fils]]);
-            $depositEvent->created_at = $created->copy()->addHours(2);
-            $depositEvent->updated_at = $created->copy()->addHours(2);
-            $depositEvent->save();
-        }
     }
 
     protected function seedNotifications(Store $store, User $owner): void
@@ -473,7 +456,7 @@ class DemoSeeder extends Seeder
             $notification = StoreNotification::create([
                 'store_id' => $store->id,
                 'user_id' => $owner->id,
-                'type' => $i % 3 === 0 ? 'order_created' : ($i % 3 === 1 ? 'deposit_paid' : 'order_confirmed'),
+                'type' => $i % 3 === 0 ? 'order_created' : 'order_confirmed',
                 'title' => $i % 3 === 0 ? 'طلب جديد '.$order->number : 'تحديث على الطلب '.$order->number,
                 'body' => $order->customer->name.' • '.$order->totalFormatted(),
                 'data' => ['order_id' => $order->id],

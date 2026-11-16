@@ -16,9 +16,4 @@ enum PaymentMethod: string
             self::BankTransfer => 'حوالة بنكية',
         };
     }
-
-    public function requiresDeposit(): bool
-    {
-        return $this !== self::Cash;
-    }
 }

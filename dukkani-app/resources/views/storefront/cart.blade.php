@@ -144,13 +144,6 @@
                             </div>
                         </div>
 
-                        @if ($store->deposit_percent > 0)
-                            <div class="mt-4 flex items-start gap-2 rounded-2xl bg-gold-soft/60 px-3.5 py-3 text-[10px] leading-5 text-[#8a672c]">
-                                <svg class="mt-0.5 size-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z"/></svg>
-                                <span>عند الدفع بـ CliQ أو الحوالة البنكية، يُطلب عربون {{ $store->deposit_percent }}% لتأكيد الطلب. الدفع النقدي عند الاستلام بدون عربون.</span>
-                            </div>
-                        @endif
-
                         <a href="{{ route('storefront.checkout', $store) }}" class="btn-primary mt-5 w-full">
                             متابعة إلى البيانات
                             <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 19.5 12m0 0-9-7.5m9 7.5H3"/></svg>

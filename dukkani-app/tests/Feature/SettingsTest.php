@@ -91,17 +91,21 @@ class SettingsTest extends TestCase
                 'pickup_enabled' => '1',
                 'delivery_enabled' => '1',
                 'delivery_fee' => '3.500',
-                'deposit_percent' => '40',
                 'lead_time_hours' => '24',
-                'deposit_instructions' => 'حوّلي عبر CliQ.',
+                'bank_name' => 'البنك العربي',
+                'bank_account_name' => 'أمل بيكنز',
+                'bank_iban' => 'jo94 cbjo 0010 0000 0000 0131 0003 02',
             ])
             ->assertRedirect(route('settings.index', ['tab' => 'delivery']));
 
         $this->store->refresh();
 
         $this->assertSame(3500, $this->store->delivery_fee_fils);
-        $this->assertSame(40, $this->store->deposit_percent);
         $this->assertSame(24, $this->store->lead_time_hours);
+        $this->assertSame('البنك العربي', $this->store->bank_name);
+        $this->assertSame('أمل بيكنز', $this->store->bank_account_name);
+        $this->assertSame('JO94CBJO0010000000000131000302', $this->store->bank_iban);
+        $this->assertTrue($this->store->hasBankDetails());
     }
 
     public function test_at_least_one_fulfillment_method_is_required(): void
@@ -112,7 +116,6 @@ class SettingsTest extends TestCase
                 'pickup_enabled' => '0',
                 'delivery_enabled' => '0',
                 'delivery_fee' => '2',
-                'deposit_percent' => '30',
                 'lead_time_hours' => '48',
             ])
             ->assertSessionHasErrors('delivery_enabled');

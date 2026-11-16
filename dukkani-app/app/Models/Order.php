@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Enums\DepositStatus;
 use App\Enums\FulfillmentType;
 use App\Enums\OrderStatus;
 use App\Enums\PaymentMethod;
@@ -21,8 +20,8 @@ class Order extends Model
     protected $fillable = [
         'store_id', 'customer_id', 'number', 'public_token', 'status',
         'fulfillment_type', 'scheduled_at', 'delivery_address', 'subtotal_fils',
-        'delivery_fee_fils', 'discount_fils', 'total_fils', 'deposit_fils',
-        'deposit_status', 'payment_method', 'balance_due_fils', 'customer_notes',
+        'delivery_fee_fils', 'discount_fils', 'total_fils',
+        'payment_method', 'balance_due_fils', 'customer_notes',
         'internal_notes', 'source', 'reference_image_path', 'consent_at',
     ];
 
@@ -31,7 +30,6 @@ class Order extends Model
         return [
             'status' => OrderStatus::class,
             'fulfillment_type' => FulfillmentType::class,
-            'deposit_status' => DepositStatus::class,
             'payment_method' => PaymentMethod::class,
             'scheduled_at' => 'datetime',
             'consent_at' => 'datetime',
@@ -39,7 +37,6 @@ class Order extends Model
             'delivery_fee_fils' => 'integer',
             'discount_fils' => 'integer',
             'total_fils' => 'integer',
-            'deposit_fils' => 'integer',
             'balance_due_fils' => 'integer',
         ];
     }
@@ -110,24 +107,9 @@ class Order extends Model
         return Money::format($this->subtotal_fils);
     }
 
-    public function depositFormatted(): string
-    {
-        return Money::format($this->deposit_fils);
-    }
-
     public function balanceFormatted(): string
     {
         return Money::format($this->balance_due_fils);
-    }
-
-    public function depositAmount(): int
-    {
-        return $this->deposit_fils;
-    }
-
-    public function computeBalance(): int
-    {
-        return max(0, $this->total_fils - ($this->deposit_status === DepositStatus::Paid ? $this->deposit_fils : 0));
     }
 
     public function nextStatuses(): array

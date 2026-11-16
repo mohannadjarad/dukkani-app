@@ -30,9 +30,6 @@ class OrderEvent extends Model
         return match ($this->type) {
             'created' => 'تم إنشاء الطلب',
             'status_changed' => 'تحديث حالة الطلب',
-            'deposit_paid' => 'تأكيد استلام العربون',
-            'deposit_refunded' => 'استرجاع العربون',
-            'deposit_updated' => 'تحديث حالة العربون',
             'note_added' => 'إضافة ملاحظة داخلية',
             'whatsapp_sent' => 'فتح رسالة واتساب',
             'customer_updated' => 'تحديث بيانات العميل',
@@ -50,7 +47,6 @@ class OrderEvent extends Model
             'whatsapp_sent' => isset($this->payload['template'])
                 ? (WhatsAppService::TEMPLATES[$this->payload['template']] ?? $this->payload['template'])
                 : null,
-            'deposit_paid', 'deposit_refunded', 'deposit_updated' => $this->payload['label'] ?? null,
             default => null,
         };
     }
@@ -60,9 +56,6 @@ class OrderEvent extends Model
         return match ($this->type) {
             'created' => 'sparkles',
             'status_changed' => 'arrow',
-            'deposit_paid' => 'cash',
-            'deposit_refunded' => 'undo',
-            'deposit_updated' => 'cash',
             'note_added' => 'note',
             'whatsapp_sent' => 'chat',
             'customer_updated' => 'user',
@@ -73,7 +66,6 @@ class OrderEvent extends Model
     public function color(): string
     {
         return match ($this->type) {
-            'deposit_paid', 'deposit_refunded' => 'emerald',
             'note_added' => 'gold',
             'whatsapp_sent' => 'sage',
             'status_changed' => 'brand',

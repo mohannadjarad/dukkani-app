@@ -43,7 +43,6 @@ class StoreNotification extends Model
     {
         return match ($this->type) {
             'order_created' => 'amber',
-            'deposit_paid' => 'green',
             'order_late' => 'red',
             default => 'stone',
         };

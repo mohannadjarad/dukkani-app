@@ -62,7 +62,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/', [OrderController::class, 'index'])->name('index');
         Route::get('/{order}', [OrderController::class, 'show'])->name('show');
         Route::patch('/{order}/status', [OrderController::class, 'updateStatus'])->name('status');
-        Route::patch('/{order}/deposit', [OrderController::class, 'updateDeposit'])->name('deposit');
         Route::patch('/{order}/notes', [OrderController::class, 'updateNotes'])->name('notes');
         Route::post('/{order}/messages', [OrderController::class, 'storeMessage'])->name('messages.store');
     });

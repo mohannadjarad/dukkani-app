@@ -18,8 +18,9 @@ class Store extends Model
         'owner_id', 'name', 'slug', 'tagline', 'description', 'logo_path',
         'logo_public_id', 'cover_path', 'cover_public_id', 'phone', 'whatsapp',
         'instagram', 'city', 'address',
-        'currency', 'country_code', 'delivery_fee_fils', 'deposit_percent', 'pickup_enabled',
-        'delivery_enabled', 'lead_time_hours', 'deposit_instructions', 'timezone',
+        'currency', 'country_code', 'delivery_fee_fils', 'pickup_enabled',
+        'delivery_enabled', 'lead_time_hours', 'bank_name', 'bank_account_name',
+        'bank_iban', 'timezone',
         'status', 'onboarding_completed_at',
     ];
 
@@ -27,7 +28,6 @@ class Store extends Model
     {
         return [
             'delivery_fee_fils' => 'integer',
-            'deposit_percent' => 'integer',
             'pickup_enabled' => 'boolean',
             'delivery_enabled' => 'boolean',
             'lead_time_hours' => 'integer',
@@ -173,6 +173,17 @@ class Store extends Model
         $methods[] = 'bank_transfer';
 
         return $methods;
+    }
+
+    /**
+     * Whether the store has configured bank-transfer details the customer can
+     * pay the full order amount to.
+     */
+    public function hasBankDetails(): bool
+    {
+        return filled($this->bank_name)
+            || filled($this->bank_account_name)
+            || filled($this->bank_iban);
     }
 
     public function whatsappLink(?string $text = null): string

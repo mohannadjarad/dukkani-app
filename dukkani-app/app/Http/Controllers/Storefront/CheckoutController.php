@@ -37,7 +37,6 @@ class CheckoutController extends StorefrontController
                 'time' => old('scheduled_time', $defaultTime),
                 'subtotal' => $subtotal,
                 'deliveryFee' => $store->delivery_enabled ? (int) $store->delivery_fee_fils : 0,
-                'depositPercent' => (int) $store->deposit_percent,
                 'deliveryEnabled' => (bool) $store->delivery_enabled,
                 'pickupEnabled' => (bool) $store->pickup_enabled,
                 'name' => old('name'),

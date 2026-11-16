@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Enums\DepositStatus;
 use App\Enums\OrderStatus;
 use App\Enums\PaymentMethod;
 use App\Models\Customer;
@@ -36,9 +35,8 @@ class OrderService
         $subtotal = (int) $items->sum('line_total_fils');
         $deliveryFee = $this->cart->deliveryFee($store, $fulfillment);
         $total = $subtotal + $deliveryFee;
-        $deposit = $this->cart->depositFor($store, $total, $payment);
 
-        return DB::transaction(function () use ($store, $data, $items, $fulfillment, $payment, $subtotal, $deliveryFee, $total, $deposit) {
+        return DB::transaction(function () use ($store, $data, $items, $fulfillment, $payment, $subtotal, $deliveryFee, $total) {
             $phone = Phone::normalize($data['phone'], $store->dialCode()) ?? $data['phone'];
 
             $customer = Customer::firstOrCreate(
@@ -68,10 +66,8 @@ class OrderService
                 'delivery_fee_fils' => $deliveryFee,
                 'discount_fils' => 0,
                 'total_fils' => $total,
-                'deposit_fils' => $deposit,
-                'deposit_status' => $deposit > 0 ? DepositStatus::Pending : DepositStatus::None,
                 'payment_method' => PaymentMethod::from($payment),
-                'balance_due_fils' => max(0, $total - $deposit),
+                'balance_due_fils' => $total,
                 'customer_notes' => $data['customer_notes'] ?? null,
                 'source' => 'storefront',
                 'reference_image_path' => $data['reference_image_path'] ?? null,
@@ -144,33 +140,6 @@ class OrderService
         return $order->refresh();
     }
 
-    public function markDepositPaid(Order $order, ?User $user = null): void
-    {
-        $this->updateDeposit($order, DepositStatus::Paid, $user);
-    }
-
-    public function updateDeposit(Order $order, DepositStatus $status, ?User $user = null): void
-    {
-        $order->forceFill([
-            'deposit_status' => $status,
-            'balance_due_fils' => $this->balanceFor($order, $status),
-        ])->save();
-
-        $order->events()->create([
-            'user_id' => $user?->id,
-            'type' => match ($status) {
-                DepositStatus::Paid => 'deposit_paid',
-                DepositStatus::Refunded => 'deposit_refunded',
-                default => 'deposit_updated',
-            },
-            'payload' => [
-                'amount' => $order->deposit_fils,
-                'status' => $status->value,
-                'label' => $status->label(),
-            ],
-        ]);
-    }
-
     public function addNote(Order $order, ?string $note, ?User $user = null): void
     {
         $order->forceFill(['internal_notes' => $note])->save();
@@ -202,15 +171,6 @@ class OrderService
         ]);
 
         return $log;
-    }
-
-    protected function balanceFor(Order $order, DepositStatus $status): int
-    {
-        return match ($status) {
-            DepositStatus::Paid => max(0, $order->total_fils - $order->deposit_fils),
-            DepositStatus::Pending => max(0, $order->total_fils - $order->deposit_fils),
-            default => $order->total_fils,
-        };
     }
 
     protected function nextNumber(Store $store): string

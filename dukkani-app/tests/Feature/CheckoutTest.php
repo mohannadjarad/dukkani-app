@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Enums\DepositStatus;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Store;
@@ -63,7 +62,6 @@ class CheckoutTest extends TestCase
         $this->assertSame(18500, $order->subtotal_fils);
         $this->assertSame(2000, $order->delivery_fee_fils);
         $this->assertSame(20500, $order->total_fils);
-        $this->assertSame(0, $order->deposit_fils);
         $this->assertSame(20500, $order->balance_due_fils);
         $this->assertSame(1, $order->items()->count());
         $this->assertNull(session('cart.'.$this->store->id));
@@ -97,7 +95,7 @@ class CheckoutTest extends TestCase
         $this->assertNull($order->delivery_address);
     }
 
-    public function test_cliq_order_requires_a_thirty_percent_deposit(): void
+    public function test_cliq_order_pays_the_full_amount_without_a_deposit(): void
     {
         $this->addToCart();
 
@@ -107,11 +105,13 @@ class CheckoutTest extends TestCase
 
         $order = Order::latest('id')->firstOrFail();
 
-        $expectedDeposit = (int) round(20500 * 0.3);
+        $this->assertSame(20500, $order->total_fils);
+        $this->assertSame(20500, $order->balance_due_fils);
 
-        $this->assertSame($expectedDeposit, $order->deposit_fils);
-        $this->assertSame(DepositStatus::Pending, $order->deposit_status);
-        $this->assertSame(20500 - $expectedDeposit, $order->balance_due_fils);
+        $this->get(route('track.show', $order->public_token))
+            ->assertOk()
+            ->assertSee('حوّلي المبلغ كاملاً')
+            ->assertDontSee('عربون');
     }
 
     public function test_schedule_outside_opening_hours_is_rejected(): void

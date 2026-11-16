@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Enums\DepositStatus;
 use App\Enums\OrderStatus;
 use App\Models\Customer;
 use App\Models\MessageLog;
@@ -45,7 +44,7 @@ class OrdersBoardTest extends TestCase
             ->assertOk()
             ->assertSee('الطلبات')
             ->assertSee($order->number)
-            ->assertSee('عربونات معلّقة');
+            ->assertSee('مكتملة');
     }
 
     public function test_the_status_filter_only_returns_matching_orders(): void
@@ -165,21 +164,6 @@ class OrdersBoardTest extends TestCase
             ->assertSessionHasErrors('status');
 
         $this->assertSame(OrderStatus::New, $order->refresh()->status);
-    }
-
-    public function test_a_deposit_can_be_marked_as_paid(): void
-    {
-        $order = Order::where('deposit_status', DepositStatus::Pending)->firstOrFail();
-
-        $this->actingAs($this->owner)
-            ->patch(route('orders.deposit', $order), ['deposit_status' => 'paid'])
-            ->assertRedirect();
-
-        $order->refresh();
-
-        $this->assertSame(DepositStatus::Paid, $order->deposit_status);
-        $this->assertSame($order->total_fils - $order->deposit_fils, $order->balance_due_fils);
-        $this->assertTrue($order->events()->where('type', 'deposit_paid')->exists());
     }
 
     public function test_internal_notes_are_saved(): void

@@ -5,7 +5,6 @@
 
 @section('content')
     @php
-        use App\Enums\DepositStatus;
         use App\Enums\OrderStatus;
         use App\Support\Money;
 
@@ -204,16 +203,6 @@
                         <span class="text-xs font-bold text-ink">الإجمالي</span>
                         <span class="font-display text-lg font-bold text-brand">{{ $order->totalFormatted() }}</span>
                     </div>
-                    @if ($order->deposit_fils > 0)
-                        <div class="flex items-center justify-between gap-3">
-                            <span class="text-muted">العربون</span>
-                            <span class="font-bold text-ink">{{ $order->depositFormatted() }}</span>
-                        </div>
-                        <div class="flex items-center justify-between gap-3">
-                            <span class="text-muted">المتبقي</span>
-                            <span class="font-bold text-ink">{{ $order->balanceFormatted() }}</span>
-                        </div>
-                    @endif
                 </div>
             </div>
 
@@ -236,62 +225,40 @@
 
         <div class="space-y-4">
             <div class="card p-5 sm:p-6">
-                <div class="flex items-center justify-between">
-                    <h2 class="text-sm font-bold text-ink">العربون</h2>
-                    @if ($order->deposit_fils > 0)
-                        <x-deposit-badge :status="$order->deposit_status" />
-                    @endif
+                <h2 class="text-sm font-bold text-ink">الدفع</h2>
+
+                <div class="mt-4 space-y-2.5 text-[11px]">
+                    <div class="flex items-center justify-between gap-3">
+                        <span class="text-muted">طريقة الدفع</span>
+                        <span class="font-bold text-ink">{{ $order->payment_method?->label() ?? '—' }}</span>
+                    </div>
+                    <div class="flex items-center justify-between gap-3">
+                        <span class="text-muted">الإجمالي</span>
+                        <span class="font-bold text-ink">{{ $order->totalFormatted() }}</span>
+                    </div>
                 </div>
 
-                @if ($order->deposit_fils > 0)
-                    <div class="mt-4 space-y-2.5 text-[11px]">
-                        <div class="flex items-center justify-between gap-3">
-                            <span class="text-muted">قيمة العربون</span>
-                            <span class="font-bold text-ink">{{ $order->depositFormatted() }}</span>
-                        </div>
-                        <div class="flex items-center justify-between gap-3">
-                            <span class="text-muted">طريقة الدفع</span>
-                            <span class="font-bold text-ink">{{ $order->payment_method?->label() ?? '—' }}</span>
-                        </div>
-                        <div class="flex items-center justify-between gap-3">
-                            <span class="text-muted">المبلغ المتبقي</span>
-                            <span class="font-bold text-ink">{{ $order->balanceFormatted() }}</span>
-                        </div>
-                    </div>
-
-                    <div class="mt-4 flex flex-wrap gap-2">
-                        @if ($order->deposit_status === DepositStatus::Pending)
-                            <form method="POST" action="{{ route('orders.deposit', $order) }}">
-                                @csrf
-                                @method('PATCH')
-                                <input type="hidden" name="deposit_status" value="{{ DepositStatus::Paid->value }}">
-                                <button class="btn-primary btn-sm">تأكيد استلام العربون</button>
-                            </form>
+                @if ($order->payment_method === \App\Enums\PaymentMethod::BankTransfer && $store->hasBankDetails())
+                    <div class="mt-4 space-y-1.5 rounded-2xl bg-canvas/60 px-3.5 py-3 text-[10px] text-muted">
+                        @if ($store->bank_name)
+                            <div class="flex items-center justify-between gap-2"><span>البنك</span><span class="font-bold text-ink-soft">{{ $store->bank_name }}</span></div>
                         @endif
-
-                        @if ($order->deposit_status === DepositStatus::Paid)
-                            <form method="POST" action="{{ route('orders.deposit', $order) }}">
-                                @csrf
-                                @method('PATCH')
-                                <input type="hidden" name="deposit_status" value="{{ DepositStatus::Refunded->value }}">
-                                <button class="btn-secondary btn-sm text-danger">استرجاع العربون</button>
-                            </form>
+                        @if ($store->bank_account_name)
+                            <div class="flex items-center justify-between gap-2"><span>اسم الحساب</span><span class="font-bold text-ink-soft">{{ $store->bank_account_name }}</span></div>
                         @endif
-
-                        @if ($order->deposit_status !== DepositStatus::Pending)
-                            <form method="POST" action="{{ route('orders.deposit', $order) }}">
-                                @csrf
-                                @method('PATCH')
-                                <input type="hidden" name="deposit_status" value="{{ DepositStatus::Pending->value }}">
-                                <button class="btn-ghost btn-sm">إعادة إلى معلّق</button>
-                            </form>
+                        @if ($store->bank_iban)
+                            <div class="flex items-center justify-between gap-2"><span>IBAN</span><span class="font-bold text-ink-soft" dir="ltr">{{ $store->bank_iban }}</span></div>
                         @endif
                     </div>
-                @else
-                    <p class="mt-4 text-[10px] leading-5 text-muted">
-                        هذا الطلب بدون عربون (الدفع نقداً عند {{ $isDelivery ? 'التوصيل' : 'الاستلام' }}).
-                    </p>
                 @endif
+
+                <p class="mt-4 text-[10px] leading-5 text-muted">
+                    @if ($order->payment_method === \App\Enums\PaymentMethod::Cash)
+                        تحصّلين المبلغ نقداً عند {{ $isDelivery ? 'التوصيل' : 'الاستلام' }}.
+                    @else
+                        تتأكدين من وصول التحويل يدوياً، ثم تنقلين الطلب إلى «مؤكد».
+                    @endif
+                </p>
             </div>
 
             <div class="card p-5 sm:p-6">

@@ -31,7 +31,6 @@ class MessageLog extends Model
             'order_ready' => 'الطلب جاهز',
             'out_for_delivery' => 'في الطريق',
             'delivered' => 'تم التسليم',
-            'deposit_reminder' => 'تذكير بالعربون',
             'follow_up' => 'متابعة العميل',
             default => $this->template,
         };

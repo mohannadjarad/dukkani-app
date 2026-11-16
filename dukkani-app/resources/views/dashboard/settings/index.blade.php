@@ -213,18 +213,11 @@
                     </div>
                     @error('delivery_enabled') <p class="field-error">{{ $message }}</p> @enderror
 
-                    <div class="mt-4 grid gap-4 sm:grid-cols-3">
+                    <div class="mt-4 grid gap-4 sm:grid-cols-2">
                         <div>
                             <label class="label" for="delivery_fee">رسوم التوصيل ({{ $store->currencySymbol() }})</label>
                             <input id="delivery_fee" type="number" name="delivery_fee" value="{{ old('delivery_fee', $feeValue) }}" step="0.001" min="0" max="100" class="input" required>
                             @error('delivery_fee') <p class="field-error">{{ $message }}</p> @enderror
-                        </div>
-
-                        <div>
-                            <label class="label" for="deposit_percent">نسبة العربون (٪)</label>
-                            <input id="deposit_percent" type="number" name="deposit_percent" value="{{ old('deposit_percent', $store->deposit_percent) }}" min="0" max="100" class="input" required>
-                            <p class="mt-1.5 text-[9px] text-muted/70">تُطبّق على الدفع عبر CliQ أو التحويل البنكي.</p>
-                            @error('deposit_percent') <p class="field-error">{{ $message }}</p> @enderror
                         </div>
 
                         <div>
@@ -234,10 +227,29 @@
                         </div>
                     </div>
 
-                    <div class="mt-4">
-                        <label class="label" for="deposit_instructions">تعليمات العربون</label>
-                        <textarea id="deposit_instructions" name="deposit_instructions" rows="3" class="textarea" maxlength="1000" placeholder="كيف يحوّل العميل العربون...">{{ old('deposit_instructions', $store->deposit_instructions) }}</textarea>
-                        @error('deposit_instructions') <p class="field-error">{{ $message }}</p> @enderror
+                    <div class="mt-5 border-t border-line/60 pt-4">
+                        <h3 class="text-[11px] font-bold text-ink">بيانات الحوالة البنكية</h3>
+                        <p class="mt-1 text-[10px] text-muted">تظهر للعميل عند اختيار الحوالة البنكية لتحويل المبلغ كاملاً.</p>
+
+                        <div class="mt-3 grid gap-4 sm:grid-cols-2">
+                            <div>
+                                <label class="label" for="bank_name">اسم البنك</label>
+                                <input id="bank_name" type="text" name="bank_name" value="{{ old('bank_name', $store->bank_name) }}" class="input" maxlength="100" placeholder="مثلاً: البنك الإسلامي الفلسطيني">
+                                @error('bank_name') <p class="field-error">{{ $message }}</p> @enderror
+                            </div>
+
+                            <div>
+                                <label class="label" for="bank_account_name">اسم صاحب الحساب</label>
+                                <input id="bank_account_name" type="text" name="bank_account_name" value="{{ old('bank_account_name', $store->bank_account_name) }}" class="input" maxlength="120" placeholder="الاسم كما هو في البنك">
+                                @error('bank_account_name') <p class="field-error">{{ $message }}</p> @enderror
+                            </div>
+                        </div>
+
+                        <div class="mt-3">
+                            <label class="label" for="bank_iban">رقم الآيبان (IBAN)</label>
+                            <input id="bank_iban" type="text" name="bank_iban" value="{{ old('bank_iban', $store->bank_iban) }}" class="input" dir="ltr" maxlength="60" placeholder="PS00XXXX000000000000000000000">
+                            @error('bank_iban') <p class="field-error">{{ $message }}</p> @enderror
+                        </div>
                     </div>
 
                     <div class="mt-5 flex justify-end">
@@ -379,8 +391,8 @@
                         <dd class="font-bold text-ink-soft">{{ Money::format($store->delivery_fee_fils) }}</dd>
                     </div>
                     <div class="flex items-center justify-between gap-3">
-                        <dt class="text-muted">العربون</dt>
-                        <dd class="font-bold text-ink-soft">{{ $store->deposit_percent }}٪</dd>
+                        <dt class="text-muted">الحوالة البنكية</dt>
+                        <dd class="font-bold {{ $store->hasBankDetails() ? 'text-sage' : 'text-muted/60' }}">{{ $store->hasBankDetails() ? 'مهيأة' : 'غير مهيأة' }}</dd>
                     </div>
                     <div class="flex items-center justify-between gap-3">
                         <dt class="text-muted">أقل مدة تحضير</dt>

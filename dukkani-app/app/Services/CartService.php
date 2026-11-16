@@ -155,15 +155,6 @@ class CartService
             : 0;
     }
 
-    public function depositFor(Store $store, int $total, string $paymentMethod): int
-    {
-        if ($paymentMethod === 'cash' || $store->deposit_percent <= 0) {
-            return 0;
-        }
-
-        return (int) round($total * $store->deposit_percent / 100);
-    }
-
     protected function lineKey(int $productId, array $selected): string
     {
         $values = collect($selected)->pluck('value_id')->sort()->implode('-');

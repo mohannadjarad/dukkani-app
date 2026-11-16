@@ -6,7 +6,6 @@
 @section('content')
     @php
         use App\Enums\OrderStatus;
-        use App\Support\Money;
 
         $queryFor = function (array $overrides = []) {
             $query = array_merge(request()->query(), $overrides);
@@ -87,10 +86,10 @@
             </div>
         </div>
         <div class="card flex items-center gap-3 p-4">
-            <span class="kpi-icon size-10 bg-gold-soft text-[#a47b32]"><svg class="size-5" fill="none" viewBox="0 0 24 24" stroke-width="1.7" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Z"/></svg></span>
+            <span class="kpi-icon size-10 bg-violet-50 text-violet-600"><svg class="size-5" fill="none" viewBox="0 0 24 24" stroke-width="1.7" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg></span>
             <div>
-                <p class="text-[11px] font-bold text-muted">عربونات معلّقة</p>
-                <p class="font-display text-xl font-bold text-ink">{{ Money::format($stats['deposits']) }}</p>
+                <p class="text-[11px] font-bold text-muted">مكتملة</p>
+                <p class="font-display text-xl font-bold text-ink">{{ $stats['completed'] }}</p>
             </div>
         </div>
     </div>
@@ -242,15 +241,9 @@
                                 </td>
                                 <td class="whitespace-nowrap">
                                     <p class="text-[11px] text-ink-soft">{{ $order->payment_method?->label() ?? '—' }}</p>
-                                    @if ($order->deposit_fils > 0)
-                                        <p class="mt-0.5 text-[9px] {{ $order->deposit_status === \App\Enums\DepositStatus::Pending ? 'font-bold text-[#a47b32]' : 'text-muted/70' }}">{{ $order->deposit_status->label() }}</p>
-                                    @endif
                                 </td>
                                 <td class="whitespace-nowrap">
                                     <p class="text-[11px] font-bold text-ink">{{ $order->totalFormatted() }}</p>
-                                    @if ($order->deposit_fils > 0)
-                                        <p class="mt-0.5 text-[9px] text-muted/70">متبقٍ {{ $order->balanceFormatted() }}</p>
-                                    @endif
                                 </td>
                                 <td><x-status-badge :status="$order->status" /></td>
                                 <td>

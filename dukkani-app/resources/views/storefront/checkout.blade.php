@@ -194,9 +194,6 @@
                                 <span class="min-w-0 flex-1">
                                     <span class="flex flex-wrap items-center gap-2">
                                         <span class="text-xs font-bold text-ink">{{ $method['label'] }}</span>
-                                        @if ($value !== 'cash' && $store->deposit_percent > 0)
-                                            <span class="rounded-full bg-gold-soft px-2 py-0.5 text-[8px] font-bold text-[#8a672c]">عربون {{ $store->deposit_percent }}%</span>
-                                        @endif
                                     </span>
                                     <span class="mt-0.5 block text-[10px] leading-5 text-muted">{{ $method['hint'] }}</span>
                                 </span>
@@ -205,17 +202,28 @@
                     </div>
                     @error('payment_method') <p class="field-error">{{ $message }}</p> @enderror
 
-                    <div x-show="payment !== 'cash' && depositPercent > 0" x-cloak class="mt-3 rounded-2xl border border-gold/30 bg-gold-soft/50 p-3.5 text-[10px] leading-5 text-[#8a672c]">
+                    <div x-show="payment !== 'cash'" x-cloak class="mt-3 rounded-2xl border border-line/70 bg-canvas/50 p-3.5 text-[10px] leading-5 text-muted">
                         <div class="flex items-center justify-between gap-2">
-                            <span>العربون المطلوب</span>
-                            <span class="text-xs font-bold" x-text="money(deposit)"></span>
+                            <span>المبلغ المطلوب تحويله كاملاً</span>
+                            <span class="text-xs font-bold text-ink" x-text="money(total)"></span>
                         </div>
-                        <div class="mt-1 flex items-center justify-between gap-2">
-                            <span>المتبقي عند الاستلام</span>
-                            <span class="font-bold" x-text="money(balance)"></span>
-                        </div>
-                        <p class="mt-2 border-t border-gold/20 pt-2">{{ $store->deposit_instructions }}</p>
+                        <p class="mt-2 border-t border-line/60 pt-2">بعد تأكيد الطلب، أرسلي صورة التحويل على واتساب لنبدأ التحضير.</p>
                     </div>
+
+                    @if ($store->hasBankDetails())
+                        <div x-show="payment === 'bank_transfer'" x-cloak class="mt-3 space-y-1.5 rounded-2xl border border-line/70 bg-white p-3.5 text-[10px] text-muted">
+                            <p class="text-[10px] font-bold text-ink">بيانات التحويل البنكي</p>
+                            @if ($store->bank_name)
+                                <div class="flex items-center justify-between gap-2"><span>البنك</span><span class="font-bold text-ink-soft">{{ $store->bank_name }}</span></div>
+                            @endif
+                            @if ($store->bank_account_name)
+                                <div class="flex items-center justify-between gap-2"><span>اسم الحساب</span><span class="font-bold text-ink-soft">{{ $store->bank_account_name }}</span></div>
+                            @endif
+                            @if ($store->bank_iban)
+                                <div class="flex items-center justify-between gap-2"><span>IBAN</span><span class="font-bold text-ink-soft" dir="ltr">{{ $store->bank_iban }}</span></div>
+                            @endif
+                        </div>
+                    @endif
                 </div>
 
                 <div class="card p-5 sm:p-6">
@@ -287,10 +295,6 @@
                         <div class="flex items-center justify-between gap-3 pt-1">
                             <span class="text-xs font-bold text-ink">الإجمالي</span>
                             <span class="font-display text-xl font-bold text-brand" x-text="money(total)">{{ \App\Support\Money::format($subtotal + $store->delivery_fee_fils) }}</span>
-                        </div>
-                        <div x-show="payment !== 'cash' && depositPercent > 0" x-cloak class="flex items-center justify-between gap-3 rounded-xl bg-gold-soft/60 px-3 py-2 text-[10px] text-[#8a672c]">
-                            <span>عربون مطلوب الآن</span>
-                            <span class="font-bold" x-text="money(deposit)"></span>
                         </div>
                     </div>
 

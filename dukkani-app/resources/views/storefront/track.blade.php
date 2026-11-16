@@ -182,31 +182,37 @@
                             <span class="text-xs font-bold text-ink">الإجمالي</span>
                             <span class="font-display text-lg font-bold text-brand">{{ $order->totalFormatted() }}</span>
                         </div>
-                        @if ($order->deposit_fils > 0)
-                            <div class="flex items-center justify-between gap-3">
-                                <span class="text-muted">العربون ({{ $order->deposit_status->label() }})</span>
-                                <span class="font-bold text-ink">{{ $order->depositFormatted() }}</span>
-                            </div>
-                            <div class="flex items-center justify-between gap-3">
-                                <span class="text-muted">المتبقي عند الاستلام</span>
-                                <span class="font-bold text-ink">{{ $order->balanceFormatted() }}</span>
-                            </div>
-                        @endif
                     </div>
                 </div>
 
-                @if ($order->deposit_fils > 0 && $order->deposit_status === \App\Enums\DepositStatus::Pending)
-                    <div class="rounded-[2rem] border border-gold/30 bg-gold-soft/50 p-5">
+                @if (! $cancelled && $order->payment_method !== \App\Enums\PaymentMethod::Cash && ! $order->status->isFinal())
+                    <div class="rounded-[2rem] border border-line/70 bg-canvas/50 p-5">
                         <div class="flex items-start gap-3">
-                            <span class="flex size-10 shrink-0 items-center justify-center rounded-2xl bg-white/70 text-[#a47b32]">
-                                <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke-width="1.7" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>
+                            <span class="flex size-10 shrink-0 items-center justify-center rounded-2xl bg-white/70 text-brand">
+                                <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke-width="1.7" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Z"/></svg>
                             </span>
                             <div class="min-w-0 flex-1">
-                                <p class="text-xs font-bold text-ink">عربون الطلب بانتظار التحويل</p>
-                                <p class="mt-1 text-[10px] leading-6 text-[#8a672c]">{{ $store->deposit_instructions }}</p>
+                                <p class="text-xs font-bold text-ink">
+                                    {{ $order->payment_method === \App\Enums\PaymentMethod::Cliq ? 'حوّلي المبلغ كاملاً عبر CliQ' : 'حوّلي المبلغ كاملاً إلى الحساب البنكي' }}
+                                </p>
+
+                                @if ($order->payment_method === \App\Enums\PaymentMethod::BankTransfer && $store->hasBankDetails())
+                                    <div class="mt-2.5 space-y-1.5 text-[10px] leading-5 text-muted">
+                                        @if ($store->bank_name)
+                                            <div class="flex items-center justify-between gap-2"><span>البنك</span><span class="font-bold text-ink-soft">{{ $store->bank_name }}</span></div>
+                                        @endif
+                                        @if ($store->bank_account_name)
+                                            <div class="flex items-center justify-between gap-2"><span>اسم الحساب</span><span class="font-bold text-ink-soft">{{ $store->bank_account_name }}</span></div>
+                                        @endif
+                                        @if ($store->bank_iban)
+                                            <div class="flex items-center justify-between gap-2"><span>IBAN</span><span class="font-bold text-ink-soft" dir="ltr">{{ $store->bank_iban }}</span></div>
+                                        @endif
+                                    </div>
+                                @endif
+
                                 <div class="mt-3 flex flex-wrap items-center gap-3">
-                                    <span class="rounded-full bg-white/70 px-3 py-1 text-[10px] font-bold text-ink">المبلغ: {{ $order->depositFormatted() }}</span>
-                                    <a href="{{ $store->whatsappLink("مرحباً، أرسل صورة تحويل عربون الطلب {$order->number}.") }}" target="_blank" rel="noopener" class="btn-primary btn-sm">
+                                    <span class="rounded-full bg-white/70 px-3 py-1 text-[10px] font-bold text-ink">المبلغ: {{ $order->totalFormatted() }}</span>
+                                    <a href="{{ $store->whatsappLink("مرحباً، أرسل صورة تحويل الطلب {$order->number}.") }}" target="_blank" rel="noopener" class="btn-primary btn-sm">
                                         أرسلي صورة التحويل
                                     </a>
                                 </div>
@@ -253,9 +259,6 @@
                             <div>
                                 <p class="text-[9px] text-muted/70">طريقة الدفع</p>
                                 <p class="mt-0.5 text-[11px] font-bold text-ink">{{ $order->payment_method?->label() ?? 'غير محدد' }}</p>
-                                @if ($order->deposit_fils > 0)
-                                    <p class="mt-0.5 text-[10px] text-muted">العربون: {{ $order->deposit_status->label() }}</p>
-                                @endif
                             </div>
                         </div>
 

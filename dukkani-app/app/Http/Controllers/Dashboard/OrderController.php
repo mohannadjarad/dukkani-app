@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Dashboard;
 
-use App\Enums\DepositStatus;
 use App\Enums\FulfillmentType;
 use App\Enums\OrderStatus;
 use App\Http\Controllers\Controller;
@@ -111,25 +110,6 @@ class OrderController extends Controller
         return back()->with('status', 'تم تحديث حالة الطلب إلى «'.$to->label().'».');
     }
 
-    public function updateDeposit(Request $request, Order $order, OrderService $orders): RedirectResponse
-    {
-        $this->authorizeOrder($order);
-
-        if ($order->deposit_fils <= 0) {
-            return back()->with('status', 'هذا الطلب لا يتضمن عربوناً.');
-        }
-
-        $data = $request->validate([
-            'deposit_status' => ['required', Rule::enum(DepositStatus::class)],
-        ]);
-
-        $status = DepositStatus::from($data['deposit_status']);
-
-        $orders->updateDeposit($order, $status, $request->user());
-
-        return back()->with('status', 'تم تحديث العربون: '.$status->label().'.');
-    }
-
     public function updateNotes(Request $request, Order $order, OrderService $orders): RedirectResponse
     {
         $this->authorizeOrder($order);
@@ -234,10 +214,7 @@ class OrderController extends Controller
                 ->where('status', '!=', OrderStatus::Cancelled)->count(),
             'late' => Order::forStore($store)->where('scheduled_at', '<', now())
                 ->whereNotIn('status', [OrderStatus::Delivered, OrderStatus::Cancelled])->count(),
-            'deposits' => (int) Order::forStore($store)
-                ->where('deposit_status', DepositStatus::Pending)
-                ->where('status', '!=', OrderStatus::Cancelled)
-                ->sum('deposit_fils'),
+            'completed' => Order::forStore($store)->where('status', OrderStatus::Delivered)->count(),
         ];
     }
 

@@ -14,8 +14,6 @@
             <span class="font-mono text-[10px] font-bold text-muted" dir="ltr">{{ $order->number }}</span>
             @if ($order->isLate())
                 <span class="rounded-full bg-danger-soft px-2 py-0.5 text-[8px] font-bold text-danger">متأخر</span>
-            @elseif ($order->deposit_status === \App\Enums\DepositStatus::Pending)
-                <span class="rounded-full bg-gold-soft px-2 py-0.5 text-[8px] font-bold text-[#8a672c]">عربون معلّق</span>
             @endif
         </div>
 

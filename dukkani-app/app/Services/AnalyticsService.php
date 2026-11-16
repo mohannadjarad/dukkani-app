@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Enums\DepositStatus;
 use App\Enums\OrderStatus;
 use App\Models\Order;
 use App\Models\Store;
@@ -38,11 +37,6 @@ class AnalyticsService
 
         $newCustomers = $store->customers()->whereDate('created_at', '>=', $monthStart)->count();
 
-        $outstanding = (int) Order::forStore($store)
-            ->where('deposit_status', DepositStatus::Pending)
-            ->where('status', '!=', OrderStatus::Cancelled)
-            ->sum('deposit_fils');
-
         $avg = $ordersThisMonth > 0 ? (int) round($revenue / $ordersThisMonth) : 0;
 
         return [
@@ -53,7 +47,6 @@ class AnalyticsService
             'pending' => $pending,
             'today' => $today,
             'new_customers' => $newCustomers,
-            'outstanding_deposits' => $outstanding,
             'avg_order' => $avg,
         ];
     }

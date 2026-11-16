@@ -269,7 +269,6 @@ function checkoutPage(config) {
         payment: config.payment || 'cash',
         subtotal: Number(config.subtotal || 0),
         deliveryFee: Number(config.deliveryFee || 0),
-        depositPercent: Number(config.depositPercent || 0),
         deliveryEnabled: Boolean(config.deliveryEnabled),
         pickupEnabled: Boolean(config.pickupEnabled),
         date: config.date || '',
@@ -356,14 +355,6 @@ function checkoutPage(config) {
 
         get total() {
             return this.subtotal + this.fee;
-        },
-
-        get deposit() {
-            return this.payment === 'cash' ? 0 : Math.round((this.total * this.depositPercent) / 100);
-        },
-
-        get balance() {
-            return Math.max(0, this.total - this.deposit);
         },
 
         fillDemo() {
