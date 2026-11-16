@@ -13,7 +13,7 @@ Live demo: **https://dukkani-demo.onrender.com** (see [`docs/DEPLOYMENT.md`](../
 | Backend | Laravel 12 (PHP 8.4+) |
 | Views | Blade + Tailwind CSS 4 + Alpine.js |
 | Build | Vite 7 |
-| Database | SQLite (demo), integer fils for money |
+| Database | SQLite (local/demo), Postgres (production), integer fils for money |
 | Language | Arabic only, RTL |
 | Hosting target | Render |
 
@@ -149,7 +149,7 @@ Product slugs are made unique automatically, category ownership is validated, an
 - `PATCH /dashboard/settings/hours` — seven-day opening hours; closed days are stored without times.
 - `POST /dashboard/settings/blocked-dates` / `DELETE .../{blockedDate}` — add or remove blocked dates (today or later).
 
-Uploads use Laravel's `public` disk, so run `php artisan storage:link` once during setup.
+Uploads use Cloudinary in production. Locally they fall back to Laravel's `public` disk, so run `php artisan storage:link` once during setup.
 
 ## Analytics
 

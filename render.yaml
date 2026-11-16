@@ -96,3 +96,88 @@ services:
     # APP_KEY is generated once and stored under /var/data by the entrypoint.
     # APP_URL is taken from Render's RENDER_EXTERNAL_URL automatically.
     # Set either variable here if you prefer to manage them yourself.
+
+  # Production service: Neon Postgres + Cloudinary. No disk is mounted, so every
+  # value that must survive a restart is provided by Render, and `sync: false`
+  # prompts for the secret values when the Blueprint is applied.
+  - type: web
+    name: dukkani-prod
+    runtime: docker
+    plan: free
+    region: frankfurt
+    branch: main
+    rootDir: dukkani-app
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /up
+    autoDeployTrigger: commit
+
+    envVars:
+      - key: APP_NAME
+        value: Dukkani
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: APP_KEY
+        sync: false
+      - key: APP_URL
+        value: https://dukkani-prod.onrender.com
+
+      - key: APP_LOCALE
+        value: ar
+      - key: APP_FALLBACK_LOCALE
+        value: ar
+      - key: APP_FAKER_LOCALE
+        value: ar_JO
+      - key: APP_TIMEZONE
+        value: Asia/Amman
+      - key: TZ
+        value: Asia/Amman
+
+      - key: DEMO_MODE
+        value: "false"
+      - key: DEMO_SEED
+        value: "false"
+
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_HOST
+        sync: false
+      - key: DB_PORT
+        sync: false
+      - key: DB_DATABASE
+        sync: false
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: DB_SSLMODE
+        sync: false
+
+      - key: CLOUDINARY_URL
+        sync: false
+
+      - key: SESSION_DRIVER
+        value: database
+      - key: SESSION_SECURE_COOKIE
+        value: "true"
+      - key: SESSION_SAME_SITE
+        value: lax
+      - key: CACHE_STORE
+        value: database
+      - key: QUEUE_CONNECTION
+        value: database
+      - key: FILESYSTEM_DISK
+        value: local
+
+      - key: LOG_CHANNEL
+        value: stderr
+      - key: LOG_LEVEL
+        value: info
+      - key: MAIL_MAILER
+        value: log
+      - key: BCRYPT_ROUNDS
+        value: "12"
+      - key: APP_MAINTENANCE_DRIVER
+        value: file

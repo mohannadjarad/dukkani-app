@@ -10,6 +10,8 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
+    // Register every command in app/Console/Commands.
+    ->withCommands()
     ->withMiddleware(function (Middleware $middleware): void {
         // Render terminates TLS in front of the container.
         $middleware->trustProxies(at: '*');

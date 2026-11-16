@@ -184,7 +184,7 @@
                 @foreach ($products as $product)
                     <article class="card card-hover group overflow-hidden">
                         <div class="relative aspect-[4/3] overflow-hidden bg-canvas">
-                            <img src="{{ $product->imageUrl() }}" alt="{{ $product->name }}"
+                            <img src="{{ $product->thumbnailUrl() }}" alt="{{ $product->name }}"
                                  class="size-full object-cover transition duration-500 group-hover:scale-[1.03]">
 
                             <div class="absolute inset-x-0 top-0 flex items-start justify-between gap-2 p-3">

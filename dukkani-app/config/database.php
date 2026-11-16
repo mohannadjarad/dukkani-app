@@ -86,6 +86,9 @@ return [
 
         'pgsql' => [
             'driver' => 'pgsql',
+            // DB_URL (for example a Neon connection string) takes precedence
+            // over the individual DB_* values. A sslmode query parameter in the
+            // URL overrides DB_SSLMODE, which defaults to "prefer".
             'url' => env('DB_URL'),
             'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '5432'),

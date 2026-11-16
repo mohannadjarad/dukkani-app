@@ -2,21 +2,27 @@
 
 namespace App\Http\Controllers\Dashboard;
 
+use App\Exceptions\ImageServiceNotConfiguredException;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Store;
+use App\Services\ImageService;
 use App\Support\Money;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
+use Throwable;
 
 class ProductController extends Controller
 {
+    public function __construct(private readonly ImageService $images) {}
+
     public function index(Request $request): View
     {
         $store = $this->currentStore();
@@ -90,26 +96,34 @@ class ProductController extends Controller
     {
         $store = $this->currentStore();
         $data = $this->validated($request, $store);
+        $image = $this->resolveImage($request);
 
-        $product = DB::transaction(function () use ($store, $data, $request) {
-            $product = Product::create([
-                'store_id' => $store->id,
-                'category_id' => $data['category_id'] ?? null,
-                'name' => $data['name'],
-                'slug' => $this->uniqueSlug(($data['slug'] ?? '') ?: $data['name']),
-                'description' => $data['description'] ?? null,
-                'price_fils' => Money::jod($data['price']),
-                'image_path' => $this->resolveImage($request),
-                'lead_time_hours' => $data['lead_time_hours'] ?? null,
-                'is_active' => $request->boolean('is_active'),
-                'is_featured' => $request->boolean('is_featured'),
-                'sort_order' => (int) (Product::where('store_id', $store->id)->max('sort_order') + 1),
-            ]);
+        try {
+            $product = DB::transaction(function () use ($store, $data, $request, $image) {
+                $product = Product::create([
+                    'store_id' => $store->id,
+                    'category_id' => $data['category_id'] ?? null,
+                    'name' => $data['name'],
+                    'slug' => $this->uniqueSlug(($data['slug'] ?? '') ?: $data['name']),
+                    'description' => $data['description'] ?? null,
+                    'price_fils' => Money::jod($data['price']),
+                    'image_path' => $image['path'],
+                    'image_public_id' => $image['public_id'],
+                    'lead_time_hours' => $data['lead_time_hours'] ?? null,
+                    'is_active' => $request->boolean('is_active'),
+                    'is_featured' => $request->boolean('is_featured'),
+                    'sort_order' => (int) (Product::where('store_id', $store->id)->max('sort_order') + 1),
+                ]);
 
-            $this->syncOptions($product, $data['options'] ?? []);
+                $this->syncOptions($product, $data['options'] ?? []);
 
-            return $product;
-        });
+                return $product;
+            });
+        } catch (Throwable $exception) {
+            $this->images->delete($image['public_id']);
+
+            throw $exception;
+        }
 
         return redirect()
             ->route('products.index')
@@ -143,22 +157,37 @@ class ProductController extends Controller
     {
         $store = $this->authorizeProduct($product);
         $data = $this->validated($request, $store, $product);
+        $oldPublicId = $product->image_public_id;
+        $image = $this->resolveImage($request, $product);
 
-        DB::transaction(function () use ($product, $request, $data) {
-            $product->update([
-                'category_id' => $data['category_id'] ?? null,
-                'name' => $data['name'],
-                'slug' => $this->uniqueSlug(($data['slug'] ?? '') ?: $data['name'], $product),
-                'description' => $data['description'] ?? null,
-                'price_fils' => Money::jod($data['price']),
-                'image_path' => $this->resolveImage($request, $product),
-                'lead_time_hours' => $data['lead_time_hours'] ?? null,
-                'is_active' => $request->boolean('is_active'),
-                'is_featured' => $request->boolean('is_featured'),
-            ]);
+        try {
+            DB::transaction(function () use ($product, $request, $data, $image) {
+                $product->update([
+                    'category_id' => $data['category_id'] ?? null,
+                    'name' => $data['name'],
+                    'slug' => $this->uniqueSlug(($data['slug'] ?? '') ?: $data['name'], $product),
+                    'description' => $data['description'] ?? null,
+                    'price_fils' => Money::jod($data['price']),
+                    'image_path' => $image['path'],
+                    'image_public_id' => $image['public_id'],
+                    'lead_time_hours' => $data['lead_time_hours'] ?? null,
+                    'is_active' => $request->boolean('is_active'),
+                    'is_featured' => $request->boolean('is_featured'),
+                ]);
 
-            $this->syncOptions($product, $data['options'] ?? []);
-        });
+                $this->syncOptions($product, $data['options'] ?? []);
+            });
+        } catch (Throwable $exception) {
+            if ($image['public_id'] && $image['public_id'] !== $oldPublicId) {
+                $this->images->delete($image['public_id']);
+            }
+
+            throw $exception;
+        }
+
+        if ($oldPublicId && $oldPublicId !== $image['public_id']) {
+            $this->images->delete($oldPublicId);
+        }
 
         return redirect()
             ->route('products.index')
@@ -181,7 +210,9 @@ class ProductController extends Controller
         $this->authorizeProduct($product);
 
         $name = $product->name;
+        $publicId = $product->image_public_id;
         $product->delete();
+        $this->images->delete($publicId);
 
         return redirect()
             ->route('products.index')
@@ -317,23 +348,46 @@ class ProductController extends Controller
         }
     }
 
-    protected function resolveImage(Request $request, ?Product $product = null): ?string
+    /** @return array{path: string|null, public_id: string|null} */
+    protected function resolveImage(Request $request, ?Product $product = null): array
     {
         if ($request->hasFile('image_file')) {
-            return $request->file('image_file')->store('products', 'public');
+            return $this->uploadImage($request->file('image_file'), 'products', 'image_file');
         }
 
         if ($request->boolean('remove_image')) {
-            return null;
+            return ['path' => null, 'public_id' => null];
         }
 
         $url = trim($request->input('image_url', ''));
 
         if ($url !== '') {
-            return $url;
+            return ['path' => $url, 'public_id' => null];
         }
 
-        return $product?->image_path;
+        return [
+            'path' => $product?->image_path,
+            'public_id' => $product?->image_public_id,
+        ];
+    }
+
+    /** @return array{path: string, public_id: string|null} */
+    protected function uploadImage(UploadedFile $file, string $folder, string $field): array
+    {
+        try {
+            $image = $this->images->upload($file, $folder);
+        } catch (ImageServiceNotConfiguredException) {
+            throw ValidationException::withMessages([$field => 'خدمة الصور غير مهيأة']);
+        } catch (Throwable $exception) {
+            report($exception);
+
+            throw ValidationException::withMessages([$field => 'تعذّر رفع الصورة، حاولي مرة أخرى.']);
+        }
+
+        return [
+            'path' => $image['url'],
+            'public_id' => $image['public_id'],
+        ];
     }
 
     protected function uniqueSlug(string $candidate, ?Product $ignore = null): string

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\ImageService;
 use App\Support\Money;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -16,7 +17,8 @@ class Product extends Model
 
     protected $fillable = [
         'store_id', 'category_id', 'name', 'slug', 'description', 'price_fils',
-        'image_path', 'lead_time_hours', 'is_active', 'is_featured', 'sort_order',
+        'image_path', 'image_public_id', 'lead_time_hours', 'is_active',
+        'is_featured', 'sort_order',
     ];
 
     protected function casts(): array
@@ -67,17 +69,27 @@ class Product extends Model
 
     public function imageUrl(): string
     {
-        if ($this->image_path) {
-            if (str_starts_with($this->image_path, 'http')) {
-                return $this->image_path;
-            }
+        return $this->resolveImageUrl('f_auto,q_auto,w_800');
+    }
 
-            return str_starts_with($this->image_path, 'images/')
-                ? asset($this->image_path)
-                : asset('storage/'.$this->image_path);
+    public function thumbnailUrl(): string
+    {
+        return $this->resolveImageUrl('f_auto,q_auto,w_400');
+    }
+
+    protected function resolveImageUrl(string $transform): string
+    {
+        if (! $this->image_path) {
+            return asset('images/placeholder-bakery.svg');
         }
 
-        return asset('images/placeholder-bakery.svg');
+        if (str_starts_with($this->image_path, 'http')) {
+            return app(ImageService::class)->url($this->image_path, $transform);
+        }
+
+        return str_starts_with($this->image_path, 'images/')
+            ? asset($this->image_path)
+            : asset('storage/'.$this->image_path);
     }
 
     public function priceFormatted(): string

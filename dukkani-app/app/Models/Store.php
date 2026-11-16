@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\ImageService;
 use App\Support\Phone;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,7 +15,8 @@ class Store extends Model
 
     protected $fillable = [
         'owner_id', 'name', 'slug', 'tagline', 'description', 'logo_path',
-        'cover_path', 'phone', 'whatsapp', 'instagram', 'city', 'address',
+        'logo_public_id', 'cover_path', 'cover_public_id', 'phone', 'whatsapp',
+        'instagram', 'city', 'address',
         'currency', 'delivery_fee_fils', 'deposit_percent', 'pickup_enabled',
         'delivery_enabled', 'lead_time_hours', 'deposit_instructions', 'timezone',
         'status', 'onboarding_completed_at',
@@ -82,14 +84,16 @@ class Store extends Model
         return $this->hasMany(MessageLog::class);
     }
 
-    public function imageUrl(?string $path): ?string
+    public function imageUrl(?string $path = null, string $transform = 'f_auto,q_auto,w_800'): ?string
     {
+        $path ??= $this->logo_path;
+
         if (! $path) {
             return null;
         }
 
         if (str_starts_with($path, 'http')) {
-            return $path;
+            return app(ImageService::class)->url($path, $transform);
         }
 
         return str_starts_with($path, 'images/')

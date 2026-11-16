@@ -49,7 +49,7 @@
                     @foreach ($items as $item)
                         <div class="flex flex-col gap-4 p-4 sm:flex-row sm:p-5">
                             <a href="{{ route('storefront.product', [$store, $item['product']]) }}" class="shrink-0">
-                                <img src="{{ $item['product']->imageUrl() }}" alt="{{ $item['product']->name }}"
+                                <img src="{{ $item['product']->thumbnailUrl() }}" alt="{{ $item['product']->name }}"
                                      class="h-24 w-full rounded-2xl object-cover sm:h-24 sm:w-24">
                             </a>
 

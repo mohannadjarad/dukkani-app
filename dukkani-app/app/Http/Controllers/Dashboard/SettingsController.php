@@ -2,19 +2,25 @@
 
 namespace App\Http\Controllers\Dashboard;
 
+use App\Exceptions\ImageServiceNotConfiguredException;
 use App\Http\Controllers\Controller;
 use App\Models\BlockedDate;
 use App\Models\Store;
 use App\Models\StoreHour;
+use App\Services\ImageService;
 use App\Support\Money;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
+use Throwable;
 
 class SettingsController extends Controller
 {
+    public function __construct(private readonly ImageService $images) {}
+
     public function index(): View
     {
         $store = $this->store();
@@ -78,19 +84,55 @@ class SettingsController extends Controller
             throw ValidationException::withMessages(['slug' => 'هذا الرابط مستخدم لمتجر آخر.']);
         }
 
-        $store->update([
-            'name' => $data['name'],
-            'slug' => $slug,
-            'tagline' => $data['tagline'] ?? null,
-            'description' => $data['description'] ?? null,
-            'phone' => trim($data['phone']),
-            'whatsapp' => filled($data['whatsapp'] ?? null) ? trim($data['whatsapp']) : null,
-            'instagram' => $data['instagram'] ?? null,
-            'city' => $data['city'],
-            'address' => $data['address'] ?? null,
-            'logo_path' => $this->resolveAsset($request, 'logo', $store),
-            'cover_path' => $this->resolveAsset($request, 'cover', $store),
-        ]);
+        $oldLogoPublicId = $store->logo_public_id;
+        $oldCoverPublicId = $store->cover_public_id;
+        $logo = $this->resolveAsset($request, 'logo', $store);
+
+        try {
+            $cover = $this->resolveAsset($request, 'cover', $store);
+        } catch (Throwable $exception) {
+            if ($logo['public_id'] && $logo['public_id'] !== $oldLogoPublicId) {
+                $this->images->delete($logo['public_id']);
+            }
+
+            throw $exception;
+        }
+
+        try {
+            $store->update([
+                'name' => $data['name'],
+                'slug' => $slug,
+                'tagline' => $data['tagline'] ?? null,
+                'description' => $data['description'] ?? null,
+                'phone' => trim($data['phone']),
+                'whatsapp' => filled($data['whatsapp'] ?? null) ? trim($data['whatsapp']) : null,
+                'instagram' => $data['instagram'] ?? null,
+                'city' => $data['city'],
+                'address' => $data['address'] ?? null,
+                'logo_path' => $logo['path'],
+                'logo_public_id' => $logo['public_id'],
+                'cover_path' => $cover['path'],
+                'cover_public_id' => $cover['public_id'],
+            ]);
+        } catch (Throwable $exception) {
+            if ($logo['public_id'] && $logo['public_id'] !== $oldLogoPublicId) {
+                $this->images->delete($logo['public_id']);
+            }
+
+            if ($cover['public_id'] && $cover['public_id'] !== $oldCoverPublicId) {
+                $this->images->delete($cover['public_id']);
+            }
+
+            throw $exception;
+        }
+
+        if ($oldLogoPublicId && $oldLogoPublicId !== $logo['public_id']) {
+            $this->images->delete($oldLogoPublicId);
+        }
+
+        if ($oldCoverPublicId && $oldCoverPublicId !== $cover['public_id']) {
+            $this->images->delete($oldCoverPublicId);
+        }
 
         return redirect()
             ->route('settings.index', ['tab' => 'profile'])
@@ -219,23 +261,50 @@ class SettingsController extends Controller
             ->with('status', 'تم إلغاء حظر التاريخ.');
     }
 
-    protected function resolveAsset(Request $request, string $key, Store $store): ?string
+    /** @return array{path: string|null, public_id: string|null} */
+    protected function resolveAsset(Request $request, string $key, Store $store): array
     {
         if ($request->hasFile($key.'_file')) {
-            return $request->file($key.'_file')->store('store', 'public');
+            return $this->uploadAsset(
+                $request->file($key.'_file'),
+                $key === 'logo' ? 'stores/logos' : 'stores/covers',
+                $key.'_file',
+            );
         }
 
         if ($request->boolean('remove_'.$key)) {
-            return null;
+            return ['path' => null, 'public_id' => null];
         }
 
         $url = trim($request->input($key.'_url', ''));
 
         if ($url !== '') {
-            return $url;
+            return ['path' => $url, 'public_id' => null];
         }
 
-        return $store->{$key.'_path'};
+        return [
+            'path' => $store->{$key.'_path'},
+            'public_id' => $key === 'logo' ? $store->logo_public_id : $store->cover_public_id,
+        ];
+    }
+
+    /** @return array{path: string, public_id: string|null} */
+    protected function uploadAsset(UploadedFile $file, string $folder, string $field): array
+    {
+        try {
+            $image = $this->images->upload($file, $folder);
+        } catch (ImageServiceNotConfiguredException) {
+            throw ValidationException::withMessages([$field => 'خدمة الصور غير مهيأة']);
+        } catch (Throwable $exception) {
+            report($exception);
+
+            throw ValidationException::withMessages([$field => 'تعذّر رفع الصورة، حاولي مرة أخرى.']);
+        }
+
+        return [
+            'path' => $image['url'],
+            'public_id' => $image['public_id'],
+        ];
     }
 
     protected function store(): Store
