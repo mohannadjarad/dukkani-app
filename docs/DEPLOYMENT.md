@@ -226,14 +226,20 @@ the database stores their URLs and public IDs.
 
 ## 8. M1 exit gate
 
-- [ ] Migrations succeeded against Neon.
-- [ ] Create a throwaway account with `dukkani:store:create`, log in, restart
-      the service, and log in again. The account still exists.
-- [ ] Upload an image, restart the service: the image still loads.
-- [ ] Delete a product: the Cloudinary asset is removed.
-- [ ] `pg_dump` + `pg_restore` into a fresh Neon branch succeeded.
+- [x] Migrations succeeded against Neon (22 tables).
+- [x] Create a throwaway account with `dukkani:store:create`, log in, restart
+      the service, and log in again. The account still exists. (Verified on
+      2026-11-16: the session created before a redeploy and an API restart
+      still opened `/dashboard` afterwards.)
+- [x] Upload an image, restart the service: the image still loads. (Cloudinary
+      URL returned 200 before and after the restart.)
+- [x] Delete a product: the Cloudinary asset is removed. (Product soft-deleted;
+      Cloudinary Admin API returned an empty resource list.)
+- [x] `pg_dump` + `pg_restore` into a fresh Neon database succeeded. (178 dump
+      objects restored into `dukkani_restore_test`; table and row counts matched
+      production, then the database was dropped.)
 - [ ] `/up` returns 200 and the cron-job.org pinger reports success.
-- [ ] No reliance on local SQLite or container-local uploads in production.
+- [x] No reliance on local SQLite or container-local uploads in production.
 
 ## 9. Demo service
 
