@@ -130,4 +130,55 @@ class StorefrontTest extends TestCase
 
         $this->assertEmpty(session('cart.'.$this->store->id));
     }
+
+    public function test_a_new_store_shows_its_own_letter_and_never_another_brand(): void
+    {
+        config(['app.demo_mode' => false]);
+
+        $store = $this->makeFreshStore();
+
+        $this->get(route('storefront.home', $store))
+            ->assertOk()
+            ->assertSee('aria-label="'.$store->name.'"', false)
+            ->assertDontSee('placeholder-bakery.svg');
+    }
+
+    public function test_a_product_without_an_image_uses_a_neutral_placeholder(): void
+    {
+        config(['app.demo_mode' => false]);
+
+        $store = $this->makeFreshStore();
+
+        Product::create([
+            'store_id' => $store->id,
+            'name' => 'كيكة بلا صورة',
+            'slug' => 'cake-without-image',
+            'price_fils' => 45000,
+            'is_active' => true,
+        ]);
+
+        $this->get(route('storefront.menu', $store))
+            ->assertOk()
+            ->assertSee('placeholder-product.svg', false)
+            ->assertDontSee('placeholder-bakery.svg');
+    }
+
+    protected function makeFreshStore(): Store
+    {
+        $owner = User::factory()->create();
+
+        return Store::create([
+            'owner_id' => $owner->id,
+            'name' => 'قطعة السعادة',
+            'slug' => 'qitat-alsaada',
+            'tagline' => 'حلويات منزلية تُخبز على مهل',
+            'description' => 'حلويات منزلية في جنين.',
+            'phone' => '0597474647',
+            'whatsapp' => '972597474647',
+            'city' => 'جنين',
+            'currency' => 'ILS',
+            'country_code' => '970',
+            'timezone' => 'Asia/Hebron',
+        ]);
+    }
 }

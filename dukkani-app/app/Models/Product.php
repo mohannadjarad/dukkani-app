@@ -80,7 +80,11 @@ class Product extends Model
     protected function resolveImageUrl(string $transform): string
     {
         if (! $this->image_path) {
-            return asset('images/placeholder-bakery.svg');
+            // The demo keeps the Amal Bakes artwork; a real store never shows
+            // another brand, so it falls back to a neutral product placeholder.
+            return asset(config('app.demo_mode')
+                ? 'images/placeholder-bakery.svg'
+                : 'images/placeholder-product.svg');
         }
 
         if (str_starts_with($this->image_path, 'http')) {

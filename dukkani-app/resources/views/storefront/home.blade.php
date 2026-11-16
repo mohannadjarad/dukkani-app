@@ -7,12 +7,11 @@
         $today = $store->todayHours();
         $isOpen = $store->isOpenNow();
         $story = trim(explode("\n\n", (string) $store->description)[0] ?? '');
-        $cover = $store->coverUrl() ?: asset(config('app.demo_mode') ? 'images/amal-bakes/store-cover.webp' : 'images/placeholder-bakery.svg');
     @endphp
 
     <section class="mx-auto max-w-6xl px-5 pt-6 sm:px-8 sm:pt-8">
         <div class="relative overflow-hidden rounded-[2.5rem] bg-ink shadow-[var(--shadow-lift)]">
-            <img src="{{ $cover }}" alt="{{ $store->name }}" class="absolute inset-0 size-full object-cover">
+            <x-store-cover :store="$store" class="absolute inset-0 size-full" />
             <div class="absolute inset-0 bg-gradient-to-l from-[#1d110c]/95 via-[#1d110c]/75 to-[#1d110c]/35"></div>
             <div class="absolute inset-0 pattern-dots opacity-20"></div>
 
@@ -171,7 +170,7 @@
         <div class="grid items-center gap-8 lg:grid-cols-2">
             <div class="relative">
                 <div class="overflow-hidden rounded-[2.5rem]">
-                    <img src="{{ $cover }}" alt="داخل مطبخ {{ $store->name }}" class="h-[24rem] w-full object-cover sm:h-[28rem]">
+                    <x-store-cover :store="$store" :alt="'داخل مطبخ '.$store->name" class="h-[24rem] w-full sm:h-[28rem]" />
                 </div>
                 <div class="absolute -bottom-6 start-5 max-w-[15rem] rounded-3xl border border-line bg-surface p-4 shadow-[var(--shadow-lift)]">
                     <p class="font-display text-lg font-bold leading-snug text-ink">«كل طلب يخرج من مطبخنا كأنه هدية لشخص نحبه.»</p>

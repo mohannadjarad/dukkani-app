@@ -102,7 +102,7 @@
                 {{-- Image --}}
                 <div class="card p-5 sm:p-6" x-data="{
                     preview: @js($preview),
-                    fallback: @js(asset('images/placeholder-bakery.svg')),
+                    fallback: @js(asset(config('app.demo_mode') ? 'images/placeholder-bakery.svg' : 'images/placeholder-product.svg')),
                     pick(event) {
                         const file = event.target.files && event.target.files[0];
                         if (file) { this.preview = URL.createObjectURL(file); }
