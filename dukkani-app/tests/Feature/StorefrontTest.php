@@ -179,6 +179,24 @@ class StorefrontTest extends TestCase
             ->assertDontSee('placeholder-bakery.svg');
     }
 
+    public function test_the_payment_line_only_mentions_bank_transfer_when_the_store_has_bank_details(): void
+    {
+        $store = $this->makeFreshStore();
+
+        $this->get(route('storefront.home', $store))
+            ->assertOk()
+            ->assertDontSee('الحوالة البنكية');
+
+        $store->update([
+            'bank_name' => 'بنك فلسطين',
+            'bank_iban' => 'PS92PALS000000000400123456702',
+        ]);
+
+        $this->get(route('storefront.home', $store))
+            ->assertOk()
+            ->assertSee('الحوالة البنكية');
+    }
+
     protected function makeFreshStore(): Store
     {
         $owner = User::factory()->create();

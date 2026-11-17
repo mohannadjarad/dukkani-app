@@ -166,7 +166,7 @@
                     </p>
                     <p class="flex items-start gap-2">
                         <svg class="mt-1 size-3.5 shrink-0 text-sage" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>
-                        الدفع نقداً عند الاستلام، أو بالحوالة البنكية للمبلغ كاملاً للطلبات الخاصة.
+                        الدفع نقداً عند الاستلام{{ in_array('bank_transfer', $store->allowedPaymentMethods(), true) ? '، أو بالحوالة البنكية للمبلغ كاملاً للطلبات الخاصة' : '' }}.
                     </p>
                 </div>
             </div>

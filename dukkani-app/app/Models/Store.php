@@ -177,20 +177,22 @@ class Store extends Model
             $methods[] = 'cliq';
         }
 
-        $methods[] = 'bank_transfer';
+        // Bank transfer only makes sense once the customer can see where to
+        // send the money. Stores without complete details simply don't get it.
+        if ($this->hasBankDetails()) {
+            $methods[] = 'bank_transfer';
+        }
 
         return $methods;
     }
 
     /**
      * Whether the store has configured bank-transfer details the customer can
-     * pay the full order amount to.
+     * pay the full order amount to. A bank name and an IBAN are the minimum.
      */
     public function hasBankDetails(): bool
     {
-        return filled($this->bank_name)
-            || filled($this->bank_account_name)
-            || filled($this->bank_iban);
+        return filled($this->bank_name) && filled($this->bank_iban);
     }
 
     public function whatsappLink(?string $text = null): string

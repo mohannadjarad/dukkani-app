@@ -230,13 +230,17 @@
                     </div>
 
                     <div class="mt-5 border-t border-line/60 pt-4">
+                        @php
+                            $bankExample = config('payments.bank_examples')[$store->country_code]
+                                ?? ['bank' => 'اسم البنك', 'iban' => 'XX00XXXXXXXXXXXXXXXXXXXXXXX'];
+                        @endphp
                         <h3 class="text-[11px] font-bold text-ink">بيانات الحوالة البنكية</h3>
-                        <p class="mt-1 text-[10px] text-muted">تظهر للعميل عند اختيار الحوالة البنكية لتحويل المبلغ كاملاً.</p>
+                        <p class="mt-1 text-[10px] text-muted">تظهر للعميل عند اختيار الحوالة البنكية لتحويل المبلغ كاملاً. لتفعيل الخيار، أدخلي اسم البنك والآيبان على الأقل.</p>
 
                         <div class="mt-3 grid gap-4 sm:grid-cols-2">
                             <div>
                                 <label class="label" for="bank_name">اسم البنك</label>
-                                <input id="bank_name" type="text" name="bank_name" value="{{ old('bank_name', $store->bank_name) }}" class="input" maxlength="100" placeholder="مثلاً: البنك الإسلامي الفلسطيني">
+                                <input id="bank_name" type="text" name="bank_name" value="{{ old('bank_name', $store->bank_name) }}" class="input" maxlength="100" placeholder="مثلاً: {{ $bankExample['bank'] }}">
                                 @error('bank_name') <p class="field-error">{{ $message }}</p> @enderror
                             </div>
 
@@ -249,7 +253,8 @@
 
                         <div class="mt-3">
                             <label class="label" for="bank_iban">رقم الآيبان (IBAN)</label>
-                            <input id="bank_iban" type="text" name="bank_iban" value="{{ old('bank_iban', $store->bank_iban) }}" class="input" dir="ltr" maxlength="60" placeholder="PS00XXXX000000000000000000000">
+                            <input id="bank_iban" type="text" name="bank_iban" value="{{ old('bank_iban', $store->bank_iban) }}" class="input" dir="ltr" maxlength="60" placeholder="{{ $bankExample['iban'] }}">
+                            <p class="mt-1.5 text-[9px] leading-5 text-muted/70">آيبان حسابك في بنكك المحلي — في مصر يبدأ بـ EG، وفي فلسطين بـ PS، وفي الأردن بـ JO.</p>
                             @error('bank_iban') <p class="field-error">{{ $message }}</p> @enderror
                         </div>
                     </div>

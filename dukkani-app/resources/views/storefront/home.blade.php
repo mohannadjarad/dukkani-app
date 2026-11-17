@@ -104,7 +104,14 @@
                     <a href="{{ route('storefront.menu', $store) }}" class="btn-primary mt-4 w-full">
                         ابدئي الطلب
                     </a>
-                    <p class="mt-2.5 text-center text-[9px] text-muted/70">الدفع عند الاستلام{{ in_array('cliq', $store->allowedPaymentMethods(), true) ? ' أو تحويل CliQ' : ' أو بالحوالة البنكية' }} — دون دفع إلكتروني</p>
+                    @php
+                        $allowedPayments = $store->allowedPaymentMethods();
+                        $extraPayments = collect([
+                            in_array('cliq', $allowedPayments, true) ? 'تحويل CliQ' : null,
+                            in_array('bank_transfer', $allowedPayments, true) ? 'الحوالة البنكية' : null,
+                        ])->filter()->implode(' أو ');
+                    @endphp
+                    <p class="mt-2.5 text-center text-[9px] text-muted/70">الدفع عند الاستلام{{ $extraPayments !== '' ? ' أو '.$extraPayments : '' }} — دون دفع إلكتروني</p>
                 </div>
             </div>
         </div>

@@ -46,6 +46,18 @@ class SettingsTest extends TestCase
             ->assertSee('التواريخ المحظورة');
     }
 
+    public function test_bank_placeholders_follow_the_store_country(): void
+    {
+        $this->store->update(['country_code' => '20']);
+
+        $this->actingAs($this->owner)
+            ->get(route('settings.index', ['tab' => 'delivery']))
+            ->assertOk()
+            ->assertSee('مثلاً: البنك الأهلي المصري')
+            ->assertSee('placeholder="EG000000000000000000000000000"', false)
+            ->assertDontSee('placeholder="JO00', false);
+    }
+
     public function test_the_password_form_appears_outside_demo_mode(): void
     {
         config(['app.demo_mode' => false]);

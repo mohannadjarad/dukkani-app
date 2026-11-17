@@ -72,9 +72,34 @@ class CurrencyAndCountryTest extends TestCase
     {
         $jordan = new Store(['country_code' => '962']);
         $palestine = new Store(['country_code' => '970']);
+        $jordanWithBank = new Store([
+            'country_code' => '962',
+            'bank_name' => 'البنك العربي',
+            'bank_iban' => 'JO94CBJO0010000000000131000302',
+        ]);
+        $palestineWithBank = new Store([
+            'country_code' => '970',
+            'bank_name' => 'بنك فلسطين',
+            'bank_iban' => 'PS92PALS000000000400123456702',
+        ]);
 
-        $this->assertSame(['cash', 'cliq', 'bank_transfer'], $jordan->allowedPaymentMethods());
-        $this->assertSame(['cash', 'bank_transfer'], $palestine->allowedPaymentMethods());
+        $this->assertSame(['cash', 'cliq'], $jordan->allowedPaymentMethods());
+        $this->assertSame(['cash'], $palestine->allowedPaymentMethods());
+        $this->assertSame(['cash', 'cliq', 'bank_transfer'], $jordanWithBank->allowedPaymentMethods());
+        $this->assertSame(['cash', 'bank_transfer'], $palestineWithBank->allowedPaymentMethods());
+    }
+
+    public function test_bank_transfer_is_hidden_until_a_bank_name_and_an_iban_are_saved(): void
+    {
+        $store = new Store(['country_code' => '970', 'bank_name' => 'بنك فلسطين']);
+
+        $this->assertFalse($store->hasBankDetails());
+        $this->assertSame(['cash'], $store->allowedPaymentMethods());
+
+        $store->bank_iban = 'PS92PALS000000000400123456702';
+
+        $this->assertTrue($store->hasBankDetails());
+        $this->assertSame(['cash', 'bank_transfer'], $store->allowedPaymentMethods());
     }
 
     public function test_checkout_rejects_cliq_for_a_palestinian_store(): void

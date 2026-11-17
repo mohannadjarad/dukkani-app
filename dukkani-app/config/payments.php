@@ -46,4 +46,20 @@ return [
 
     'cliq_countries' => ['962'],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Bank examples per country
+    |--------------------------------------------------------------------------
+    |
+    | Local bank names and IBAN shapes used as placeholders in the owner's
+    | settings. The field itself accepts any bank the store actually uses.
+    |
+    */
+
+    'bank_examples' => [
+        '970' => ['bank' => 'بنك فلسطين', 'iban' => 'PS00XXXX000000000000000000000'],
+        '962' => ['bank' => 'البنك العربي', 'iban' => 'JO00XXXX0000000000000000000000'],
+        '20' => ['bank' => 'البنك الأهلي المصري', 'iban' => 'EG000000000000000000000000000'],
+    ],
+
 ];
