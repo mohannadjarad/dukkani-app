@@ -192,6 +192,23 @@ class PlanLimitsTest extends TestCase
         $this->assertTrue($this->plans()->isAtProductLimit($store));
     }
 
+    public function test_a_trial_store_cannot_open_the_add_product_screen_at_twelve_products(): void
+    {
+        $store = $this->makeStore([
+            'plan' => 'starter',
+            'plan_expires_at' => now()->addDays(3),
+            'is_trial' => true,
+        ]);
+
+        for ($i = 1; $i <= 12; $i++) {
+            $this->makeProduct($store, $i);
+        }
+
+        $this->actingAs($store->owner)
+            ->get(route('products.create'))
+            ->assertRedirect(route('products.index'));
+    }
+
     public function test_an_expired_trial_falls_back_to_free_limits_immediately(): void
     {
         $store = $this->makeStore([
