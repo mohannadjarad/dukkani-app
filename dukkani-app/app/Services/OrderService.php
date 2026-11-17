@@ -175,7 +175,7 @@ class OrderService
 
     protected function nextNumber(Store $store): string
     {
-        $prefix = 'AB-'.now()->format('ymd').'-';
+        $prefix = $this->orderPrefix($store).'-'.now()->format('ymd').'-';
         $count = Order::forStore($store)->where('number', 'like', $prefix.'%')->count() + 1;
 
         do {
@@ -184,5 +184,37 @@ class OrderService
         } while (Order::forStore($store)->where('number', $number)->exists());
 
         return $number;
+    }
+
+    /**
+     * Each store gets its own order prefix so a number never carries another
+     * store's initials. An explicit `order_prefix` wins; otherwise the prefix
+     * is built from the Latin initials of the store name, then the slug.
+     */
+    protected function orderPrefix(Store $store): string
+    {
+        $custom = strtoupper((string) preg_replace('/[^A-Za-z0-9]/', '', (string) $store->order_prefix));
+
+        if ($custom !== '') {
+            return mb_substr($custom, 0, 4);
+        }
+
+        $initials = '';
+
+        foreach (preg_split('/[\s\-_]+/', trim((string) $store->name)) ?: [] as $word) {
+            if (preg_match('/^[A-Za-z]/', $word) === 1) {
+                $initials .= strtoupper($word[0]);
+            }
+        }
+
+        if ($initials === '') {
+            foreach (preg_split('/[\s\-_]+/', trim((string) $store->slug)) ?: [] as $word) {
+                if (preg_match('/^[A-Za-z0-9]/', $word) === 1) {
+                    $initials .= strtoupper($word[0]);
+                }
+            }
+        }
+
+        return $initials !== '' ? mb_substr($initials, 0, 4) : 'DK';
     }
 }

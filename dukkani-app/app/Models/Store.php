@@ -15,7 +15,7 @@ class Store extends Model
     use HasFactory;
 
     protected $fillable = [
-        'owner_id', 'name', 'slug', 'tagline', 'description', 'logo_path',
+        'owner_id', 'name', 'slug', 'order_prefix', 'tagline', 'description', 'logo_path',
         'logo_public_id', 'cover_path', 'cover_public_id', 'phone', 'whatsapp',
         'instagram', 'city', 'address',
         'currency', 'country_code', 'delivery_fee_fils', 'pickup_enabled',
@@ -114,7 +114,9 @@ class Store extends Model
 
     public function coverUrl(): ?string
     {
-        return $this->imageUrl($this->cover_path);
+        // A cover is its own asset. When it is missing the storefront shows the
+        // store's initial; the logo has its own spot in the header instead.
+        return $this->cover_path ? $this->imageUrl($this->cover_path) : null;
     }
 
     public function todayHours(): ?StoreHour

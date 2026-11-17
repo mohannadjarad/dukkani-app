@@ -36,7 +36,7 @@
     <header class="sticky top-0 z-40 border-b border-line/70 bg-canvas/90 backdrop-blur-xl" @click.outside="mobile = false">
         <div class="mx-auto flex h-[4.5rem] max-w-6xl items-center gap-4 px-5 sm:px-8">
             <a href="{{ route('storefront.home', $store) }}" class="flex shrink-0 items-center gap-2.5">
-                <span class="flex size-10 items-center justify-center rounded-2xl bg-brand font-display text-lg font-bold text-white shadow-[0_8px_18px_-10px_rgba(142,68,37,0.9)]">{{ mb_substr($store->name, 0, 1) }}</span>
+                <x-store-logo :store="$store" class="shadow-[0_8px_18px_-10px_rgba(142,68,37,0.9)]" />
                 <span class="hidden flex-col leading-none sm:flex">
                     <span class="font-display text-lg font-bold text-ink">{{ $store->name }}</span>
                     @if (config('app.demo_mode'))
@@ -95,7 +95,7 @@
             <div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
                 <div>
                     <div class="flex items-center gap-2.5">
-                        <span class="flex size-10 items-center justify-center rounded-2xl bg-brand font-display text-lg font-bold text-white">{{ mb_substr($store->name, 0, 1) }}</span>
+                        <x-store-logo :store="$store" />
                         <div class="leading-none">
                             <p class="font-display text-lg font-bold text-ink">{{ $store->name }}</p>
                             @if (config('app.demo_mode'))

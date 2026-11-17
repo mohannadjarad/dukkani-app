@@ -52,7 +52,11 @@
 
             <div class="mt-6 rounded-2xl border border-line/80 bg-canvas/70 p-3">
                 <div class="flex items-center gap-3">
-                    <span class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-brand-soft font-display text-lg font-bold text-brand-dark">{{ mb_substr($store?->name ?? $brandName, 0, 1) }}</span>
+                    @if ($store)
+                        <x-store-logo :store="$store" radius="rounded-xl" tone="soft" class="shrink-0" />
+                    @else
+                        <span class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-brand-soft font-display text-lg font-bold text-brand-dark">{{ mb_substr($brandName, 0, 1) }}</span>
+                    @endif
                     <div class="min-w-0 flex-1">
                         <p class="truncate text-[13px] font-bold text-ink">{{ $store?->name ?? $brandName }}</p>
                         <p class="mt-0.5 flex flex-wrap items-center gap-1.5 text-[10px] text-muted">

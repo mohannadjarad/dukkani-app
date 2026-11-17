@@ -163,6 +163,22 @@ class StorefrontTest extends TestCase
             ->assertDontSee('placeholder-bakery.svg');
     }
 
+    public function test_a_store_logo_is_shown_alongside_the_monogram_cover(): void
+    {
+        config(['app.demo_mode' => false]);
+
+        $store = $this->makeFreshStore();
+        $store->update([
+            'logo_path' => 'https://res.cloudinary.com/demo/image/upload/v123/dukkani/sweets-city/logo.jpg',
+        ]);
+
+        $this->get(route('storefront.home', $store))
+            ->assertOk()
+            ->assertSee('sweets-city/logo.jpg', false)
+            ->assertSee('aria-label="'.$store->name.'"', false)
+            ->assertDontSee('placeholder-bakery.svg');
+    }
+
     protected function makeFreshStore(): Store
     {
         $owner = User::factory()->create();

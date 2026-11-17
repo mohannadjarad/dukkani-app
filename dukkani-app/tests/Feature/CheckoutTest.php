@@ -64,6 +64,7 @@ class CheckoutTest extends TestCase
         $this->assertSame(20500, $order->total_fils);
         $this->assertSame(20500, $order->balance_due_fils);
         $this->assertSame(1, $order->items()->count());
+        $this->assertStringStartsWith('AB-', $order->number);
         $this->assertNull(session('cart.'.$this->store->id));
 
         $this->get(route('track.show', $order->public_token))
