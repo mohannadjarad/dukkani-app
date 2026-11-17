@@ -43,7 +43,7 @@
         @if ($atProductLimit)
             <div class="mt-5 rounded-2xl border border-gold/30 bg-gold-soft/60 px-4 py-3">
                 <p class="text-xs font-bold text-[#7a5a22]">وصلتِ حد {{ $productLimit }} منتجاً.</p>
-                <p class="mt-0.5 text-[10px] leading-5 text-[#8a672c]">احذفي منتجاً لإفساح مجال لمنتج جديد.</p>
+                <p class="mt-0.5 text-[10px] leading-5 text-[#8a672c]">اشتركي في Starter لإضافة منتجات بلا حد، أو احذفي منتجاً لإفساح مجال لمنتج جديد.</p>
             </div>
         @endif
 

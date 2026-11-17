@@ -377,6 +377,7 @@
                     @if ($planUsage['trial'])
                         <div class="mt-4 rounded-2xl border border-gold/30 bg-gold-soft/70 px-4 py-3 text-[11px] leading-6 text-[#7a5a22]">
                             🎁 أنتِ على تجربة Starter مجاناً — باقي <span class="font-bold">{{ $planUsage['trial_days'] }}</span> {{ $planUsage['trial_days'] === 1 ? 'يوم' : 'أيام' }}.
+                            المنتجات محدودة بـ12 خلال التجربة، والاشتراك في Starter بيفتحها بلا حد.
                         </div>
                     @endif
 
@@ -405,8 +406,8 @@
                     @if (! $planUsage['unlimited'] && $upgradeLink)
                         <div class="mt-4 flex flex-col items-start justify-between gap-3 rounded-2xl bg-gradient-to-bl from-gold-soft/80 to-brand-soft/50 p-4 sm:flex-row sm:items-center">
                             <div>
-                                <p class="text-[11px] font-bold text-ink">ترقية إلى Starter — طلبات بلا حد</p>
-                                <p class="mt-0.5 text-[10px] text-muted">طلبات بلا حد، سجل الزبائن، والتقارير.</p>
+                                <p class="text-[11px] font-bold text-ink">ترقية إلى Starter — بلا حد</p>
+                                <p class="mt-0.5 text-[10px] text-muted">طلبات ومنتجات بلا حد، سجل الزبائن، والتقارير.</p>
                             </div>
                             <a href="{{ $upgradeLink }}" target="_blank" rel="noopener" class="btn-primary btn-sm shrink-0">رقّي عبر واتساب</a>
                         </div>

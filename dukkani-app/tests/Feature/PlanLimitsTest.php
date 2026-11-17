@@ -155,7 +155,7 @@ class PlanLimitsTest extends TestCase
         $this->assertTrue($this->plans()->canAcceptOrder($store));
     }
 
-    public function test_starter_has_unlimited_orders_but_a_twelve_product_cap(): void
+    public function test_paid_starter_is_unlimited_for_orders_and_products(): void
     {
         $store = $this->makeStore([
             'plan' => 'starter',
@@ -165,10 +165,15 @@ class PlanLimitsTest extends TestCase
 
         $this->fillMonth($store, 30);
 
+        for ($i = 1; $i <= 13; $i++) {
+            $this->makeProduct($store, $i);
+        }
+
         $this->assertTrue($this->plans()->isUnlimited($store));
         $this->assertNull($this->plans()->orderLimit($store));
-        $this->assertSame(12, $this->plans()->productLimit($store));
+        $this->assertNull($this->plans()->productLimit($store));
         $this->assertTrue($this->plans()->canAcceptOrder($store));
+        $this->assertTrue($this->plans()->canAddProduct($store));
     }
 
     public function test_a_trial_store_can_add_a_product_until_it_reaches_twelve(): void
@@ -220,6 +225,7 @@ class PlanLimitsTest extends TestCase
         $this->assertFalse($this->plans()->isUnlimited($store));
         $this->assertFalse($this->plans()->isOnTrial($store));
         $this->assertSame(15, $this->plans()->orderLimit($store));
+        $this->assertSame(12, $this->plans()->productLimit($store));
         $this->assertSame('free', $this->plans()->effectivePlan($store));
     }
 

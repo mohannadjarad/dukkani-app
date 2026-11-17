@@ -17,8 +17,9 @@ return [
 
     'default' => 'free',
 
-    // A brand-new store gets a free full-feature Starter trial for this many
-    // days, then falls back to the Free limits automatically.
+    // A brand-new store gets a free Starter trial for this many days: unlimited
+    // orders plus the customer log, while products stay at the Free ceiling so
+    // a lapsed trial never leaves more products than the Free plan allows.
     'trial_days' => 3,
 
     // The first time a store activates a paid plan, this many extra free days
@@ -72,7 +73,7 @@ return [
             'label_latin' => 'Starter',
             'price' => ['JOD' => 29, 'ILS' => 131, 'EGP' => 2200],
             'order_limit' => null,
-            'product_limit' => 12,
+            'product_limit' => null,
             'user_limit' => 1,
             'purchasable' => true,
             'features' => [

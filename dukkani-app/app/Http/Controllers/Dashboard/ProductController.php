@@ -438,8 +438,11 @@ class ProductController extends Controller
     protected function productLimitMessage(Store $store): string
     {
         $limit = $this->plans->productLimit($store) ?? 12;
+        $upgrade = $this->plans->isOnTrial($store)
+            ? 'بعد الاشتراك في Starter، المنتجات بلا حد.'
+            : 'رقّي إلى Starter لإضافة منتجات بلا حد.';
 
-        return 'وصلتِ حد المنتجات ('.$limit.' منتجاً). احذفي منتجاً لإفساح مجال لمنتج جديد.';
+        return 'وصلتِ حد المنتجات ('.$limit.' منتجاً). '.$upgrade.' أو احذفي منتجاً لإفساح مجال.';
     }
 
     protected function authorizeProduct(Product $product): Store

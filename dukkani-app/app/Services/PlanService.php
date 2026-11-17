@@ -154,12 +154,18 @@ class PlanService
         return (int) $base + max(0, (int) ($store->order_limit_override ?? 0));
     }
 
-    /** Product ceiling, or null when the plan has no product cap. */
+    /**
+     * Product ceiling, or null when the plan has no product cap.
+     *
+     * A trial keeps the Free product ceiling so a lapsed trial never leaves the
+     * store with more products than the Free plan allows. A paid Starter plan
+     * has no product cap.
+     */
     public function productLimit(Store $store): ?int
     {
-        // Orders may be unlimited while products still have a cap (Starter),
-        // so read the product limit from the effective plan directly.
-        $limit = $this->plan($store)['product_limit'] ?? null;
+        $limit = $store->is_trial
+            ? ($this->config('free')['product_limit'] ?? null)
+            : ($this->plan($store)['product_limit'] ?? null);
 
         return $limit === null ? null : (int) $limit;
     }

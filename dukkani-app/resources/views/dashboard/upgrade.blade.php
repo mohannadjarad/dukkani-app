@@ -45,7 +45,7 @@
             <div class="mt-6 rounded-2xl border border-line/70 bg-canvas/50 p-4 text-start">
                 <p class="text-xs font-bold text-ink">الترقية إلى Starter</p>
                 <ul class="mt-3 space-y-2 text-[11px] text-ink-soft">
-                    <li class="flex items-center gap-2"><span class="text-sage">✓</span> طلبات بلا حد</li>
+                    <li class="flex items-center gap-2"><span class="text-sage">✓</span> طلبات ومنتجات بلا حد</li>
                     <li class="flex items-center gap-2"><span class="text-sage">✓</span> سجل الزبائن والتقارير</li>
                     <li class="flex items-center gap-2"><span class="text-sage">✓</span> دعم بالعربي عبر واتساب</li>
                 </ul>
