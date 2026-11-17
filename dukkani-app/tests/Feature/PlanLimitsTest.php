@@ -139,22 +139,57 @@ class PlanLimitsTest extends TestCase
         $this->assertTrue($this->plans()->isAtProductLimit($store));
     }
 
-    public function test_starter_and_pro_plans_are_unlimited(): void
+    public function test_pro_is_unlimited(): void
     {
-        foreach (['starter', 'pro'] as $plan) {
-            $store = $this->makeStore([
-                'plan' => $plan,
-                'plan_expires_at' => now()->addMonth(),
-                'is_trial' => false,
-            ]);
+        $store = $this->makeStore([
+            'plan' => 'pro',
+            'plan_expires_at' => now()->addMonth(),
+            'is_trial' => false,
+        ]);
 
-            $this->fillMonth($store, 30);
+        $this->fillMonth($store, 30);
 
-            $this->assertTrue($this->plans()->isUnlimited($store));
-            $this->assertNull($this->plans()->orderLimit($store));
-            $this->assertNull($this->plans()->productLimit($store));
-            $this->assertTrue($this->plans()->canAcceptOrder($store));
+        $this->assertTrue($this->plans()->isUnlimited($store));
+        $this->assertNull($this->plans()->orderLimit($store));
+        $this->assertNull($this->plans()->productLimit($store));
+        $this->assertTrue($this->plans()->canAcceptOrder($store));
+    }
+
+    public function test_starter_has_unlimited_orders_but_a_twelve_product_cap(): void
+    {
+        $store = $this->makeStore([
+            'plan' => 'starter',
+            'plan_expires_at' => now()->addMonth(),
+            'is_trial' => false,
+        ]);
+
+        $this->fillMonth($store, 30);
+
+        $this->assertTrue($this->plans()->isUnlimited($store));
+        $this->assertNull($this->plans()->orderLimit($store));
+        $this->assertSame(12, $this->plans()->productLimit($store));
+        $this->assertTrue($this->plans()->canAcceptOrder($store));
+    }
+
+    public function test_a_trial_store_can_add_a_product_until_it_reaches_twelve(): void
+    {
+        $store = $this->makeStore([
+            'plan' => 'starter',
+            'plan_expires_at' => now()->addDays(3),
+            'is_trial' => true,
+        ]);
+
+        for ($i = 1; $i <= 11; $i++) {
+            $this->makeProduct($store, $i);
         }
+
+        $this->assertTrue($this->plans()->canAddProduct($store));
+
+        $this->makeProduct($store, 12);
+
+        $this->assertSame(12, $this->plans()->productLimit($store));
+        $this->assertFalse($this->plans()->canAddProduct($store));
+        $this->assertTrue($this->plans()->isAtProductLimit($store));
     }
 
     public function test_an_expired_trial_falls_back_to_free_limits_immediately(): void
@@ -216,6 +251,7 @@ class PlanLimitsTest extends TestCase
         $this->assertTrue($this->plans()->isOnTrial($store));
         $this->assertSame(3, $this->plans()->trialDaysLeft($store));
         $this->assertNull($this->plans()->orderLimit($store));
+        $this->assertSame(12, $this->plans()->productLimit($store));
     }
 
     public function test_the_first_paid_activation_adds_the_first_month_bonus(): void

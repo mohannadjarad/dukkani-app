@@ -439,7 +439,7 @@ class ProductController extends Controller
     {
         $limit = $this->plans->productLimit($store) ?? 12;
 
-        return 'وصلتِ حد الخطة المجانية ('.$limit.' منتجاً). رقّي الخطة لإضافة منتجات أكثر.';
+        return 'وصلتِ حد المنتجات ('.$limit.' منتجاً). احذفي منتجاً لإفساح مجال لمنتج جديد.';
     }
 
     protected function authorizeProduct(Product $product): Store

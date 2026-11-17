@@ -72,7 +72,7 @@ return [
             'label_latin' => 'Starter',
             'price' => ['JOD' => 29, 'ILS' => 131, 'EGP' => 2200],
             'order_limit' => null,
-            'product_limit' => null,
+            'product_limit' => 12,
             'user_limit' => 1,
             'purchasable' => true,
             'features' => [

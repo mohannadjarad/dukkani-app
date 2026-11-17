@@ -6,6 +6,7 @@ use App\Enums\OrderStatus;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Store;
+use Illuminate\Support\Carbon;
 
 /**
  * Reads the subscription plan config and answers the questions the rest of the
@@ -153,13 +154,11 @@ class PlanService
         return (int) $base + max(0, (int) ($store->order_limit_override ?? 0));
     }
 
-    /** Product ceiling, or null when unlimited. */
+    /** Product ceiling, or null when the plan has no product cap. */
     public function productLimit(Store $store): ?int
     {
-        if ($this->isUnlimited($store)) {
-            return null;
-        }
-
+        // Orders may be unlimited while products still have a cap (Starter),
+        // so read the product limit from the effective plan directly.
         $limit = $this->plan($store)['product_limit'] ?? null;
 
         return $limit === null ? null : (int) $limit;
@@ -241,7 +240,7 @@ class PlanService
     /**
      * Usage snapshot used by the dashboard banner and the plan screen.
      *
-     * @return array{limit: int|null, used: int, remaining: int|null, at_limit: bool, near_limit: bool, unlimited: bool, plan: string, label: string, trial: bool, trial_days: int, expires_at: \Illuminate\Support\Carbon|null}
+     * @return array{limit: int|null, used: int, remaining: int|null, at_limit: bool, near_limit: bool, unlimited: bool, plan: string, label: string, trial: bool, trial_days: int, expires_at: Carbon|null}
      */
     public function ordersUsage(Store $store): array
     {
