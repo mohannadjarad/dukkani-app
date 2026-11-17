@@ -47,7 +47,7 @@ return [
 
     'support' => [
         'name' => env('DUKKANI_SUPPORT_NAME', 'دعم دكّاني'),
-        'whatsapp' => env('DUKKANI_SUPPORT_WHATSAPP', '962790000000'),
+        'whatsapp' => env('DUKKANI_SUPPORT_WHATSAPP', '972569991081'),
     ],
 
     'plans' => [

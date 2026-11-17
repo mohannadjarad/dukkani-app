@@ -375,6 +375,38 @@ class PlanLimitsTest extends TestCase
             ->assertSee('wa.me');
     }
 
+    public function test_the_limit_page_keeps_the_support_number_international_for_another_country(): void
+    {
+        config(['plans.support.whatsapp' => '972569991081']);
+
+        $store = $this->makeStore([
+            'plan' => 'free',
+            'country_code' => '20',
+            'currency' => 'EGP',
+            'phone' => '01000000000',
+            'timezone' => 'Africa/Cairo',
+        ]);
+        $this->fillMonth($store, 15);
+
+        $this->get(route('storefront.checkout.limit', $store))
+            ->assertOk()
+            ->assertSee('https://wa.me/972569991081', false)
+            ->assertDontSee('wa.me/20569991081', false);
+    }
+
+    public function test_the_dashboard_upgrade_link_uses_the_support_number(): void
+    {
+        config(['plans.support.whatsapp' => '972569991081']);
+
+        $store = $this->makeStore(['plan' => 'free']);
+
+        $this->actingAs($store->owner)
+            ->get(route('settings.index', ['tab' => 'plan']))
+            ->assertOk()
+            ->assertSee('https://wa.me/972569991081', false)
+            ->assertSee('رقّي عبر واتساب');
+    }
+
     public function test_the_limit_page_redirects_back_when_the_store_can_accept_orders(): void
     {
         $store = $this->makeStore(['plan' => 'free']);
