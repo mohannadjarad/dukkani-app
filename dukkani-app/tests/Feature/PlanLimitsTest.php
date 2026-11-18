@@ -489,9 +489,15 @@ class PlanLimitsTest extends TestCase
     {
         $store = $this->makeStore([
             'plan' => 'starter',
-            'plan_expires_at' => now()->addDays(7),
             'is_trial' => true,
         ]);
+
+        // The dashboard reads timestamps back in the store's own timezone, so
+        // the fixture has to write the expiry in that same zone to stay 7 days
+        // away (Asia/Hebron sits two hours behind the app default).
+        $store->forceFill([
+            'plan_expires_at' => now()->timezone($store->timezone)->addDays(7),
+        ])->save();
 
         $this->actingAs($store->owner)
             ->get(route('dashboard'))
