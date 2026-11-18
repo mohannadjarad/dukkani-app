@@ -75,12 +75,18 @@ class ProductController extends Controller
             'categories' => $categories->count(),
         ];
 
+        $imageIssues = Product::where('store_id', $store->id)
+            ->withImageIssue()
+            ->orderBy('name')
+            ->get(['id', 'name', 'slug']);
+
         return view('dashboard.products.index', [
             'store' => $store,
             'products' => $products,
             'categories' => $categories,
             'filters' => $filters,
             'stats' => $stats,
+            'imageIssues' => $imageIssues,
             'productLimit' => $this->plans->productLimit($store),
             'atProductLimit' => $this->plans->isAtProductLimit($store),
         ]);
@@ -189,6 +195,11 @@ class ProductController extends Controller
                     'price_fils' => Money::jod($data['price']),
                     'image_path' => $image['path'],
                     'image_public_id' => $image['public_id'],
+                    // A fresh image is given the benefit of the doubt; keeping
+                    // the same dead link keeps the warning until it is fixed.
+                    'image_broken_at' => $image['path'] === $product->image_path
+                        ? $product->image_broken_at
+                        : null,
                     'lead_time_hours' => $data['lead_time_hours'] ?? null,
                     'is_active' => $request->boolean('is_active'),
                     'is_featured' => $request->boolean('is_featured'),

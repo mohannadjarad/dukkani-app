@@ -12,6 +12,7 @@ use App\Http\Controllers\Dashboard\ProductController;
 use App\Http\Controllers\Dashboard\SettingsController;
 use App\Http\Controllers\Storefront\CartController;
 use App\Http\Controllers\Storefront\CheckoutController;
+use App\Http\Controllers\Storefront\ImageProblemController;
 use App\Http\Controllers\Storefront\OrderTrackingController;
 use App\Http\Controllers\Storefront\ShopController;
 use App\Models\Store;
@@ -33,6 +34,12 @@ Route::prefix('s/{store:slug}')->name('storefront.')->middleware('store.active')
     Route::get('/', [ShopController::class, 'home'])->name('home');
     Route::get('/menu', [ShopController::class, 'menu'])->name('menu');
     Route::get('/product/{product:slug}', [ShopController::class, 'product'])->name('product');
+
+    // Beacons a product image that failed to load in the browser. Signed so it
+    // can only report for a page we actually rendered.
+    Route::post('/image-problem/{product:slug}', ImageProblemController::class)
+        ->middleware(['signed', 'throttle:30,1'])
+        ->name('image-problem');
 
     Route::get('/cart', [CartController::class, 'index'])->name('cart');
     Route::post('/cart', [CartController::class, 'add'])->name('cart.add');

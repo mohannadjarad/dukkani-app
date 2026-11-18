@@ -19,7 +19,7 @@
         <div class="mt-5 grid gap-8 lg:grid-cols-[1fr_1fr] lg:gap-12">
             <div class="lg:sticky lg:top-24 lg:self-start">
                 <div class="relative overflow-hidden rounded-[2.5rem] bg-canvas shadow-[var(--shadow-soft)]">
-                    <img src="{{ $product->imageUrl() }}" alt="{{ $product->name }}" class="aspect-square w-full object-cover">
+                    <x-product-thumb :product="$product" size="large" loading="" class="aspect-square w-full object-cover" />
                     <div class="absolute inset-x-0 top-0 flex items-start justify-between gap-2 p-4">
                         @if ($product->is_featured)
                             <span class="inline-flex items-center gap-1.5 rounded-full bg-gold-soft/95 px-3 py-1.5 text-[10px] font-bold text-[#8a672c] shadow-sm backdrop-blur">

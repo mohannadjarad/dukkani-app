@@ -163,8 +163,12 @@
                 <div class="divide-y divide-line/60">
                     @foreach ($order->items as $item)
                         <div class="flex gap-3.5 px-5 py-4">
-                            <img src="{{ $item->product?->thumbnailUrl() ?? asset(config('app.demo_mode') ? 'images/placeholder-bakery.svg' : 'images/placeholder-product.svg') }}"
+                            @if ($item->product)
+                            <x-product-thumb :product="$item->product" :alt="$item->product_name" class="size-14 shrink-0 rounded-2xl object-cover" />
+                        @else
+                            <img src="{{ asset(config('app.demo_mode') ? 'images/placeholder-bakery.svg' : 'images/placeholder-product.svg') }}"
                                  alt="{{ $item->product_name }}" class="size-14 shrink-0 rounded-2xl object-cover">
+                        @endif
                             <div class="min-w-0 flex-1">
                                 <div class="flex items-start justify-between gap-2">
                                     <div class="min-w-0">

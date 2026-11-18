@@ -2,8 +2,7 @@
 
 <a href="{{ route('storefront.product', [$store, $product]) }}" class="group card card-hover flex flex-col overflow-hidden">
     <div class="relative aspect-[4/3] overflow-hidden bg-canvas">
-        <img src="{{ $product->thumbnailUrl() }}" alt="{{ $product->name }}" loading="lazy"
-             class="size-full object-cover transition duration-500 group-hover:scale-[1.04]">
+        <x-product-thumb :product="$product" :class="'size-full object-cover transition duration-500 group-hover:scale-[1.04]'" />
 
         <div class="absolute inset-x-0 top-0 flex items-start justify-between gap-2 p-3">
             @if ($product->is_featured)

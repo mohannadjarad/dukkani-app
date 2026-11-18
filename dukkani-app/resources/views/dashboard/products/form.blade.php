@@ -17,7 +17,7 @@
         $featuredDefault = $errors->any() ? (bool) old('is_featured') : ($product?->is_featured ?? false);
         $priceValue = old('price', $product ? rtrim(rtrim(number_format($product->price_fils / 1000, 3, '.', ''), '0'), '.') : '');
         $imageUrlValue = old('image_url', $product && str_starts_with((string) $product->image_path, 'http') ? $product->image_path : '');
-        $preview = $product?->imageUrl() ?? '';
+        $preview = $product?->displayImageUrl() ?? '';
     @endphp
 
     <nav class="flex items-center gap-1.5 text-[10px] font-medium text-muted/70">
@@ -34,6 +34,18 @@
             </p>
         </div>
     </div>
+
+    @if ($isEdit && $product->imageIsBroken())
+        <div class="mt-5 rounded-2xl border border-danger/25 bg-danger-soft px-4 py-3.5">
+            <p class="text-xs font-bold text-danger">في مشكلة في صورة «{{ $product->name }}».</p>
+            <p class="mt-1 text-[10px] leading-5 text-danger/85">
+                الرابط المخزَّن ما بيفتح، فالمتجر بيعرض صورة محايدة مكانها لحد ما تنحل.
+            </p>
+            <p class="mt-1 text-[10px] leading-5 text-danger/70">
+                ارفعي صورة جديدة أو الصقي رابطاً يفتح، وبعد الحفظ بيختفي التنبيه وترجع الصورة للمتجر.
+            </p>
+        </div>
+    @endif
 
     <form method="POST" action="{{ $action }}" enctype="multipart/form-data" class="mt-6">
         @csrf

@@ -265,7 +265,7 @@
                     <div class="max-h-72 space-y-3 overflow-y-auto px-5 py-4">
                         @foreach ($items as $item)
                             <div class="flex gap-3">
-                                <img src="{{ $item['product']->thumbnailUrl() }}" alt="{{ $item['product']->name }}" class="size-12 shrink-0 rounded-xl object-cover">
+                                <x-product-thumb :product="$item['product']" class="size-12 shrink-0 rounded-xl object-cover" />
                                 <div class="min-w-0 flex-1">
                                     <div class="flex items-start justify-between gap-2">
                                         <p class="truncate text-[11px] font-bold text-ink">{{ $item['product']->name }}</p>

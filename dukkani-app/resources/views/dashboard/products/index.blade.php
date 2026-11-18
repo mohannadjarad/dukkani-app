@@ -47,6 +47,32 @@
             </div>
         @endif
 
+        {{-- Broken product images: named one by one so the owner knows exactly
+             which photo to replace. Visitors never see a broken frame meanwhile. --}}
+        @if ($imageIssues->isNotEmpty())
+            <div class="mt-5 rounded-2xl border border-danger/25 bg-danger-soft px-4 py-3.5">
+                <p class="flex items-center gap-2 text-xs font-bold text-danger">
+                    <svg class="size-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m0 3h.008v.008H12v-.008ZM10.34 3.94l-7.6 13.16A1.5 1.5 0 0 0 4.04 19.5h15.92a1.5 1.5 0 0 0 1.3-2.4L13.66 3.94a1.5 1.5 0 0 0-2.62 0Z"/></svg>
+                    @if ($imageIssues->count() === 1)
+                        في مشكلة في صورة منتج واحد
+                    @else
+                        في مشكلة في صور {{ $imageIssues->count() }} منتجات
+                    @endif
+                </p>
+                <ul class="mt-2 space-y-1">
+                    @foreach ($imageIssues as $issue)
+                        <li class="flex flex-wrap items-center gap-x-2 text-[10px] leading-5 text-danger/90">
+                            <span>صورة «{{ $issue->name }}» ما بتفتح.</span>
+                            <a href="{{ route('products.edit', $issue) }}" class="font-bold underline underline-offset-4 hover:no-underline">أصلحيها</a>
+                        </li>
+                    @endforeach
+                </ul>
+                <p class="mt-2 text-[10px] leading-5 text-danger/70">
+                    لحد ما ترفعي صورة تعمل، المتجر بيعرض مكانها صورة محايدة — مش صورة مكسورة.
+                </p>
+            </div>
+        @endif
+
         <div class="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
             <div class="card flex items-center gap-3 p-4">
                 <span class="kpi-icon size-10 bg-brand-soft text-brand"><svg class="size-5" fill="none" viewBox="0 0 24 24" stroke-width="1.7" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m21 8-9-5-9 5v8l9 5 9-5V8Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m3.3 8.3 8.7 4.9 8.7-4.9M12 21v-7.8"/></svg></span>
@@ -191,11 +217,15 @@
                 @foreach ($products as $product)
                     <article class="card card-hover group overflow-hidden">
                         <div class="relative aspect-[4/3] overflow-hidden bg-canvas">
-                            <img src="{{ $product->thumbnailUrl() }}" alt="{{ $product->name }}"
-                                 class="size-full object-cover transition duration-500 group-hover:scale-[1.03]">
+                            <x-product-thumb :product="$product" class="size-full object-cover transition duration-500 group-hover:scale-[1.03]" loading="" />
 
                             <div class="absolute inset-x-0 top-0 flex items-start justify-between gap-2 p-3">
                                 <div class="flex flex-col items-start gap-1.5">
+                                    @if ($product->imageIsBroken())
+                                        <span class="inline-flex items-center gap-1 rounded-full bg-danger/90 px-2.5 py-1 text-[9px] font-bold text-white shadow-sm backdrop-blur" title="{{ $product->imageIssueText() }}">
+                                            الصورة لا تعمل
+                                        </span>
+                                    @endif
                                     @if ($product->is_featured)
                                         <span class="inline-flex items-center gap-1 rounded-full bg-gold-soft/95 px-2.5 py-1 text-[9px] font-bold text-[#8a672c] shadow-sm backdrop-blur">
                                             <span class="size-1.5 rounded-full bg-gold"></span>
