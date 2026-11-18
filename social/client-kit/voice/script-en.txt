@@ -1,0 +1,28 @@
+# Dukkani — English voiceover script (6 lines)
+
+> Optional English reel. Record one file per line, then point the render
+> script at the folder and rebuild. Keep the same six-scene timing.
+> The Arabic keyword «تشخيص» is the one the business listens for; the English
+> line uses “diagnosis” so it is easy to say, and the caption clarifies both.
+
+1.
+Three signs you're losing customers — and you don't even feel it.
+
+2.
+Sign one: orders get lost in the conversations.
+
+3.
+Sign two: you repeat the same questions every day.
+How much? Is it available? Where's the deposit?
+
+4.
+Sign three: you don't know your numbers.
+How much did you sell this month? Who's your best customer?
+
+5.
+The fix isn't a new app. It's one system that brings your storefront,
+orders, schedule and reports together — all in one place, under your name.
+
+6.
+Send the word “diagnosis” on WhatsApp, and within twenty-four hours
+you'll have a clear plan. No commitment.

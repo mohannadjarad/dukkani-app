@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1200, initial-scale=1">
+<title>Dukkani — 3 signs you're losing orders (Facebook 1.91:1)</title>
+<style>
+  @font-face { font-family:'Tajawal'; font-weight:400; src:url('../../../dukkani-app/resources/fonts/tajawal-400-arabic.woff2') format('woff2'); }
+  @font-face { font-family:'Tajawal'; font-weight:500; src:url('../../../dukkani-app/resources/fonts/tajawal-500-arabic.woff2') format('woff2'); }
+  @font-face { font-family:'Tajawal'; font-weight:700; src:url('../../../dukkani-app/resources/fonts/tajawal-700-arabic.woff2') format('woff2'); }
+  @font-face { font-family:'Tajawal'; font-weight:800; src:url('../../../dukkani-app/resources/fonts/tajawal-800-arabic.woff2') format('woff2'); }
+
+  :root{
+    --cream:#fbf3e9; --cream2:#f6ead9; --surface:#fffaf3;
+    --ink:#2b2119; --muted:#7a6a5b; --accent:#c2410c; --accent-dark:#96320f;
+    --green:#1f7a4d; --green-soft:#e8f2ea; --border:#e9dcc9;
+    --wa:#25d366;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{width:1200px;height:630px;overflow:hidden}
+  body{
+    position:relative;width:1200px;height:630px;
+    font-family:'Tajawal',sans-serif;color:var(--ink);background:var(--cream);
+    direction:rtl;overflow:hidden;-webkit-font-smoothing:antialiased;
+  }
+  .bg{position:absolute;inset:0;background:
+    radial-gradient(circle at 93% 2%,rgba(194,65,12,.17),transparent 33%),
+    radial-gradient(circle at 0% 100%,rgba(95,122,91,.15),transparent 31%),
+    linear-gradient(155deg,#fffaf3 0%,#fbf3e9 55%,#f6ead9 100%);}
+  .bg::after{content:'';position:absolute;inset:0;background-image:radial-gradient(rgba(43,33,25,.07) 1.2px,transparent 1.2px);background-size:26px 26px;opacity:.28}
+  .ring{position:absolute;border:1.5px solid rgba(194,65,12,.13);border-radius:50%;pointer-events:none}
+
+  .top{position:absolute;top:24px;right:48px;left:48px;display:flex;align-items:center;justify-content:space-between;z-index:5}
+  .brand{display:flex;align-items:center;gap:11px}
+  .mark{width:44px;height:44px;border-radius:13px;background:var(--accent);color:#fff7ee;display:grid;place-items:center;font-size:27px;font-weight:800;line-height:1;box-shadow:0 9px 20px rgba(194,65,12,.26)}
+  .brand-name{font-size:23px;font-weight:800;line-height:1.1}
+  .brand-latin{font-size:8px;letter-spacing:.34em;color:var(--muted);font-weight:500;margin-top:2px}
+  .tag{font-size:13px;font-weight:500;color:var(--muted);border:1px solid var(--border);background:rgba(255,250,243,.72);padding:7px 14px;border-radius:999px}
+  .tag b{color:var(--accent);font-weight:700}
+
+  .head{position:absolute;top:80px;right:48px;left:48px;z-index:3}
+  .eyebrow{display:inline-flex;align-items:center;gap:9px;color:var(--accent);font-size:16px;font-weight:700;margin-bottom:6px}
+  .eyebrow::before{content:'';width:26px;height:2px;background:var(--accent);border-radius:2px}
+  h1{font-size:41px;font-weight:800;line-height:1.15;letter-spacing:-.012em;white-space:nowrap}
+  h1 .accent{color:var(--accent)}
+  .sub{font-size:17px;line-height:1.5;color:var(--muted);font-weight:400;margin-top:7px;width:1000px}
+  .sub b{color:var(--ink);font-weight:700}
+
+  .list{position:absolute;top:196px;right:48px;left:48px;display:flex;flex-direction:row;gap:14px;z-index:3}
+  .item{flex:1;position:relative;background:rgba(255,250,243,.9);border:1px solid var(--border);border-radius:20px;padding:19px 20px;min-height:204px;display:flex;flex-direction:column;justify-content:center;box-shadow:0 12px 30px rgba(74,44,22,.055)}
+  .topline{display:flex;align-items:center;gap:10px}
+  .num{flex:none;width:38px;height:38px;border-radius:50%;background:#f8e7d8;color:var(--accent);display:grid;place-items:center;font-size:16px;font-weight:800;font-variant-numeric:tabular-nums;border:1px solid #efd4bf}
+  .title{flex:1;font-size:19px;font-weight:800;line-height:1.25;display:flex;align-items:center;gap:8px}
+  .title .x{width:18px;height:18px;border-radius:50%;background:#fde8e4;color:#b23a1f;display:grid;place-items:center;font-size:11px;font-weight:800;flex:none}
+  .desc{font-size:15px;color:var(--muted);line-height:1.55;margin-top:9px;font-weight:400}
+  .desc b{color:var(--ink);font-weight:700}
+
+  .solution{position:absolute;top:416px;right:48px;left:48px;background:var(--ink);color:#fff7ee;border-radius:16px;padding:13px 20px;display:flex;align-items:center;gap:12px;z-index:4;box-shadow:0 18px 40px rgba(43,33,25,.2)}
+  .solution .ic{width:34px;height:34px;border-radius:10px;background:rgba(255,247,238,.1);display:grid;place-items:center;flex:none;color:#ffd7b8}
+  .solution .txt{font-size:19px;font-weight:500;line-height:1.35}
+  .solution .txt b{color:#ffd7b8;font-weight:800}
+  .solution .arrow{margin-right:auto;color:#a98d75;font-size:22px;line-height:1}
+  .icon{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;flex:none}
+
+  .cta{position:absolute;top:484px;right:48px;left:48px;display:flex;align-items:center;justify-content:space-between;gap:18px;z-index:4}
+  .wa-btn{display:inline-flex;align-items:center;gap:11px;background:var(--wa);color:#063a1e;border-radius:14px;padding:10px 18px;font-size:19px;font-weight:800;box-shadow:0 14px 32px rgba(37,211,102,.26)}
+  .wa-btn .icon{width:23px;height:23px;stroke:none;fill:currentColor;flex:none}
+  .wa-btn small{font-size:14px;font-weight:500;opacity:.78}
+  .wa-btn .phone{display:block;width:100%;white-space:nowrap;font-size:15px;font-weight:700;font-style:normal;direction:ltr;text-align:right;letter-spacing:.02em;opacity:.82;margin-top:1px;font-variant-numeric:tabular-nums}
+  .demo{text-align:left;color:var(--muted);font-size:12px;line-height:1.5}
+  .demo b{display:block;color:var(--ink);font-size:16px;font-weight:700;direction:ltr;letter-spacing:.01em}
+  .demo span{display:block;margin-bottom:1px}
+  .foot{position:absolute;bottom:18px;right:48px;left:48px;display:flex;align-items:center;justify-content:space-between;color:var(--muted);font-size:13px;font-weight:500;z-index:4}
+  .foot .latin{letter-spacing:.28em;font-size:9px;color:#9b8877}
+  .save{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--border);background:rgba(255,250,243,.75);border-radius:999px;padding:6px 12px;font-size:13px;font-weight:700;color:var(--ink)}
+  .save .icon{width:14px;height:14px;color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="bg"></div>
+<div class="ring" style="width:620px;height:620px;top:-300px;left:-220px"></div>
+<div class="ring" style="width:460px;height:460px;bottom:-260px;right:-160px"></div>
+
+<svg width="0" height="0" style="position:absolute">
+  <symbol id="i-msg" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-bookmark" viewBox="0 0 24 24"><path d="m19 21-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></symbol>
+  <symbol id="i-wa" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></symbol>
+</svg>
+
+<header class="top">
+  <div class="brand">
+    <div class="mark">د</div>
+    <div><div class="brand-name">دكاني</div><div class="brand-latin">DUKKANI</div></div>
+  </div>
+  <div class="tag"><b>دليل سريع</b> · لأصحاب المشاريع</div>
+</header>
+
+<section class="head">
+  <div class="eyebrow">إذا فيك وحدة من هالعلامات… خليك معي</div>
+  <h1>٣ علامات إنك عم تخسر طلبات… <span class="accent">وأنت مش حاسس.</span></h1>
+  <p class="sub">المشكلة غالباً مش بالمنتج ولا بالسعر — المشكلة <b>بنظام الطلبات</b> اللي شغّال بين الخاص والستوريز.</p>
+</section>
+
+<section class="list">
+  <div class="item">
+    <div class="topline">
+      <div class="num">01</div>
+      <div class="title">الطلب بيدوب بين المحادثات <span class="x">✕</span></div>
+    </div>
+    <div class="desc">كل زبون إله نسخة بالخاص، ونسخة بالستوري، ونسخة بالواتساب — <b>وما في مكان واحد</b> يلمّهم.</div>
+  </div>
+  <div class="item">
+    <div class="topline">
+      <div class="num">02</div>
+      <div class="title">بتعيد نفس الأسئلة كل يوم <span class="x">✕</span></div>
+    </div>
+    <div class="desc">«بكم؟» «متوفر؟» «وين العربون؟» — ساعات من يومك بتنسخ ولصق، <b>بدون أي إضافة</b>.</div>
+  </div>
+  <div class="item">
+    <div class="topline">
+      <div class="num">03</div>
+      <div class="title">ما بتعرف أرقامك <span class="x">✕</span></div>
+    </div>
+    <div class="desc">كم بعت هالشهر؟ مين أفضل زبون؟ إذا الجواب <b>«بعدين بحسبها»</b> — هاد أخطر علامة.</div>
+  </div>
+</section>
+
+<div class="solution">
+  <div class="ic"><svg class="icon"><use href="#i-check"/></svg></div>
+  <div class="txt">الحل مش تطبيق جديد. <b>نظام واحد</b> يجمع المتجر + الطلبات + المواعيد + التقارير.</div>
+  <div class="arrow">←</div>
+</div>
+
+<div class="cta">
+  <div class="wa-btn">
+    <svg class="icon"><use href="#i-wa"/></svg>
+    <span>ابعث «تشخيص» على واتساب <small>· خلال ٢٤ ساعة</small><em class="phone">+972 56 999 1081</em></span>
+  </div>
+  <div class="demo">
+    <span>شوف النظام مباشرة</span>
+    <b>dukkani-demo.onrender.com</b>
+  </div>
+</div>
+
+<footer class="foot">
+  <div class="save"><svg class="icon"><use href="#i-bookmark"/></svg> احفظ البوست وشاركه مع صاحب مشروع</div>
+  <div class="latin">DUKKANI · 2026</div>
+</footer>
+
+<script>
+  window.__ready = (async () => {
+    await document.fonts.ready;
+    await Promise.all([...document.images].map(img => img.complete ? Promise.resolve() : new Promise(r => { img.onload = img.onerror = r; })));
+    return true;
+  })();
+</script>
+</body>
+</html>

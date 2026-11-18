@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1080, initial-scale=1">
+<title>Dukkani — 3 signs you're losing orders</title>
+<style>
+  @font-face { font-family:'Tajawal'; font-weight:400; src:url('../../../dukkani-app/resources/fonts/tajawal-400-arabic.woff2') format('woff2'); }
+  @font-face { font-family:'Tajawal'; font-weight:500; src:url('../../../dukkani-app/resources/fonts/tajawal-500-arabic.woff2') format('woff2'); }
+  @font-face { font-family:'Tajawal'; font-weight:700; src:url('../../../dukkani-app/resources/fonts/tajawal-700-arabic.woff2') format('woff2'); }
+  @font-face { font-family:'Tajawal'; font-weight:800; src:url('../../../dukkani-app/resources/fonts/tajawal-800-arabic.woff2') format('woff2'); }
+
+  :root{
+    --cream:#fbf3e9; --cream2:#f6ead9; --surface:#fffaf3;
+    --ink:#2b2119; --muted:#7a6a5b; --accent:#c2410c; --accent-dark:#96320f;
+    --red:#b23a1f; --red-soft:#fde8e4;
+    --green:#1f7a4d; --green-soft:#e8f2ea; --border:#e9dcc9;
+    --wa:#25d366;
+    --shadow:0 30px 80px rgba(74,44,22,.18);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{width:1080px;height:1920px}
+  body{font-family:'Tajawal',sans-serif;background:var(--cream);color:var(--ink);direction:rtl;overflow:hidden;-webkit-font-smoothing:antialiased}
+  .scene{display:none;position:relative;width:1080px;height:1920px;overflow:hidden}
+  .scene.active{display:block}
+  .bg{position:absolute;inset:0;background:
+    radial-gradient(circle at 90% 4%,rgba(194,65,12,.15),transparent 36%),
+    radial-gradient(circle at 4% 96%,rgba(95,122,91,.13),transparent 34%),
+    linear-gradient(155deg,#fffaf3 0%,#fbf3e9 52%,#f6ead9 100%);}
+  .bg::after{content:'';position:absolute;inset:0;background-image:radial-gradient(rgba(43,33,25,.07) 1.2px,transparent 1.2px);background-size:26px 26px;opacity:.3}
+  .ring{position:absolute;border:1.5px solid rgba(194,65,12,.14);border-radius:50%;pointer-events:none}
+  .orb{position:absolute;border-radius:50%;pointer-events:none}
+  .orb-a{width:820px;height:820px;top:-240px;right:-220px;background:radial-gradient(circle,rgba(194,65,12,.20),rgba(194,65,12,0) 68%);animation:driftA 16s ease-in-out infinite alternate}
+  .orb-b{width:700px;height:700px;bottom:-260px;left:-200px;background:radial-gradient(circle,rgba(95,122,91,.18),rgba(95,122,91,0) 68%);animation:driftB 19s ease-in-out infinite alternate}
+
+  .top{position:absolute;top:58px;right:64px;left:64px;display:flex;align-items:center;justify-content:space-between;z-index:30;animation:fadeDown .8s .15s cubic-bezier(.16,1,.3,1) both}
+  .brand{display:flex;align-items:center;gap:15px}
+  .mark{width:62px;height:62px;border-radius:19px;background:var(--accent);color:#fff7ee;display:grid;place-items:center;font-size:38px;font-weight:800;line-height:1;box-shadow:0 12px 26px rgba(194,65,12,.26)}
+  .brand-name{font-size:29px;font-weight:800;line-height:1.1}
+  .brand-latin{font-size:10px;letter-spacing:.34em;color:var(--muted);font-weight:500;margin-top:3px}
+  .tag{font-size:16px;font-weight:500;color:var(--muted);border:1px solid var(--border);background:rgba(255,250,243,.72);padding:11px 20px;border-radius:999px}
+  .tag b{color:var(--accent);font-weight:700}
+
+  .bottom{position:absolute;bottom:52px;right:64px;left:64px;display:flex;align-items:center;justify-content:space-between;z-index:30;color:var(--muted);font-size:17px;font-weight:500;animation:fadeIn .8s 1s both}
+  .bottom .demo{direction:ltr;letter-spacing:.01em}
+  .pager{display:flex;align-items:center;gap:12px;direction:ltr;font-variant-numeric:tabular-nums}
+  .pager .line{width:52px;height:1px;background:#c9b39c}
+  .pager b{color:var(--ink);font-weight:700}
+
+  .eyebrow{display:inline-flex;align-items:center;gap:10px;color:var(--accent);font-size:22px;font-weight:700;margin-bottom:18px}
+  .eyebrow::before{content:'';width:30px;height:2px;background:var(--accent);border-radius:2px}
+  .eyebrow.green{color:var(--green)}
+  .eyebrow.green::before{background:var(--green)}
+  h1{font-size:96px;font-weight:800;line-height:1.1;letter-spacing:-.015em}
+  h2{font-size:92px;font-weight:800;line-height:1.12;letter-spacing:-.012em}
+  .accent{color:var(--accent)}
+  .green{color:var(--green)}
+  .sub{font-size:31px;line-height:1.55;color:var(--muted);font-weight:400}
+  .sub b{color:var(--ink);font-weight:700}
+  .icon{width:28px;height:28px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  .chip{display:inline-flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border);color:var(--ink);padding:11px 18px;border-radius:999px;font-size:19px;font-weight:500;box-shadow:0 6px 16px rgba(74,44,22,.05);animation:popIn .55s cubic-bezier(.16,1,.3,1) both;animation-delay:var(--d,0s)}
+  .chip .icon{width:18px;height:18px;color:var(--green);stroke-width:2.4}
+
+  .w{display:inline-block;animation:wordUp .9s cubic-bezier(.16,1,.3,1) both;animation-delay:calc(.45s + var(--i) * .085s)}
+  @keyframes wordUp{0%{opacity:0;transform:translateY(.62em) rotate(2.5deg)}60%{opacity:1}100%{opacity:1;transform:translateY(0) rotate(0)}}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(34px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes fadeDown{from{opacity:0;transform:translateY(-26px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  @keyframes popIn{0%{opacity:0;transform:scale(.82) translateY(14px)}65%{opacity:1;transform:scale(1.025) translateY(0)}100%{opacity:1;transform:scale(1) translateY(0)}}
+  @keyframes lineGrow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+  @keyframes driftA{from{transform:translate(0,0) scale(1)}to{transform:translate(-70px,50px) scale(1.12)}}
+  @keyframes driftB{from{transform:translate(0,0) scale(1)}to{transform:translate(60px,-60px) scale(1.10)}}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+  @keyframes blink{0%,100%{opacity:.3;transform:translateY(0)}50%{opacity:1;transform:translateY(-3px)}}
+  @keyframes cardUp{from{opacity:0;transform:translateY(90px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+  @keyframes fromRight{from{opacity:0;transform:translateX(110px) scale(.96)}to{opacity:1;transform:translateX(0) scale(1)}}
+  @keyframes fromLeft{from{opacity:0;transform:translateX(-110px) scale(.96)}to{opacity:1;transform:translateX(0) scale(1)}}
+  @keyframes stampIn{0%{opacity:0;transform:scale(1.6) rotate(-18deg)}60%{opacity:1;transform:scale(.96) rotate(-7deg)}100%{opacity:1;transform:scale(1) rotate(-7deg)}}
+  @keyframes barGrow{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+  @keyframes ctaGlow{0%,100%{box-shadow:0 16px 32px rgba(194,65,12,.22)}50%{box-shadow:0 16px 46px rgba(194,65,12,.46)}}
+  @keyframes waGlow{0%,100%{box-shadow:0 16px 34px rgba(37,211,102,.30)}50%{box-shadow:0 16px 50px rgba(37,211,102,.52)}}
+  @keyframes floaty{0%,100%{transform:translateY(0) rotate(var(--r,0deg))}50%{transform:translateY(-12px) rotate(var(--r,0deg))}}
+
+  .scene-head{position:absolute;top:190px;right:64px;left:64px;text-align:center;z-index:5}
+  .scene-head h2{font-size:88px}
+  .scene-head .sub{margin:20px auto 0;width:840px;font-size:29px}
+  .big-num{position:absolute;font-size:430px;font-weight:800;line-height:1;color:rgba(194,65,12,.055);letter-spacing:-.06em;z-index:0;pointer-events:none}
+
+  /* ===== S1 ===== */
+  .s1 .head{position:absolute;top:250px;right:64px;left:64px;text-align:center;z-index:4}
+  .s1 h1{font-size:100px}
+  .s1 h1 .huge{font-size:190px;line-height:.9;display:block;color:var(--accent);margin-bottom:2px}
+  .s1 .sub{margin:20px auto 0;width:760px;font-size:33px}
+  .s1 .cards{position:absolute;top:1210px;right:70px;left:70px;display:flex;gap:16px;z-index:5}
+  .s1 .card{flex:1;background:rgba(255,250,243,.9);border:1px solid var(--border);border-radius:26px;padding:24px 18px;text-align:center;box-shadow:0 18px 40px rgba(74,44,22,.08);animation:cardUp .8s cubic-bezier(.16,1,.3,1) both;animation-delay:var(--d,0s)}
+  .s1 .card .n{width:46px;height:46px;border-radius:50%;background:var(--red-soft);color:var(--red);display:grid;place-items:center;font-size:18px;font-weight:800;margin:0 auto 12px}
+  .s1 .card .ic{width:50px;height:50px;border-radius:15px;background:#fbf0e4;color:var(--accent);display:grid;place-items:center;margin:0 auto 12px}
+  .s1 .card .t{font-size:21px;font-weight:800;line-height:1.25}
+  .s1 .card .d{font-size:15px;color:var(--muted);margin-top:5px;line-height:1.4}
+  .s1 .warn{position:absolute;top:1010px;left:50%;transform:translateX(-50%);display:inline-flex;align-items:center;gap:10px;background:var(--red-soft);border:1px solid #f5cfc7;color:var(--red);border-radius:999px;padding:12px 22px;font-size:19px;font-weight:700;z-index:5;animation:popIn .7s 1.9s cubic-bezier(.16,1,.3,1) both}
+  .s1 .warn .icon{width:20px;height:20px;stroke-width:2.4}
+
+  /* ===== S2 ===== */
+  .s2 .big-num{top:120px;left:10px}
+  .s2 .scene-head{text-align:right}
+  .s2 .scene-head h2{font-size:86px;width:820px}
+  .s2 .scene-head .sub{width:760px;margin-right:0;text-align:right;font-size:28px}
+  .s2 .chat{position:absolute;top:640px;right:130px;left:130px;background:var(--surface);border:1px solid var(--border);border-radius:34px;box-shadow:var(--shadow);overflow:hidden;z-index:4;transform:rotate(-1.2deg);animation:cardUp .9s .5s cubic-bezier(.16,1,.3,1) both}
+  .chat-head{display:flex;align-items:center;gap:14px;padding:22px 26px;border-bottom:1px solid #f0e4d4;background:#fffdf9}
+  .avatar{width:52px;height:52px;border-radius:50%;flex:none;background:linear-gradient(135deg,#e9b38a,#c2410c);display:grid;place-items:center;color:#fff7ee;font-weight:700;font-size:22px}
+  .chat-head .name{font-size:24px;font-weight:700}
+  .chat-head .status{font-size:14px;color:var(--green);font-weight:500;margin-top:2px}
+  .chat-head .badge{margin-right:auto;background:var(--red);color:#fff;font-size:14px;font-weight:700;border-radius:999px;padding:5px 10px;min-width:30px;text-align:center}
+  .chat-body{padding:24px 26px 26px;background:#f7ecdf}
+  .bubble{max-width:80%;padding:16px 20px;border-radius:20px;font-size:23px;line-height:1.45;margin-bottom:12px;box-shadow:0 4px 10px rgba(74,44,22,.05);animation:bubbleIn .55s cubic-bezier(.16,1,.3,1) both;animation-delay:var(--d,0s)}
+  .bubble.in{background:#fffdf9;border-top-right-radius:6px;margin-right:0}
+  .bubble.out{background:#d9e7d4;border-top-left-radius:6px;margin-right:auto}
+  .bubble .time{display:block;font-size:12px;color:#9b8877;margin-top:4px;text-align:left}
+  .bubble.ghost{opacity:.4}
+  @keyframes bubbleIn{from{opacity:0;transform:translateY(18px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+  .s2 .lost{position:absolute;top:1250px;left:54px;z-index:7;background:var(--red);color:#fff7ee;border-radius:16px;padding:14px 20px;font-size:18px;font-weight:700;box-shadow:0 18px 40px rgba(178,58,31,.3);transform:rotate(-7deg);animation:stampIn .7s 3.1s cubic-bezier(.16,1,.3,1) both}
+  .s2 .lost b{display:block;font-size:23px;margin-top:2px}
+  .s2 .ticker{position:absolute;top:1510px;right:0;left:0;overflow:hidden;border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:13px 0;background:rgba(255,250,243,.6);z-index:5;animation:fadeIn .6s 2.8s both}
+  .s2 .ticker .track{display:flex;width:max-content;animation:ticker 18s linear infinite}
+  .s2 .ticker span{font-size:23px;font-weight:700;color:var(--muted);padding:0 18px;white-space:nowrap}
+  .s2 .ticker i{color:var(--accent);font-style:normal;font-size:19px}
+  .s2 .verdict{position:absolute;top:1600px;right:64px;left:64px;text-align:center;font-size:28px;font-weight:700;color:var(--muted);z-index:5;animation:fadeUp .8s 3.4s both}
+  .s2 .verdict .accent{color:var(--accent)}
+  @keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+  /* ===== S3 ===== */
+  .s3 .big-num{top:120px;right:10px}
+  .s3 .scene-head{text-align:right}
+  .s3 .scene-head h2{font-size:86px;width:820px}
+  .s3 .scene-head .sub{width:760px;margin-right:0;text-align:right;font-size:28px}
+  .s3 .loop{position:absolute;top:610px;right:64px;left:64px;background:var(--surface);border:1px solid var(--border);border-radius:34px;box-shadow:var(--shadow);padding:30px 34px 26px;z-index:4;animation:cardUp .9s .5s cubic-bezier(.16,1,.3,1) both}
+  .loop-head{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+  .loop-head .ic{width:42px;height:42px;border-radius:12px;background:#fbf0e4;color:var(--accent);display:grid;place-items:center}
+  .loop-head .t{font-size:23px;font-weight:800}
+  .loop-head .b{margin-right:auto;background:var(--red-soft);color:var(--red);font-size:14px;font-weight:700;border-radius:999px;padding:6px 12px}
+  .qrow{display:flex;align-items:center;gap:14px;padding:13px 16px;background:#f7ecdf;border-radius:16px;margin-bottom:10px;animation:fromRight .6s cubic-bezier(.16,1,.3,1) both;animation-delay:var(--d,0s)}
+  .qrow .q{font-size:24px;font-weight:700}
+  .qrow .x{margin-right:auto;background:#fffdf9;border:1px solid #efd9c4;color:var(--muted);font-size:14px;font-weight:700;border-radius:999px;padding:4px 10px}
+  .qrow .rep{width:24px;height:24px;color:var(--red);flex:none}
+  .s3 .note{position:absolute;top:1410px;right:110px;left:110px;background:var(--red-soft);border:1px solid #f5cfc7;border-radius:20px;padding:19px 24px;text-align:center;color:var(--red);font-size:23px;font-weight:700;z-index:5;animation:fadeUp .8s 2.9s cubic-bezier(.16,1,.3,1) both}
+  .s3 .note .icon{width:22px;height:22px;vertical-align:-4px;margin-left:6px;stroke-width:2.4}
+
+  /* ===== S4 ===== */
+  .s4 .big-num{top:120px;left:10px}
+  .s4 .scene-head{text-align:right}
+  .s4 .scene-head h2{font-size:86px;width:820px}
+  .s4 .scene-head .sub{width:760px;margin-right:0;text-align:right;font-size:28px}
+  .s4 .dash{position:absolute;top:640px;right:64px;left:64px;background:#fffdf9;border:1px solid var(--border);border-radius:30px;box-shadow:var(--shadow);overflow:hidden;z-index:4;animation:cardUp .9s .5s cubic-bezier(.16,1,.3,1) both}
+  .dash-top{display:flex;align-items:center;gap:10px;padding:18px 24px;border-bottom:1px solid #f0e4d4;background:#fffaf3}
+  .dots{display:flex;gap:6px;direction:ltr}
+  .dots i{width:9px;height:9px;border-radius:50%;background:#e4d3c0}
+  .dash-title{margin-right:auto;font-size:19px;font-weight:700;color:var(--muted)}
+  .dash-body{padding:24px}
+  .kpis{display:flex;gap:12px;margin-bottom:16px}
+  .kpi{flex:1;border:1px solid #f0e4d4;background:#fffaf3;border-radius:18px;padding:18px 16px;text-align:right;position:relative;overflow:hidden}
+  .kpi .l{font-size:14px;color:var(--muted);font-weight:500}
+  .kpi .v{font-size:38px;font-weight:800;color:#c9b39c;margin-top:4px;letter-spacing:.02em}
+  .kpi .v.blank{color:#d8c7b5;letter-spacing:.18em}
+  .kpi .qm{position:absolute;top:10px;left:12px;font-size:22px;font-weight:800;color:var(--red);opacity:.5}
+  .chart{height:250px;border:1px solid #f0e4d4;border-radius:18px;background:#fffaf3;position:relative;overflow:hidden}
+  .chart .grid{position:absolute;inset:20px 18px;background:repeating-linear-gradient(to top,transparent 0 49px,#f2e6d6 49px 50px)}
+  .chart .blurline{position:absolute;left:20px;right:20px;bottom:60px;height:120px;background:linear-gradient(135deg,rgba(194,65,12,.20),rgba(194,65,12,.05));filter:blur(12px);border-radius:40% 60% 50% 50%}
+  .chart .qbig{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:110px;font-weight:800;color:rgba(194,65,12,.16)}
+  .s4 .stamp{position:absolute;top:1100px;left:80px;z-index:7;background:var(--red);color:#fff7ee;border-radius:16px;padding:16px 24px;font-size:21px;font-weight:800;transform:rotate(-7deg);box-shadow:0 18px 40px rgba(178,58,31,.3);animation:stampIn .7s 2.6s cubic-bezier(.16,1,.3,1) both}
+  .s4 .stamp small{display:block;font-size:14px;font-weight:500;opacity:.8;margin-top:2px}
+  .s4 .qs{position:absolute;top:1240px;right:90px;left:90px;display:flex;flex-direction:column;gap:10px;z-index:5}
+  .s4 .qs .row{display:flex;align-items:center;gap:12px;background:rgba(255,250,243,.86);border:1px solid var(--border);border-radius:16px;padding:13px 18px;font-size:21px;font-weight:700;animation:fromLeft .6s cubic-bezier(.16,1,.3,1) both;animation-delay:var(--d,0s)}
+  .s4 .qs .row .icon{width:20px;height:20px;color:var(--red);stroke-width:2.4}
+  .s4 .verdict{position:absolute;top:1430px;right:64px;left:64px;text-align:center;font-size:24px;color:var(--muted);font-weight:500;z-index:5;animation:fadeUp .8s 3.1s both}
+  .s4 .verdict b{color:var(--red);font-weight:800}
+
+  /* ===== S5 ===== */
+  .s5 .scene-head h2{font-size:84px}
+  .s5 .scene-head .sub{width:900px;font-size:30px}
+  .s5 .grid{position:absolute;top:740px;right:64px;left:64px;display:flex;gap:16px;z-index:5}
+  .surface{flex:1;background:rgba(255,250,243,.92);border:1px solid var(--border);border-radius:24px;padding:14px 14px 18px;box-shadow:0 18px 40px rgba(74,44,22,.09);animation:cardUp .8s cubic-bezier(.16,1,.3,1) both;animation-delay:var(--d,0s)}
+  .surface .shot{height:330px;border-radius:16px;overflow:hidden;border:1px solid #eedfcd;background:#fff;position:relative}
+  .surface .shot img{width:100%;height:100%;object-fit:cover;object-position:top center;display:block}
+  .surface .lbl{display:flex;align-items:center;gap:8px;margin-top:12px}
+  .surface .lbl .n{width:30px;height:30px;border-radius:50%;background:#f8e7d8;color:var(--accent);display:grid;place-items:center;font-size:13px;font-weight:800;flex:none}
+  .surface .lbl .t{font-size:19px;font-weight:800}
+  .surface .d{font-size:14px;color:var(--muted);margin-top:3px;line-height:1.4}
+  .s5 .flow{position:absolute;top:1230px;right:84px;left:84px;display:flex;align-items:center;gap:12px;background:var(--ink);color:#fff7ee;border-radius:20px;padding:18px 24px;font-size:21px;font-weight:600;z-index:5;animation:cardUp .8s 1.5s cubic-bezier(.16,1,.3,1) both}
+  .s5 .flow .sep{color:#a98d75;font-size:17px}
+  .s5 .flow b{color:#ffd7b8;font-weight:800}
+  .s5 .chips{position:absolute;top:1335px;right:0;left:0;display:flex;justify-content:center;gap:12px;z-index:5}
+  .s5 .proof{position:absolute;top:1425px;right:64px;left:64px;text-align:center;font-size:23px;font-weight:500;color:var(--muted);z-index:5;animation:fadeUp .8s 2.4s both}
+  .s5 .proof b{color:var(--ink);font-weight:800}
+  .s5 .proof .live{display:inline-flex;align-items:center;gap:7px;color:var(--green);font-weight:700;margin-right:8px}
+  .s5 .proof .live i{width:8px;height:8px;border-radius:50%;background:#2f9e62;box-shadow:0 0 0 4px rgba(47,158,98,.14)}
+
+  /* ===== S6 ===== */
+  .s6 .scene-head{top:210px}
+  .s6 .scene-head h2{font-size:88px}
+  .s6 .scene-head .sub{width:800px;font-size:30px}
+  .s6 .card{position:absolute;top:770px;right:100px;left:100px;background:var(--surface);border:1px solid var(--border);border-radius:36px;box-shadow:var(--shadow);padding:38px 44px 32px;text-align:center;animation:cardUp 1s 1s cubic-bezier(.16,1,.3,1) both}
+  .s6 .wa{width:94px;height:94px;border-radius:50%;background:var(--wa);color:#fff;display:grid;place-items:center;margin:0 auto 16px;animation:popIn .7s 1.5s cubic-bezier(.16,1,.3,1) both,waGlow 2.4s 2.4s ease-in-out infinite both}
+  .s6 .wa .icon{width:48px;height:48px;stroke:none;fill:currentColor}
+  .s6 .k{font-size:19px;color:var(--muted);font-weight:500}
+  .s6 .num{font-size:44px;font-weight:800;direction:ltr;letter-spacing:.01em;margin-top:4px;color:var(--ink);font-variant-numeric:tabular-nums}
+  .s6 .hint{font-size:21px;color:var(--muted);margin-top:10px}
+  .s6 .hint b{color:var(--accent);font-weight:800}
+  .s6 .cta{margin-top:22px;display:inline-flex;align-items:center;justify-content:center;gap:12px;background:var(--accent);color:#fff7ee;border-radius:16px;padding:18px 34px;font-size:25px;font-weight:800;animation:popIn .65s 2.1s cubic-bezier(.16,1,.3,1) both,ctaGlow 2s 3s ease-in-out infinite both}
+  .s6 .cta .icon{width:24px;height:24px}
+  .s6 .trust{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:22px}
+  .s6 .trust span{display:inline-flex;align-items:center;gap:6px;font-size:15px;color:var(--muted);font-weight:500;background:#fbf3e9;border:1px solid var(--border);border-radius:999px;padding:8px 12px;animation:popIn .5s cubic-bezier(.16,1,.3,1) both;animation-delay:var(--d,0s)}
+  .s6 .trust .icon{width:14px;height:14px;color:var(--green);stroke-width:2.6}
+  .s6 .steps{position:absolute;top:1370px;right:64px;left:64px;display:flex;gap:14px;z-index:5}
+  .s6 .step{flex:1;background:rgba(255,250,243,.86);border:1px solid var(--border);border-radius:20px;padding:18px 16px;text-align:center;box-shadow:0 10px 24px rgba(74,44,22,.05);animation:cardUp .7s cubic-bezier(.16,1,.3,1) both;animation-delay:var(--d,0s)}
+  .s6 .step .n{width:36px;height:36px;border-radius:50%;background:#f8e7d8;color:var(--accent);display:grid;place-items:center;font-size:17px;font-weight:800;margin:0 auto 9px}
+  .s6 .step .t{font-size:19px;font-weight:800}
+  .s6 .step .d{font-size:14px;color:var(--muted);margin-top:3px}
+  .s6 .sign{position:absolute;bottom:230px;right:64px;left:64px;text-align:center;color:var(--ink);font-size:21px;font-weight:700;z-index:5;animation:fadeUp .8s 3.4s both}
+  .s6 .sign small{color:var(--muted);font-size:16px;font-weight:400}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute">
+  <symbol id="i-msg" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+  <symbol id="i-cart" viewBox="0 0 24 24"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3z"/><path d="M12 9v4M12 17h.01"/></symbol>
+  <symbol id="i-repeat" viewBox="0 0 24 24"><path d="m17 2 4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></symbol>
+  <symbol id="i-layers" viewBox="0 0 24 24"><path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/></symbol>
+  <symbol id="i-wa" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></symbol>
+</svg>
+
+<header class="top">
+  <div class="brand"><div class="mark">د</div><div><div class="brand-name">دكاني</div><div class="brand-latin">DUKKANI</div></div></div>
+  <div class="tag"><b>تشخيص سريع</b> · لأصحاب المشاريع</div>
+</header>
+
+<!-- SCENE 1 -->
+<section class="scene s1" data-scene="1">
+  <div class="bg"></div>
+  <div class="orb orb-a"></div>
+  <div class="ring" style="width:820px;height:820px;top:-340px;left:-260px"></div>
+  <div class="big-num" style="top:120px;left:30px">3</div>
+  <div class="head">
+    <div class="eyebrow" style="animation:fadeUp .8s .3s both">لأصحاب المشاريع الصغيرة</div>
+    <h1>
+      <span class="huge"><span class="w" style="--i:0">٣</span></span>
+      <span class="w" style="--i:1">علامات</span> <span class="w" style="--i:2">إنك</span> <span class="w" style="--i:3">عم</span> <span class="w" style="--i:4">تخسر</span> <span class="w accent" style="--i:5">زباين.</span>
+    </h1>
+    <p class="sub" style="animation:fadeUp .9s 1.5s both">وأنت مش حاسس. خلّينا نشوف إذا فيك وحدة.</p>
+  </div>
+  <div class="warn"><svg class="icon"><use href="#i-alert"/></svg> تشخيص سريع · ٣ علامات</div>
+  <div class="cards">
+    <div class="card" style="--d:1.9s"><div class="n">01</div><div class="ic"><svg class="icon"><use href="#i-msg"/></svg></div><div class="t">طلبات ضايعة</div><div class="d">بين الخاص والستوريز</div></div>
+    <div class="card" style="--d:2.1s"><div class="n">02</div><div class="ic"><svg class="icon"><use href="#i-repeat"/></svg></div><div class="t">أسئلة مكررة</div><div class="d">نفس الحكي كل يوم</div></div>
+    <div class="card" style="--d:2.3s"><div class="n">03</div><div class="ic"><svg class="icon"><use href="#i-chart"/></svg></div><div class="t">أرقام مجهولة</div><div class="d">ما بتعرف شو بصير</div></div>
+  </div>
+</section>
+
+<!-- SCENE 2 -->
+<section class="scene s2" data-scene="2">
+  <div class="bg"></div>
+  <div class="orb orb-a"></div>
+  <div class="big-num">01</div>
+  <div class="ring" style="width:700px;height:700px;top:-300px;right:-260px"></div>
+  <div class="scene-head">
+    <div class="eyebrow" style="animation:fadeUp .8s .3s both">أول علامة</div>
+    <h2><span class="w" style="--i:0">الطلب</span> <span class="w" style="--i:1">بيدوب</span> <span class="w" style="--i:2">بين</span> <span class="w accent" style="--i:3">المحادثات.</span></h2>
+    <p class="sub" style="animation:fadeUp .9s 1.1s both">كل زبون إله نسخة بالخاص، ونسخة بالستوري، ونسخة بالواتساب — وما في مكان واحد يلمّهم.</p>
+  </div>
+  <div class="chat">
+    <div class="chat-head"><div class="avatar">ز</div><div><div class="name">الخاص</div><div class="status">٢٠ محادثة مفتوحة</div></div><div class="badge">20</div></div>
+    <div class="chat-body">
+      <div class="bubble in" style="--d:1s">مرحبا، بكم كيكة العسل؟ <span class="time">10:12 ص</span></div>
+      <div class="bubble in" style="--d:1.5s">بدي ٢، ووين أدفع العربون؟ <span class="time">10:14 ص</span></div>
+      <div class="bubble out" style="--d:2s">أهلين! الكيكة ٢٢ د.أ، والعربون ٣٠٪ <span class="time">10:18 ص</span></div>
+      <div class="bubble in" style="--d:2.5s">طيب متى التوصيل؟ <span class="time">10:24 ص</span></div>
+      <div class="bubble in ghost" style="--d:3s">؟؟ <span class="time">10:31 ص</span></div>
+    </div>
+  </div>
+  <div class="lost">طلب #1042<b>مفقود بين الرسائل</b></div>
+  <div class="ticker"><div class="track">
+    <span>بكم؟</span><i>•</i><span>متوفر؟</span><i>•</i><span>وين العربون؟</span><i>•</i><span>متى التوصيل؟</span><i>•</i><span>بدي ٢</span><i>•</i>
+    <span>بكم؟</span><i>•</i><span>متوفر؟</span><i>•</i><span>وين العربون؟</span><i>•</i><span>متى التوصيل؟</span><i>•</i><span>بدي ٢</span><i>•</i>
+  </div></div>
+  <div class="verdict">٢٠ محادثة… <span class="accent">وصفر طلب مؤكد.</span></div>
+</section>
+
+<!-- SCENE 3 -->
+<section class="scene s3" data-scene="3">
+  <div class="bg"></div>
+  <div class="orb orb-b"></div>
+  <div class="big-num">02</div>
+  <div class="ring" style="width:680px;height:680px;top:-300px;left:-240px"></div>
+  <div class="scene-head">
+    <div class="eyebrow" style="animation:fadeUp .8s .3s both">تاني علامة</div>
+    <h2><span class="w" style="--i:0">بتكرر</span> <span class="w" style="--i:1">نفس</span> <span class="w" style="--i:2">الأسئلة.</span><br><span class="w accent" style="--i:3">كل</span> <span class="w accent" style="--i:4">يوم.</span></h2>
+    <p class="sub" style="animation:fadeUp .9s 1.1s both">«بكم؟» «متوفر؟» «وين العربون؟» — ساعات من يومك بتنسخ ولصق، وبدون أي إضافة.</p>
+  </div>
+  <div class="loop">
+    <div class="loop-head"><div class="ic"><svg class="icon"><use href="#i-repeat"/></svg></div><div class="t">الأسئلة المكررة</div><div class="b">× ٢٠ كل يوم</div></div>
+    <div class="qrow" style="--d:1.1s"><svg class="icon rep"><use href="#i-msg"/></svg><div class="q">بكم؟</div><div class="x">× ٨</div></div>
+    <div class="qrow" style="--d:1.45s"><svg class="icon rep"><use href="#i-msg"/></svg><div class="q">متوفر؟</div><div class="x">× ٦</div></div>
+    <div class="qrow" style="--d:1.8s"><svg class="icon rep"><use href="#i-msg"/></svg><div class="q">وين العربون؟</div><div class="x">× ٤</div></div>
+    <div class="qrow" style="--d:2.15s"><svg class="icon rep"><use href="#i-msg"/></svg><div class="q">كم التوصيل؟</div><div class="x">× ٢</div></div>
+  </div>
+  <div class="note"><svg class="icon"><use href="#i-clock"/></svg> نفس الحكي… كل يوم. ووقتك بيمشي.</div>
+</section>
+
+<!-- SCENE 4 -->
+<section class="scene s4" data-scene="4">
+  <div class="bg"></div>
+  <div class="orb orb-a"></div>
+  <div class="big-num">03</div>
+  <div class="ring" style="width:640px;height:640px;bottom:-260px;right:-200px"></div>
+  <div class="scene-head">
+    <div class="eyebrow" style="animation:fadeUp .8s .3s both">تالت علامة</div>
+    <h2><span class="w" style="--i:0">ما</span> <span class="w" style="--i:1">بتعرف</span> <span class="w accent" style="--i:2">أرقامك.</span></h2>
+    <p class="sub" style="animation:fadeUp .9s 1.1s both">كم بعت هالشهر؟ مين أفضل زبون؟ شو الأكثر مبيعاً؟ إذا الجواب «بعدين بحسبها»… هاي أخطر علامة.</p>
+  </div>
+  <div class="dash">
+    <div class="dash-top"><div class="dots"><i></i><i></i><i></i></div><div class="dash-title">نظرة عامة · هذا الشهر</div></div>
+    <div class="dash-body">
+      <div class="kpis">
+        <div class="kpi"><div class="l">إيرادات الشهر</div><div class="v blank">؟؟؟</div><div class="qm">؟</div></div>
+        <div class="kpi"><div class="l">طلبات الشهر</div><div class="v blank">؟؟</div><div class="qm">؟</div></div>
+        <div class="kpi"><div class="l">أفضل زبون</div><div class="v blank">؟؟؟</div><div class="qm">؟</div></div>
+      </div>
+      <div class="chart"><div class="grid"></div><div class="blurline"></div><div class="qbig">؟</div></div>
+    </div>
+  </div>
+  <div class="stamp">«بعدين بحسبها»<small>الرقم اللي مش موجود… مش موجود.</small></div>
+  <div class="qs">
+    <div class="row" style="--d:2.3s"><svg class="icon"><use href="#i-chart"/></svg> كم بعت هالشهر؟</div>
+    <div class="row" style="--d:2.55s"><svg class="icon"><use href="#i-users"/></svg> مين أفضل زبون؟</div>
+  </div>
+  <div class="verdict">إذا ما بتعرف أرقامك… <b>ما بتعرف وين بتخسر.</b></div>
+</section>
+
+<!-- SCENE 5 -->
+<section class="scene s5" data-scene="5">
+  <div class="bg"></div>
+  <div class="orb orb-b"></div>
+  <div class="ring" style="width:760px;height:760px;top:-320px;right:-240px"></div>
+  <div class="scene-head">
+    <div class="eyebrow green" style="animation:fadeUp .8s .3s both">الحل</div>
+    <h2><span class="w" style="--i:0">مش</span> <span class="w" style="--i:1">تطبيق</span> <span class="w" style="--i:2">جديد.</span><br><span class="w green" style="--i:3">نظام</span> <span class="w green" style="--i:4">واحد.</span></h2>
+    <p class="sub" style="animation:fadeUp .9s 1.1s both">متجر + طلبات + تقارير — كله بمكان واحد، وباسمك.</p>
+  </div>
+  <div class="grid">
+    <div class="surface" style="--d:1s"><div class="shot"><img src="../../../docs/screenshots/19-storefront-home-mobile.jpg" alt=""></div><div class="lbl"><div class="n">01</div><div class="t">واجهة المتجر</div></div><div class="d">منيو · سلة · دفع · تتبع</div></div>
+    <div class="surface" style="--d:1.25s"><div class="shot"><img src="../../dukkani-post/assets/orders.jpg" alt=""></div><div class="lbl"><div class="n">02</div><div class="t">لوحة الطلبات</div></div><div class="d">حالات · عربون · واتساب</div></div>
+    <div class="surface" style="--d:1.5s"><div class="shot"><img src="../../dukkani-post/assets/analytics.jpg" alt=""></div><div class="lbl"><div class="n">03</div><div class="t">التقارير</div></div><div class="d">إيرادات · منتجات · زباين</div></div>
+  </div>
+  <div class="flow">فكرة <span class="sep">←</span> تصميم <span class="sep">←</span> بناء <span class="sep">←</span> <b>نظام شغّال</b></div>
+  <div class="chips">
+    <span class="chip" style="--d:2.2s"><svg class="icon"><use href="#i-check"/></svg> بالعربي</span>
+    <span class="chip" style="--d:2.35s"><svg class="icon"><use href="#i-check"/></svg> بدون عمولة</span>
+    <span class="chip" style="--d:2.5s"><svg class="icon"><use href="#i-check"/></svg> باسمك</span>
+  </div>
+  <div class="proof"><span class="live"><i></i> LIVE DEMO</span> نموذج حقيقي: <b>مخبز أمل بيكنز — عمّان</b></div>
+</section>
+
+<!-- SCENE 6 -->
+<section class="scene s6" data-scene="6">
+  <div class="bg"></div>
+  <div class="orb orb-a"></div>
+  <div class="ring" style="width:1000px;height:1000px;top:-420px;left:50%;transform:translateX(-50%)"></div>
+  <div class="ring" style="width:560px;height:560px;bottom:-280px;right:-200px"></div>
+  <div class="scene-head">
+    <div class="eyebrow" style="animation:fadeUp .8s .3s both">خطوتك الجاية</div>
+    <h2><span class="w" style="--i:0">ابعث</span> <span class="w accent" style="--i:1">«تشخيص»</span><br><span class="w" style="--i:2">وخلال</span> <span class="w accent" style="--i:3">٢٤</span> <span class="w accent" style="--i:4">ساعة</span><br><span class="w" style="--i:5">عندك</span> <span class="w" style="--i:6">خطة</span> <span class="w" style="--i:7">واضحة.</span></h2>
+    <p class="sub" style="animation:fadeUp .9s 1.1s both">بدون التزام. بجاوبك على الواتساب، ونشوف وين بتخسر — وكيف بنصلحها.</p>
+  </div>
+  <div class="card">
+    <div class="wa"><svg class="icon"><use href="#i-wa"/></svg></div>
+    <div class="k">واتساب مباشر</div>
+    <div class="num">+972 56 999 1081</div>
+    <div class="hint">كلمة <b>«تشخيص»</b> بتكفي — والباقي عليّ.</div>
+    <div class="cta"><svg class="icon"><use href="#i-msg"/></svg> ابدأ المحادثة الآن</div>
+    <div class="trust">
+      <span style="--d:2.5s"><svg class="icon"><use href="#i-check"/></svg> خطة واضحة</span>
+      <span style="--d:2.65s"><svg class="icon"><use href="#i-check"/></svg> بدون التزام</span>
+      <span style="--d:2.8s"><svg class="icon"><use href="#i-check"/></svg> رد خلال ٢٤ ساعة</span>
+    </div>
+  </div>
+  <div class="steps">
+    <div class="step" style="--d:3s"><div class="n">1</div><div class="t">ابعث «تشخيص»</div><div class="d">على الواتساب</div></div>
+    <div class="step" style="--d:3.15s"><div class="n">2</div><div class="t">مكالمة قصيرة</div><div class="d">نفهم شغلك</div></div>
+    <div class="step" style="--d:3.3s"><div class="n">3</div><div class="t">خطة وسعر</div><div class="d">خلال ٢٤ ساعة</div></div>
+  </div>
+  <div class="sign">مهند <small>— باني «دكاني» · مهندس برمجيات</small></div>
+</section>
+
+<footer class="bottom">
+  <div class="demo">dukkani-demo.onrender.com</div>
+  <div class="pager"><b id="pg">01</b><span class="line"></span>06</div>
+</footer>
+
+<script>
+  const scene = new URLSearchParams(location.search).get('scene') || '1';
+  document.querySelectorAll('.scene').forEach(s => s.classList.toggle('active', s.dataset.scene === scene));
+  document.getElementById('pg').textContent = String(scene).padStart(2, '0');
+
+  window.__ready = (async () => {
+    await document.fonts.ready;
+    await Promise.all([...document.images].map(img =>
+      img.complete ? Promise.resolve() : new Promise(r => { img.onload = img.onerror = r; })
+    ));
+    return true;
+  })();
+
+  window.__pause = () => {
+    document.getAnimations().forEach(a => { a.pause(); a.currentTime = 0; });
+  };
+
+  window.__seek = (ms) => {
+    document.getAnimations().forEach(a => { a.currentTime = ms; });
+  };
+</script>
+</body>
+</html>

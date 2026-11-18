@@ -1,0 +1,14 @@
+# Large rendered / published media. These are build outputs — regenerate them
+# with each kit's own script (see the kit README):
+#   frames/  -> render.cjs   (deterministic per-millisecond screenshots)
+#   *.mp4    -> build.cjs    (encode + audio bed)
+# Sources, voice/music inputs, READMEs and previews ARE committed.
+frames/
+*.mp4
+*.mov
+*.webm
+*.avi
+
+# OS junk
+.DS_Store
+Thumbs.db

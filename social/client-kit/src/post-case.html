@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1080, initial-scale=1">
+<title>Dukkani — one system, three surfaces</title>
+<style>
+  @font-face { font-family:'Tajawal'; font-weight:400; src:url('../../../dukkani-app/resources/fonts/tajawal-400-arabic.woff2') format('woff2'); }
+  @font-face { font-family:'Tajawal'; font-weight:500; src:url('../../../dukkani-app/resources/fonts/tajawal-500-arabic.woff2') format('woff2'); }
+  @font-face { font-family:'Tajawal'; font-weight:700; src:url('../../../dukkani-app/resources/fonts/tajawal-700-arabic.woff2') format('woff2'); }
+  @font-face { font-family:'Tajawal'; font-weight:800; src:url('../../../dukkani-app/resources/fonts/tajawal-800-arabic.woff2') format('woff2'); }
+
+  :root{
+    --cream:#fbf3e9; --cream2:#f6ead9; --surface:#fffaf3;
+    --ink:#2b2119; --muted:#7a6a5b; --accent:#c2410c; --accent-dark:#96320f;
+    --green:#1f7a4d; --green-soft:#e8f2ea; --border:#e9dcc9;
+    --wa:#25d366;
+    --shadow:0 24px 70px rgba(74,44,22,.16);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{width:1080px;height:1350px;overflow:hidden}
+  body{position:relative;width:1080px;height:1350px;font-family:'Tajawal',sans-serif;color:var(--ink);background:var(--cream);direction:rtl;overflow:hidden;-webkit-font-smoothing:antialiased}
+  .bg{position:absolute;inset:0;background:
+    radial-gradient(circle at 92% 3%,rgba(194,65,12,.16),transparent 34%),
+    radial-gradient(circle at 0% 100%,rgba(95,122,91,.15),transparent 32%),
+    linear-gradient(155deg,#fffaf3 0%,#fbf3e9 55%,#f6ead9 100%);}
+  .bg::after{content:'';position:absolute;inset:0;background-image:radial-gradient(rgba(43,33,25,.07) 1.2px,transparent 1.2px);background-size:26px 26px;opacity:.28}
+  .ring{position:absolute;border:1.5px solid rgba(194,65,12,.13);border-radius:50%;pointer-events:none}
+
+  .top{position:absolute;top:50px;right:64px;left:64px;display:flex;align-items:center;justify-content:space-between;z-index:6}
+  .brand{display:flex;align-items:center;gap:15px}
+  .mark{width:64px;height:64px;border-radius:19px;background:var(--accent);color:#fff7ee;display:grid;place-items:center;font-size:39px;font-weight:800;line-height:1;box-shadow:0 12px 26px rgba(194,65,12,.26)}
+  .brand-name{font-size:30px;font-weight:800;line-height:1.1}
+  .brand-latin{font-size:10px;letter-spacing:.34em;color:var(--muted);font-weight:500;margin-top:3px}
+  .tag{font-size:16px;font-weight:500;color:var(--muted);border:1px solid var(--border);background:rgba(255,250,243,.72);padding:11px 20px;border-radius:999px}
+  .tag b{color:var(--accent);font-weight:700}
+
+  .head{position:absolute;top:140px;right:64px;left:64px;z-index:4}
+  .eyebrow{display:inline-flex;align-items:center;gap:10px;color:var(--accent);font-size:21px;font-weight:700;margin-bottom:12px}
+  .eyebrow::before{content:'';width:30px;height:2px;background:var(--accent);border-radius:2px}
+  h1{font-size:68px;font-weight:800;line-height:1.13;letter-spacing:-.015em}
+  h1 .accent{color:var(--accent)}
+  .sub{font-size:26px;line-height:1.55;color:var(--muted);font-weight:400;margin-top:14px;width:860px}
+  .sub b{color:var(--ink);font-weight:700}
+
+  .visual{position:absolute;top:505px;right:64px;left:64px;display:flex;gap:20px;z-index:4}
+  .phone-col{width:340px;flex:none}
+  .col-label{display:flex;align-items:center;gap:9px;font-size:17px;font-weight:700;color:var(--ink);margin-bottom:10px}
+  .n{width:31px;height:31px;border-radius:50%;background:#f8e7d8;color:var(--accent);display:grid;place-items:center;font-size:13px;font-weight:800;flex:none;border:1px solid #efd4bf}
+  .phone-frame{height:530px;border-radius:38px;background:#2b2119;padding:10px;box-shadow:0 30px 70px rgba(56,31,16,.28);position:relative}
+  .phone-frame::before{content:'';position:absolute;top:18px;left:50%;transform:translateX(-50%);width:88px;height:23px;background:#2b2119;border-radius:999px;z-index:3}
+  .phone-screen{width:100%;height:100%;border-radius:30px;overflow:hidden;background:#fffaf3;position:relative}
+  .phone-screen img{width:100%;height:100%;object-fit:cover;object-position:top center;display:block}
+  .phone-screen::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(43,33,25,.13),transparent 16%,transparent 76%,rgba(43,33,25,.28))}
+  .phone-foot{display:flex;align-items:center;gap:7px;font-size:14px;color:var(--muted);margin-top:10px;font-weight:500}
+  .phone-foot .icon{width:15px;height:15px;color:var(--green);stroke-width:2.6}
+
+  .side{flex:1;display:flex;flex-direction:column;gap:14px}
+  .shot-card{background:rgba(255,250,243,.92);border:1px solid var(--border);border-radius:20px;padding:12px 12px 11px;box-shadow:0 16px 38px rgba(74,44,22,.08)}
+  .shot-top{display:flex;align-items:center;gap:9px;font-size:17px;font-weight:700;margin-bottom:8px}
+  .shot-img{height:205px;border-radius:12px;overflow:hidden;border:1px solid #eedfcd;background:#fff}
+  .shot-img img{width:100%;height:100%;object-fit:cover;object-position:top center;display:block}
+  .shot-foot{display:flex;align-items:center;gap:7px;font-size:14px;color:var(--muted);margin-top:8px;font-weight:500}
+  .shot-foot .icon{width:15px;height:15px;color:var(--green);stroke-width:2.6}
+  .icon{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+
+  .proof{position:absolute;top:1132px;right:64px;left:64px;display:flex;align-items:center;justify-content:space-between;gap:16px;z-index:5}
+  .proof .live{display:inline-flex;align-items:center;gap:8px;color:var(--green);font-size:15px;font-weight:800;letter-spacing:.02em}
+  .proof .live i{width:9px;height:9px;border-radius:50%;background:#2f9e62;box-shadow:0 0 0 5px rgba(47,158,98,.14)}
+  .proof .who{font-size:18px;color:var(--muted);font-weight:500}
+  .proof .who b{color:var(--ink);font-weight:800}
+  .proof .three{font-size:16px;color:var(--accent);font-weight:800;background:#f8e7d8;border:1px solid #efd4bf;border-radius:999px;padding:7px 13px}
+
+  .cta{position:absolute;top:1182px;right:64px;left:64px;display:flex;align-items:center;justify-content:space-between;gap:18px;z-index:5}
+  .wa-btn{display:inline-flex;align-items:center;gap:12px;background:var(--wa);color:#063a1e;border-radius:16px;padding:13px 22px;font-size:22px;font-weight:800;box-shadow:0 14px 32px rgba(37,211,102,.25)}
+  .wa-btn .icon{width:26px;height:26px;stroke:none;fill:currentColor;flex:none}
+  .wa-btn small{font-size:16px;font-weight:500;opacity:.78}
+  .wa-btn .num{display:block;font-size:17px;font-weight:700;font-style:normal;direction:ltr;text-align:right;letter-spacing:.02em;opacity:.82;margin-top:1px;font-variant-numeric:tabular-nums}
+  .demo{text-align:left;color:var(--muted);font-size:15px;line-height:1.5}
+  .demo span{display:block;margin-bottom:2px}
+  .demo b{display:block;color:var(--ink);font-size:18px;font-weight:700;direction:ltr;letter-spacing:.01em}
+
+  .foot{position:absolute;bottom:38px;right:64px;left:64px;display:flex;align-items:center;justify-content:space-between;color:var(--muted);font-size:16px;font-weight:500;z-index:5}
+  .foot .latin{letter-spacing:.28em;font-size:11px;color:#9b8877}
+  .foot .sig b{color:var(--ink);font-weight:800}
+</style>
+</head>
+<body>
+<div class="bg"></div>
+<div class="ring" style="width:760px;height:760px;top:-330px;left:-250px"></div>
+<div class="ring" style="width:520px;height:520px;bottom:-260px;right:-180px"></div>
+
+<svg width="0" height="0" style="position:absolute">
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-wa" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></symbol>
+</svg>
+
+<header class="top">
+  <div class="brand"><div class="mark">د</div><div><div class="brand-name">دكاني</div><div class="brand-latin">DUKKANI</div></div></div>
+  <div class="tag"><b>CASE STUDY</b> · عمّان</div>
+</header>
+
+<section class="head">
+  <div class="eyebrow">من بناء حقيقي، مش من عرض تقديمي</div>
+  <h1>نظام واحد.<br><span class="accent">٣ واجهات</span> بتشتغل مع بعض.</h1>
+  <p class="sub">الزبون يطلب، البائعة تدير، وأنت تشوف الأرقام — <b>كله من نفس النظام</b>.</p>
+</section>
+
+<section class="visual">
+  <div class="phone-col">
+    <div class="col-label"><span class="n">01</span> للزبون · واجهة المتجر</div>
+    <div class="phone-frame"><div class="phone-screen"><img src="../../../docs/screenshots/19-storefront-home-mobile.jpg" alt="واجهة المتجر"></div></div>
+    <div class="phone-foot"><svg class="icon"><use href="#i-check"/></svg> منيو · سلة · دفع · تتبع</div>
+  </div>
+  <div class="side">
+    <div class="shot-card">
+      <div class="shot-top"><span class="n">02</span> للبائعة · لوحة الطلبات</div>
+      <div class="shot-img"><img src="../../dukkani-post/assets/orders.jpg" alt="لوحة الطلبات"></div>
+      <div class="shot-foot"><svg class="icon"><use href="#i-check"/></svg> طلبات · حالات · عربون · واتساب</div>
+    </div>
+    <div class="shot-card">
+      <div class="shot-top"><span class="n">03</span> للمالك · التقارير</div>
+      <div class="shot-img"><img src="../../dukkani-post/assets/analytics.jpg" alt="التقارير"></div>
+      <div class="shot-foot"><svg class="icon"><use href="#i-check"/></svg> إيرادات · أفضل منتجات · أفضل زباين</div>
+    </div>
+  </div>
+</section>
+
+<div class="proof">
+  <div class="live"><i></i> LIVE DEMO</div>
+  <div class="who">نموذج حقيقي: <b>مخبز أمل بيكنز — عمّان</b></div>
+  <div class="three">٣ واجهات · نظام واحد</div>
+</div>
+
+<div class="cta">
+  <div class="wa-btn"><svg class="icon"><use href="#i-wa"/></svg> <span>بدك نفس النظام لمشروعك؟ <small>· ابعث «تشخيص»</small><em class="num">+972 56 999 1081</em></span></div>
+  <div class="demo"><span>شوف الديمو مباشرة</span><b>dukkani-demo.onrender.com</b></div>
+</div>
+
+<footer class="foot">
+  <div class="sig">تصميم وتطوير: <b>مهند</b> · باني «دكاني»</div>
+  <div class="latin">DUKKANI · 2026</div>
+</footer>
+
+<script>
+  window.__ready = (async () => {
+    await document.fonts.ready;
+    await Promise.all([...document.images].map(img => img.complete ? Promise.resolve() : new Promise(r => { img.onload = img.onerror = r; })));
+    return true;
+  })();
+</script>
+</body>
+</html>

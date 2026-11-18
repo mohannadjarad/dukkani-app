@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1080, initial-scale=1">
+<title>Dukkani — clients reel</title>
+<style>
+  @font-face { font-family: 'Tajawal'; font-weight: 400; src: url('../../../dukkani-app/resources/fonts/tajawal-400-arabic.woff2') format('woff2'); }
+  @font-face { font-family: 'Tajawal'; font-weight: 500; src: url('../../../dukkani-app/resources/fonts/tajawal-500-arabic.woff2') format('woff2'); }
+  @font-face { font-family: 'Tajawal'; font-weight: 700; src: url('../../../dukkani-app/resources/fonts/tajawal-700-arabic.woff2') format('woff2'); }
+  @font-face { font-family: 'Tajawal'; font-weight: 800; src: url('../../../dukkani-app/resources/fonts/tajawal-800-arabic.woff2') format('woff2'); }
+
+  :root {
+    --cream: #fbf3e9; --cream-2: #f6ead9; --surface: #fffaf3;
+    --ink: #2b2119; --muted: #7a6a5b; --accent: #c2410c; --accent-dark: #96320f;
+    --green: #5f7a5b; --green-soft: #e6ede2; --border: #e9dcc9;
+    --shadow: 0 30px 80px rgba(74, 44, 22, .18);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1080px; height: 1920px; }
+  body { font-family: 'Tajawal', sans-serif; background: var(--cream); color: var(--ink); direction: rtl; overflow: hidden; -webkit-font-smoothing: antialiased; }
+  .scene { display: none; position: relative; width: 1080px; height: 1920px; overflow: hidden; }
+  .scene.active { display: block; }
+  .bg { position: absolute; inset: 0; background:
+    radial-gradient(circle at 90% 4%, rgba(194,65,12,.14), transparent 36%),
+    radial-gradient(circle at 4% 96%, rgba(95,122,91,.13), transparent 34%),
+    linear-gradient(155deg, #fffaf3 0%, #fbf3e9 52%, #f6ead9 100%); }
+  .bg::after { content: ''; position: absolute; inset: 0; background-image: radial-gradient(rgba(43,33,25,.07) 1.2px, transparent 1.2px); background-size: 26px 26px; opacity: .3; }
+  .ring { position: absolute; border: 1.5px solid rgba(194,65,12,.14); border-radius: 50%; pointer-events: none; }
+  .orb { position: absolute; border-radius: 50%; pointer-events: none; }
+  .orb-a { width: 820px; height: 820px; top: -240px; right: -220px; background: radial-gradient(circle, rgba(194,65,12,.20), rgba(194,65,12,0) 68%); animation: driftA 16s ease-in-out infinite alternate; }
+  .orb-b { width: 700px; height: 700px; bottom: -260px; left: -200px; background: radial-gradient(circle, rgba(95,122,91,.18), rgba(95,122,91,0) 68%); animation: driftB 19s ease-in-out infinite alternate; }
+
+  .top { position: absolute; top: 62px; right: 64px; left: 64px; display: flex; align-items: center; justify-content: space-between; z-index: 20; animation: fadeDown .8s .1s cubic-bezier(.16,1,.3,1) both; }
+  .brand { display: flex; align-items: center; gap: 15px; }
+  .mark { width: 62px; height: 62px; border-radius: 19px; background: var(--accent); color: #fff7ee; display: grid; place-items: center; font-size: 38px; font-weight: 800; line-height: 1; box-shadow: 0 12px 26px rgba(194,65,12,.26); }
+  .brand-name { font-size: 29px; font-weight: 800; line-height: 1.1; }
+  .brand-latin { font-size: 10px; letter-spacing: .34em; color: var(--muted); font-weight: 500; margin-top: 3px; }
+  .tag { font-size: 16px; font-weight: 500; color: var(--muted); border: 1px solid var(--border); background: rgba(255,250,243,.7); padding: 11px 20px; border-radius: 999px; }
+  .bottom { position: absolute; bottom: 54px; right: 64px; left: 64px; display: flex; align-items: center; justify-content: space-between; z-index: 20; color: var(--muted); font-size: 17px; font-weight: 500; }
+  .pager { display: flex; align-items: center; gap: 12px; direction: ltr; font-variant-numeric: tabular-nums; }
+  .pager .line { width: 52px; height: 1px; background: #c9b39c; }
+  .pager b { color: var(--ink); font-weight: 700; }
+
+  .eyebrow { display: inline-flex; align-items: center; gap: 10px; color: var(--accent); font-size: 22px; font-weight: 700; margin-bottom: 22px; animation: fadeUp .8s .35s cubic-bezier(.16,1,.3,1) both; }
+  .eyebrow::before { content: ''; width: 30px; height: 2px; background: var(--accent); border-radius: 2px; }
+  h1 { font-size: 92px; font-weight: 800; line-height: 1.1; letter-spacing: -.015em; }
+  h2 { font-size: 92px; font-weight: 800; line-height: 1.12; letter-spacing: -.012em; }
+  .accent { color: var(--accent); }
+  .sub { font-size: 30px; line-height: 1.55; color: var(--muted); font-weight: 400; animation: fadeUp .9s .85s cubic-bezier(.16,1,.3,1) both; }
+  .sub b { color: var(--ink); font-weight: 700; }
+  .w { display: inline-block; animation: wordUp .9s cubic-bezier(.16,1,.3,1) both; animation-delay: calc(.4s + var(--i) * .075s); }
+  .icon { width: 27px; height: 27px; stroke: currentColor; fill: none; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+
+  @keyframes wordUp { 0% { opacity: 0; transform: translateY(.6em) rotate(2.5deg); } 60% { opacity: 1; } 100% { opacity: 1; transform: translateY(0) rotate(0); } }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(34px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeDown { from { opacity: 0; transform: translateY(-26px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes popIn { 0% { opacity: 0; transform: scale(.82) translateY(14px); } 65% { opacity: 1; transform: scale(1.025) translateY(0); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
+  @keyframes cardUp { from { opacity: 0; transform: translateY(80px) scale(.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
+  @keyframes fromRight { from { opacity: 0; transform: translateX(100px) scale(.96); } to { opacity: 1; transform: translateX(0) scale(1); } }
+  @keyframes fromLeft { from { opacity: 0; transform: translateX(-100px) scale(.96); } to { opacity: 1; transform: translateX(0) scale(1); } }
+  @keyframes driftA { from { transform: translate(0,0) scale(1); } to { transform: translate(-70px, 50px) scale(1.12); } }
+  @keyframes driftB { from { transform: translate(0,0) scale(1); } to { transform: translate(60px,-60px) scale(1.10); } }
+  @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
+  @keyframes surge { 0%,100% { box-shadow: 0 18px 44px rgba(37,211,102,.30); } 50% { box-shadow: 0 18px 60px rgba(37,211,102,.55); } }
+  @keyframes ctaGlow { 0%,100% { box-shadow: 0 16px 32px rgba(194,65,12,.22); } 50% { box-shadow: 0 16px 46px rgba(194,65,12,.46); } }
+  @keyframes barGrow { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+  @keyframes kenburns { from { transform: scale(1.06); } to { transform: scale(1); } }
+
+  /* ---------- shared store card ---------- */
+  .store { background: var(--surface); border: 1px solid var(--border); border-radius: 28px; box-shadow: var(--shadow); overflow: hidden; display: flex; flex-direction: column; }
+  .store .cap { display: flex; align-items: center; justify-content: space-between; padding: 18px 22px; border-bottom: 1px solid #f0e4d4; background: #fffdf9; }
+  .store .city { font-size: 24px; font-weight: 700; }
+  .store .cur { font-size: 17px; font-weight: 700; color: var(--accent); background: #f8e7d8; border-radius: 999px; padding: 4px 13px; }
+  .store .shot { flex: 1; min-height: 0; overflow: hidden; background: #f7ecdf; }
+  .store .shot img { width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; animation: kenburns 12s ease-out both; }
+
+  .note { display: flex; align-items: center; justify-content: center; gap: 12px; color: var(--ink); font-size: 23px; font-weight: 500; background: var(--green-soft); border: 1px solid #d6e2d0; border-radius: 18px; padding: 19px 24px; }
+  .note .icon { width: 24px; height: 24px; color: var(--green); stroke-width: 2.4; }
+
+  /* ============ SCENE 1 ============ */
+  .s1 .head { position: absolute; top: 210px; right: 64px; left: 64px; text-align: center; z-index: 4; }
+  .s1 h1 { font-size: 96px; }
+  .s1 .head .sub { margin: 24px auto 0; width: 820px; font-size: 29px; }
+  .s1 .duo { position: absolute; top: 900px; right: 64px; left: 64px; height: 720px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; z-index: 3; }
+  .s1 .duo .store:first-child { animation: fromLeft 1s 1.25s cubic-bezier(.16,1,.3,1) both; }
+  .s1 .duo .store:last-child { animation: fromRight 1s 1.45s cubic-bezier(.16,1,.3,1) both; }
+  .s1 .chips { position: absolute; top: 1700px; right: 0; left: 0; display: flex; justify-content: center; gap: 12px; z-index: 12; }
+  .chip { display: inline-flex; align-items: center; gap: 8px; background: var(--surface); border: 1px solid var(--border); color: var(--ink); padding: 11px 18px; border-radius: 999px; font-size: 19px; font-weight: 500; box-shadow: 0 6px 16px rgba(74,44,22,.05); animation: popIn .55s cubic-bezier(.16,1,.3,1) both; animation-delay: var(--d, 0s); }
+  .chip .icon { width: 18px; height: 18px; color: var(--green); stroke-width: 2.6; }
+
+  /* ============ SCENE 2 ============ */
+  .s2 .head { position: absolute; top: 200px; right: 64px; left: 64px; text-align: center; z-index: 4; }
+  .s2 h2 { font-size: 100px; }
+  .s2 .head .sub { margin: 22px auto 0; width: 820px; font-size: 28px; }
+  .chat { position: absolute; top: 690px; right: 110px; left: 110px; background: var(--surface); border: 1px solid var(--border); border-radius: 34px; box-shadow: var(--shadow); overflow: hidden; z-index: 2; animation: cardUp .9s .8s cubic-bezier(.16,1,.3,1) both; }
+  .chat-head { display: flex; align-items: center; gap: 14px; padding: 22px 28px; border-bottom: 1px solid #f0e4d4; background: #fffdf9; }
+  .avatar { width: 50px; height: 50px; border-radius: 50%; flex: none; background: linear-gradient(135deg, #e9b38a, #c2410c); display: grid; place-items: center; color: #fff7ee; font-weight: 700; font-size: 21px; }
+  .chat-head .name { font-size: 23px; font-weight: 700; }
+  .chat-head .status { font-size: 14px; color: var(--green); font-weight: 500; margin-top: 2px; }
+  .chat-body { padding: 24px 28px 22px; background: #f7ecdf; }
+  .bubble { max-width: 78%; padding: 15px 20px; border-radius: 20px; font-size: 22px; line-height: 1.45; margin-bottom: 12px; box-shadow: 0 4px 10px rgba(74,44,22,.05); animation: bubbleIn .55s cubic-bezier(.16,1,.3,1) both; animation-delay: var(--d, 0s); }
+  .bubble.in { background: #fffdf9; border-top-right-radius: 6px; }
+  .bubble.out { background: #d9e7d4; border-top-left-radius: 6px; margin-right: auto; }
+  .bubble .time { display: block; font-size: 12px; color: #9b8877; margin-top: 4px; text-align: left; }
+  @keyframes bubbleIn { from { opacity: 0; transform: translateY(18px) scale(.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
+  .s2 .pains { position: absolute; top: 1330px; right: 80px; left: 80px; display: flex; gap: 14px; z-index: 3; }
+  .pain { flex: 1; background: rgba(255,250,243,.88); border: 1px solid var(--border); border-radius: 22px; padding: 22px 16px; text-align: center; animation: popIn .6s cubic-bezier(.16,1,.3,1) both; animation-delay: var(--d, 0s); }
+  .pain .icon { width: 26px; height: 26px; color: var(--accent); margin-bottom: 8px; }
+  .pain .t { font-size: 20px; font-weight: 700; }
+  .pain .d { font-size: 15px; color: var(--muted); margin-top: 3px; }
+
+  /* ============ SCENE 3 ============ */
+  .s3 .head { position: absolute; top: 190px; right: 64px; left: 64px; text-align: center; z-index: 2; }
+  .s3 h2 { font-size: 92px; }
+  .s3 .head .sub { margin: 20px auto 0; width: 840px; font-size: 28px; }
+  .s3 .grid { position: absolute; top: 610px; right: 64px; left: 64px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; z-index: 2; }
+  .feature { background: rgba(255,250,243,.86); border: 1px solid var(--border); border-radius: 24px; padding: 26px 24px; min-height: 232px; box-shadow: 0 10px 26px rgba(74,44,22,.045); display: flex; flex-direction: column; justify-content: center; animation: cardPop .75s cubic-bezier(.16,1,.3,1) both; animation-delay: var(--d, 0s); }
+  .feature .ic { width: 54px; height: 54px; border-radius: 16px; background: #f8e7d8; color: var(--accent); display: grid; place-items: center; margin-bottom: 14px; }
+  .feature .t { font-size: 25px; font-weight: 700; }
+  .feature .d { font-size: 17px; line-height: 1.5; color: var(--muted); margin-top: 5px; }
+  @keyframes cardPop { 0% { opacity: 0; transform: translateY(46px) scale(.94); } 65% { opacity: 1; transform: translateY(-3px) scale(1.012); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
+  .s3 .note { position: absolute; top: 1420px; right: 64px; left: 64px; z-index: 3; animation: fadeUp .8s 2.9s cubic-bezier(.16,1,.3,1) both; }
+  .s3 .chips { position: absolute; top: 1560px; right: 0; left: 0; display: flex; justify-content: center; gap: 12px; z-index: 3; }
+
+  /* ============ SCENE 4 ============ */
+  .s4 .head { position: absolute; top: 190px; right: 64px; left: 64px; text-align: center; z-index: 4; }
+  .s4 h2 { font-size: 94px; }
+  .s4 .head .sub { margin: 18px auto 0; width: 820px; font-size: 27px; }
+  .shot-card { position: absolute; border: 1px solid var(--border); border-radius: 22px; overflow: hidden; box-shadow: 0 24px 56px rgba(56,31,16,.17); background: #fffdf9; }
+  .shot-card img { width: 100%; height: 100%; object-fit: cover; object-position: top left; display: block; animation: kenburns 15s ease-out both; }
+  .c-main { top: 640px; right: 64px; left: 64px; height: 660px; z-index: 2; animation: fromRight 1s .8s cubic-bezier(.16,1,.3,1) both; }
+  .c-sub { top: 1340px; right: 64px; left: 64px; height: 320px; z-index: 2; animation: cardUp .9s 1.6s cubic-bezier(.16,1,.3,1) both; }
+  .shot-label { position: absolute; z-index: 6; display: inline-flex; align-items: center; gap: 8px; background: var(--ink); color: #fff7ee; border-radius: 999px; font-size: 17px; font-weight: 500; padding: 10px 16px; box-shadow: 0 8px 20px rgba(43,33,25,.22); animation: popIn .55s cubic-bezier(.16,1,.3,1) both; animation-delay: var(--d, 0s); }
+  .shot-label .icon { width: 16px; height: 16px; stroke-width: 2.4; }
+  .l-main { top: 596px; right: 84px; }
+  .l-sub { top: 1296px; right: 84px; }
+  .s4 .foot { position: absolute; top: 1710px; right: 64px; left: 64px; text-align: center; font-size: 24px; font-weight: 500; animation: fadeUp .8s 2.6s both; }
+  .s4 .foot b { color: var(--accent); }
+
+  /* ============ SCENE 5 ============ */
+  .s5 .head { position: absolute; top: 200px; right: 64px; left: 64px; text-align: center; z-index: 2; }
+  .s5 h2 { font-size: 94px; }
+  .s5 .head .sub { margin: 20px auto 0; width: 840px; font-size: 28px; }
+  .s5 .duo { position: absolute; top: 700px; right: 64px; left: 64px; height: 900px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; z-index: 2; }
+  .s5 .duo .store:first-child { animation: fromLeft 1s .9s cubic-bezier(.16,1,.3,1) both; }
+  .s5 .duo .store:last-child { animation: fromRight 1s 1.15s cubic-bezier(.16,1,.3,1) both; }
+  .s5 .note { position: absolute; top: 1660px; right: 64px; left: 64px; z-index: 3; animation: fadeUp .8s 2.4s both; }
+
+  /* ============ SCENE 6 ============ */
+  .s6 .head { position: absolute; top: 240px; right: 64px; left: 64px; text-align: center; z-index: 2; }
+  .s6 h1 { font-size: 102px; }
+  .s6 .head .sub { margin: 24px auto 0; width: 820px; font-size: 30px; }
+  .s6 .card { position: absolute; top: 900px; right: 90px; left: 90px; background: var(--surface); border: 1px solid var(--border); border-radius: 36px; box-shadow: var(--shadow); padding: 40px 46px 34px; text-align: center; animation: cardUp 1s 1.1s cubic-bezier(.16,1,.3,1) both; }
+  .s6 .wa { width: 96px; height: 96px; border-radius: 50%; background: #25d366; color: #fff; display: grid; place-items: center; margin: 0 auto 18px; animation: popIn .7s 1.6s cubic-bezier(.16,1,.3,1) both, surge 2.4s 2.5s ease-in-out infinite both; }
+  .s6 .wa .icon { width: 50px; height: 50px; stroke: none; fill: currentColor; }
+  .s6 .card .k { font-size: 20px; color: var(--muted); font-weight: 500; }
+  .s6 .num { font-size: 46px; font-weight: 800; direction: ltr; letter-spacing: .01em; margin-top: 4px; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .s6 .demo { font-size: 26px; color: var(--accent); font-weight: 700; direction: ltr; margin-top: 8px; }
+  .s6 .card .hint { font-size: 22px; color: var(--muted); margin-top: 12px; }
+  .s6 .card .hint b { color: var(--accent); }
+  .s6 .cta { margin-top: 22px; display: inline-flex; align-items: center; justify-content: center; gap: 12px; background: var(--accent); color: #fff7ee; border-radius: 16px; padding: 19px 38px; font-size: 26px; font-weight: 700; animation: popIn .65s 2.2s cubic-bezier(.16,1,.3,1) both, ctaGlow 2s 3s ease-in-out infinite both; }
+  .s6 .cta .icon { width: 25px; height: 25px; }
+  .s6 .trust { display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 22px; }
+  .s6 .trust span { display: inline-flex; align-items: center; gap: 6px; font-size: 16px; color: var(--muted); font-weight: 500; background: #fbf3e9; border: 1px solid var(--border); border-radius: 999px; padding: 8px 13px; animation: popIn .5s cubic-bezier(.16,1,.3,1) both; animation-delay: var(--d, 0s); }
+  .s6 .trust .icon { width: 15px; height: 15px; color: var(--green); stroke-width: 2.6; }
+  .s6 .steps { position: absolute; top: 1520px; right: 64px; left: 64px; display: flex; gap: 14px; z-index: 3; }
+  .s6 .step { flex: 1; background: rgba(255,250,243,.88); border: 1px solid var(--border); border-radius: 20px; padding: 20px 18px; text-align: center; box-shadow: 0 10px 24px rgba(74,44,22,.05); animation: cardPop .7s cubic-bezier(.16,1,.3,1) both; animation-delay: var(--d, 0s); }
+  .s6 .step .n { width: 38px; height: 38px; border-radius: 50%; background: #f8e7d8; color: var(--accent); display: grid; place-items: center; font-size: 18px; font-weight: 800; margin: 0 auto 10px; }
+  .s6 .step .t { font-size: 20px; font-weight: 700; }
+  .s6 .step .d { font-size: 15px; color: var(--muted); margin-top: 4px; }
+  .s6 .sign { position: absolute; top: 1740px; right: 64px; left: 64px; text-align: center; color: var(--ink); font-size: 22px; font-weight: 700; animation: fadeUp .8s 3.6s both; }
+  .s6 .sign small { color: var(--muted); font-size: 17px; font-weight: 400; }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute">
+  <symbol id="i-cart" viewBox="0 0 24 24"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+  <symbol id="i-card" viewBox="0 0 24 24"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></symbol>
+  <symbol id="i-message" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></symbol>
+  <symbol id="i-layers" viewBox="0 0 24 24"><path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/></symbol>
+  <symbol id="i-whatsapp" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></symbol>
+</svg>
+
+<!-- ================= SCENE 1 ================= -->
+<section class="scene s1" data-scene="1">
+  <div class="bg"></div><div class="orb orb-a"></div>
+  <div class="ring" style="width:820px;height:820px;top:-320px;left:-260px"></div>
+  <header class="top">
+    <div class="brand"><div class="mark">د</div><div><div class="brand-name">دكاني</div><div class="brand-latin">DUKKANI</div></div></div>
+    <div class="tag">خبر حلو</div>
+  </header>
+  <div class="head">
+    <div class="eyebrow">الحمد لله</div>
+    <h1>
+      <span class="w" style="--i:0">صار</span> <span class="w" style="--i:1">عنّا</span><br>
+      <span class="w accent" style="--i:2">متجرين</span> <span class="w accent" style="--i:3">حقيقيين</span>
+    </h1>
+    <p class="sub">دكاني مش بس ديمو — <b>متجرين بيستخدموه فعليًا</b>: واحد بمصر وواحد بفلسطين.</p>
+  </div>
+  <div class="duo">
+    <div class="store">
+      <div class="cap"><span class="city">جنين 🇵🇸</span><span class="cur">₪</span></div>
+      <div class="shot"><img src="../assets/store-ps.png" alt=""></div>
+    </div>
+    <div class="store">
+      <div class="cap"><span class="city">القاهرة 🇪🇬</span><span class="cur">ج.م</span></div>
+      <div class="shot"><img src="../assets/store-eg.png" alt=""></div>
+    </div>
+  </div>
+  <div class="chips">
+    <span class="chip" style="--d:3.3s"><svg class="icon"><use href="#i-check"/></svg> بالعربي</span>
+    <span class="chip" style="--d:3.45s"><svg class="icon"><use href="#i-check"/></svg> على الجوال</span>
+    <span class="chip" style="--d:3.6s"><svg class="icon"><use href="#i-check"/></svg> بدون عمولة</span>
+  </div>
+  <footer class="bottom" style="animation: fadeIn .6s 3.9s both"><div>dukkani-demo.onrender.com</div><div class="pager"><b>01</b><span class="line"></span>06</div></footer>
+</section>
+
+<!-- ================= SCENE 2 ================= -->
+<section class="scene s2" data-scene="2">
+  <div class="bg"></div><div class="orb orb-b"></div>
+  <header class="top">
+    <div class="brand"><div class="mark">د</div><div><div class="brand-name">دكاني</div><div class="brand-latin">DUKKANI</div></div></div>
+    <div class="tag">المشكلة</div>
+  </header>
+  <div class="head">
+    <div class="eyebrow">كل طلب يبدأ برسالة...</div>
+    <h2><span class="w" style="--i:0">طلباتك</span> <span class="w" style="--i:1">ضايعة</span><br><span class="w" style="--i:2">بين</span> <span class="w accent" style="--i:3">الواتساب</span><br><span class="w" style="--i:4">والإنستغرام؟</span></h2>
+    <p class="sub">سؤال، سؤال، وسؤال… ولسا ما في طلب مؤكد.</p>
+  </div>
+  <div class="chat">
+    <div class="chat-head"><div class="avatar">ز</div><div><div class="name">زبونة</div><div class="status">متصل الآن</div></div></div>
+    <div class="chat-body">
+      <div class="bubble in" style="--d:1.1s">مرحبا، بكم الكيكة؟ <span class="time">10:12 ص</span></div>
+      <div class="bubble in" style="--d:1.6s">وبتوصلوا لمنطقتي؟ <span class="time">10:13 ص</span></div>
+      <div class="bubble out" style="--d:2.2s">أهلين! سعرها 250 ج.م، والتوصيل مجاني <span class="time">10:18 ص</span></div>
+      <div class="bubble in" style="--d:2.9s">تمام، بدي وحدة ليوم السبت 🙏 <span class="time">10:24 ص</span></div>
+    </div>
+  </div>
+  <div class="pains">
+    <div class="pain" style="--d:3.4s"><svg class="icon"><use href="#i-clock"/></svg><div class="t">وقتك يضيع</div><div class="d">نسخ ولصق طول اليوم</div></div>
+    <div class="pain" style="--d:3.6s"><svg class="icon"><use href="#i-message"/></svg><div class="t">طلبات ضايعة</div><div class="d">بين الخاص والستوري</div></div>
+    <div class="pain" style="--d:3.8s"><svg class="icon"><use href="#i-users"/></svg><div class="t">زبون ما بيرجع</div><div class="d">ما في سجل ولا متابعة</div></div>
+  </div>
+  <footer class="bottom" style="animation: fadeIn .6s 4.2s both"><div>dukkani-demo.onrender.com</div><div class="pager"><b>02</b><span class="line"></span>06</div></footer>
+</section>
+
+<!-- ================= SCENE 3 ================= -->
+<section class="scene s3" data-scene="3">
+  <div class="bg"></div><div class="orb orb-b"></div>
+  <div class="ring" style="width:700px;height:700px;top:-300px;right:-260px"></div>
+  <header class="top">
+    <div class="brand"><div class="mark">د</div><div><div class="brand-name">دكاني</div><div class="brand-latin">DUKKANI</div></div></div>
+    <div class="tag">الحل</div>
+  </header>
+  <div class="head">
+    <div class="eyebrow">متجرك الأونلاين...</div>
+    <h2><span class="w" style="--i:0">شغّال</span> <span class="w" style="--i:1">بدل</span> <span class="w" style="--i:2">عنك</span> <span class="w accent" style="--i:3">24/7</span></h2>
+    <p class="sub">رابط واحد، منيو، سلة، مواعيد، ودفع — كل شي بالعربي وبدون عمولة.</p>
+  </div>
+  <div class="grid">
+    <div class="feature" style="--d:.8s"><div class="ic"><svg class="icon"><use href="#i-link"/></svg></div><div class="t">رابط خاص فيك</div><div class="d">متجرك على رابط بسيط، جاهز للإنستغرام والواتساب.</div></div>
+    <div class="feature" style="--d:1.02s"><div class="ic"><svg class="icon"><use href="#i-cart"/></svg></div><div class="t">منيو ومنتجات</div><div class="d">صور، خيارات، وأسعار — تبدّلها وقت ما بدك.</div></div>
+    <div class="feature" style="--d:1.24s"><div class="ic"><svg class="icon"><use href="#i-card"/></svg></div><div class="t">طلب أونلاين</div><div class="d">سلة وشيك أوت بخطوات، بدون محادثة.</div></div>
+    <div class="feature" style="--d:1.46s"><div class="ic"><svg class="icon"><use href="#i-calendar"/></svg></div><div class="t">مواعيد وتوصيل</div><div class="d">استلام أو توصيل، مع أوقات متاحة حسب شغلك.</div></div>
+    <div class="feature" style="--d:1.68s"><div class="ic"><svg class="icon"><use href="#i-users"/></svg></div><div class="t">سجل زبائن</div><div class="d">تاريخ كل زبونة وطلباتها — قبل ما تردّي.</div></div>
+    <div class="feature" style="--d:1.9s"><div class="ic"><svg class="icon"><use href="#i-chart"/></svg></div><div class="t">تقارير بسيطة</div><div class="d">الأكثر مبيعًا، الإيرادات، والزبائن المتكررين.</div></div>
+  </div>
+  <div class="note"><svg class="icon"><use href="#i-check"/></svg> كل شي من لوحة وحدة — الطلبات، الزباين، المنتجات، والتقارير.</div>
+  <div class="chips">
+    <span class="chip" style="--d:3.2s"><svg class="icon"><use href="#i-check"/></svg> بالعربي</span>
+    <span class="chip" style="--d:3.35s"><svg class="icon"><use href="#i-check"/></svg> على الجوال</span>
+    <span class="chip" style="--d:3.5s"><svg class="icon"><use href="#i-check"/></svg> بدون عمولة</span>
+  </div>
+  <footer class="bottom" style="animation: fadeIn .6s 4s both"><div>dukkani-demo.onrender.com</div><div class="pager"><b>03</b><span class="line"></span>06</div></footer>
+</section>
+
+<!-- ================= SCENE 4 ================= -->
+<section class="scene s4" data-scene="4">
+  <div class="bg"></div><div class="orb orb-a"></div>
+  <div class="ring" style="width:620px;height:620px;top:-260px;left:-200px"></div>
+  <header class="top">
+    <div class="brand"><div class="mark">د</div><div><div class="brand-name">دكاني</div><div class="brand-latin">DUKKANI</div></div></div>
+    <div class="tag">الدليل</div>
+  </header>
+  <div class="head">
+    <div class="eyebrow">مش كلام...</div>
+    <h2><span class="w" style="--i:0">نظام</span> <span class="w accent" style="--i:1">بيشتغل</span></h2>
+    <p class="sub">لوحة طلبات حقيقية: تأكيد، متابعة، وتقارير.</p>
+  </div>
+  <div class="shot-card c-main"><img src="../assets/orders.jpg" alt=""></div>
+  <div class="shot-card c-sub"><img src="../assets/analytics.jpg" alt=""></div>
+  <div class="shot-label l-main" style="--d:1.4s"><svg class="icon"><use href="#i-layers"/></svg> لوحة الطلبات</div>
+  <div class="shot-label l-sub" style="--d:2.1s"><svg class="icon"><use href="#i-chart"/></svg> التقارير</div>
+  <div class="foot">كل طلب له حالة واضحة — و<b>الإيراد قدامك</b>.</div>
+  <footer class="bottom" style="animation: fadeIn .6s 3.4s both"><div>dukkani-demo.onrender.com</div><div class="pager"><b>04</b><span class="line"></span>06</div></footer>
+</section>
+
+<!-- ================= SCENE 5 ================= -->
+<section class="scene s5" data-scene="5">
+  <div class="bg"></div><div class="orb orb-b"></div>
+  <div class="ring" style="width:700px;height:700px;bottom:-320px;left:-240px"></div>
+  <header class="top">
+    <div class="brand"><div class="mark">د</div><div><div class="brand-name">دكاني</div><div class="brand-latin">DUKKANI</div></div></div>
+    <div class="tag">الإثبات</div>
+  </header>
+  <div class="head">
+    <div class="eyebrow">متجرين حقيقيين</div>
+    <h2><span class="w" style="--i:0">بلدين...</span><br><span class="w accent" style="--i:1">نظام</span> <span class="w accent" style="--i:2">واحد</span></h2>
+    <p class="sub">كل متجر بمنتجاه وعملته — ونفس لوحة الطلبات بتخدمهم.</p>
+  </div>
+  <div class="duo">
+    <div class="store">
+      <div class="cap"><span class="city">جنين 🇵🇸</span><span class="cur">₪</span></div>
+      <div class="shot"><img src="../assets/store-ps.png" alt=""></div>
+    </div>
+    <div class="store">
+      <div class="cap"><span class="city">القاهرة 🇪🇬</span><span class="cur">ج.م</span></div>
+      <div class="shot"><img src="../assets/store-eg.png" alt=""></div>
+    </div>
+  </div>
+  <div class="note"><svg class="icon"><use href="#i-check"/></svg> توصيل، مواعيد، ودفع عند الاستلام — كل متجر بحسب بلده.</div>
+  <footer class="bottom" style="animation: fadeIn .6s 3.2s both"><div>dukkani-demo.onrender.com</div><div class="pager"><b>05</b><span class="line"></span>06</div></footer>
+</section>
+
+<!-- ================= SCENE 6 ================= -->
+<section class="scene s6" data-scene="6">
+  <div class="bg"></div><div class="orb orb-a"></div>
+  <div class="ring" style="width:1000px;height:1000px;top:-420px;left:50%;transform:translateX(-50%)"></div>
+  <header class="top">
+    <div class="brand"><div class="mark">د</div><div><div class="brand-name">دكاني</div><div class="brand-latin">DUKKANI</div></div></div>
+    <div class="tag">الخطوة الجاية</div>
+  </header>
+  <div class="head">
+    <div class="eyebrow">دورك</div>
+    <h1><span class="w" style="--i:0">بدك</span> <span class="w" style="--i:1">تكون</span><br><span class="w" style="--i:2">المتجر</span> <span class="w accent" style="--i:3">التالت؟</span></h1>
+    <p class="sub">ابعث كلمة <b>«متجر»</b> على الواتساب، وبجهّز لك متجرك جاهز.</p>
+  </div>
+  <div class="card">
+    <div class="wa"><svg class="icon"><use href="#i-whatsapp"/></svg></div>
+    <div class="k">واتساب مباشر</div>
+    <div class="num">wa.me/972569991081</div>
+    <div class="demo">dukkani-demo.onrender.com</div>
+    <div class="hint">شوفي المنصة شغّالة <b>مباشر</b> قبل ما تبدأي</div>
+    <div class="cta"><svg class="icon"><use href="#i-message"/></svg> ابعث رسالتك الآن</div>
+    <div class="trust">
+      <span style="--d:2.6s"><svg class="icon"><use href="#i-check"/></svg> بالعربي</span>
+      <span style="--d:2.75s"><svg class="icon"><use href="#i-check"/></svg> على الجوال</span>
+      <span style="--d:2.9s"><svg class="icon"><use href="#i-check"/></svg> بدون عمولة</span>
+    </div>
+  </div>
+  <div class="steps">
+    <div class="step" style="--d:3s"><div class="n">1</div><div class="t">ابعث رسالة</div><div class="d">كلمة «متجر»</div></div>
+    <div class="step" style="--d:3.15s"><div class="n">2</div><div class="t">نجهّز متجرك</div><div class="d">منتجاتك وأسعارك</div></div>
+    <div class="step" style="--d:3.3s"><div class="n">3</div><div class="t">ابدأي تستقبلي</div><div class="d">طلبات على رابطك</div></div>
+  </div>
+  <div class="sign">دكاني <small>— متجرك الأونلاين، بالعربي</small></div>
+  <footer class="bottom" style="animation: fadeIn .6s 4s both"><div>dukkani-demo.onrender.com</div><div class="pager"><b>06</b><span class="line"></span>06</div></footer>
+</section>
+
+<script>
+  const n = new URLSearchParams(location.search).get('scene') || '1';
+  document.querySelectorAll('.scene').forEach(s => s.classList.toggle('active', s.dataset.scene === n));
+
+  window.__ready = (async () => {
+    await document.fonts.ready;
+    await Promise.all([...document.images].map(img =>
+      img.complete ? Promise.resolve() : new Promise(r => { img.onload = img.onerror = r; })
+    ));
+    return true;
+  })();
+
+  window.__pause = () => {
+    document.getAnimations().forEach(a => { a.pause(); a.currentTime = 0; });
+  };
+
+  window.__seek = (ms) => {
+    document.getAnimations().forEach(a => { a.currentTime = ms; });
+  };
+</script>
+</body>
+</html>

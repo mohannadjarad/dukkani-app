@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1080, initial-scale=1">
+<title>Dukkani — reel</title>
+<style>
+  @font-face { font-family: 'Tajawal'; font-weight: 400; src: url('../../../dukkani-app/resources/fonts/tajawal-400-arabic.woff2') format('woff2'); }
+  @font-face { font-family: 'Tajawal'; font-weight: 500; src: url('../../../dukkani-app/resources/fonts/tajawal-500-arabic.woff2') format('woff2'); }
+  @font-face { font-family: 'Tajawal'; font-weight: 700; src: url('../../../dukkani-app/resources/fonts/tajawal-700-arabic.woff2') format('woff2'); }
+  @font-face { font-family: 'Tajawal'; font-weight: 800; src: url('../../../dukkani-app/resources/fonts/tajawal-800-arabic.woff2') format('woff2'); }
+
+  :root {
+    --cream: #fbf3e9; --cream-2: #f6ead9; --surface: #fffaf3;
+    --ink: #2b2119; --muted: #7a6a5b; --accent: #c2410c; --accent-dark: #96320f;
+    --green: #5f7a5b; --green-soft: #e6ede2; --border: #e9dcc9;
+    --shadow: 0 30px 80px rgba(74, 44, 22, .18);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1080px; height: 1920px; }
+  body { font-family: 'Tajawal', sans-serif; background: var(--cream); color: var(--ink); direction: rtl; overflow: hidden; -webkit-font-smoothing: antialiased; }
+  .scene { display: none; position: relative; width: 1080px; height: 1920px; overflow: hidden; }
+  .scene.active { display: block; }
+  .bg { position: absolute; inset: 0; background:
+    radial-gradient(circle at 90% 4%, rgba(194,65,12,.14), transparent 36%),
+    radial-gradient(circle at 4% 96%, rgba(95,122,91,.13), transparent 34%),
+    linear-gradient(155deg, #fffaf3 0%, #fbf3e9 52%, #f6ead9 100%); }
+  .bg::after { content: ''; position: absolute; inset: 0; background-image: radial-gradient(rgba(43,33,25,.07) 1.2px, transparent 1.2px); background-size: 26px 26px; opacity: .3; }
+  .ring { position: absolute; border: 1.5px solid rgba(194,65,12,.14); border-radius: 50%; pointer-events: none; }
+  .top { position: absolute; top: 62px; right: 64px; left: 64px; display: flex; align-items: center; justify-content: space-between; z-index: 5; }
+  .brand { display: flex; align-items: center; gap: 15px; }
+  .mark { width: 62px; height: 62px; border-radius: 19px; background: var(--accent); color: #fff7ee; display: grid; place-items: center; font-size: 38px; font-weight: 800; line-height: 1; box-shadow: 0 12px 26px rgba(194,65,12,.26); }
+  .brand-name { font-size: 29px; font-weight: 800; line-height: 1.1; }
+  .brand-latin { font-size: 10px; letter-spacing: .34em; color: var(--muted); font-weight: 500; margin-top: 3px; }
+  .tag { font-size: 16px; font-weight: 500; color: var(--muted); border: 1px solid var(--border); background: rgba(255,250,243,.7); padding: 11px 20px; border-radius: 999px; }
+  .bottom { position: absolute; bottom: 54px; right: 64px; left: 64px; display: flex; align-items: center; justify-content: space-between; z-index: 5; color: var(--muted); font-size: 17px; font-weight: 500; }
+  .pager { display: flex; align-items: center; gap: 12px; direction: ltr; font-variant-numeric: tabular-nums; }
+  .pager .line { width: 52px; height: 1px; background: #c9b39c; }
+  .pager b { color: var(--ink); font-weight: 700; }
+  .eyebrow { display: inline-flex; align-items: center; gap: 10px; color: var(--accent); font-size: 22px; font-weight: 700; margin-bottom: 22px; }
+  .eyebrow::before { content: ''; width: 30px; height: 2px; background: var(--accent); border-radius: 2px; }
+  h1 { font-size: 98px; font-weight: 800; line-height: 1.1; letter-spacing: -.015em; }
+  h2 { font-size: 96px; font-weight: 800; line-height: 1.12; letter-spacing: -.012em; }
+  .accent { color: var(--accent); }
+  .sub { font-size: 31px; line-height: 1.55; color: var(--muted); font-weight: 400; }
+  .sub b { color: var(--ink); font-weight: 700; }
+  .underline { position: relative; display: inline-block; color: var(--accent); }
+  .underline::after { content: ''; position: absolute; right: 0; left: 0; bottom: 2px; height: 14px; background: rgba(194,65,12,.16); border-radius: 999px; z-index: -1; }
+  .icon { width: 28px; height: 28px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .chip { display: inline-flex; align-items: center; gap: 8px; background: var(--surface); border: 1px solid var(--border); color: var(--ink); padding: 11px 18px; border-radius: 999px; font-size: 19px; font-weight: 500; box-shadow: 0 6px 16px rgba(74,44,22,.05); }
+  .chip .icon { width: 18px; height: 18px; color: var(--green); stroke-width: 2.4; }
+
+  /* scene 1 */
+  .s1 .copy { position: absolute; top: 190px; right: 64px; left: 64px; text-align: center; z-index: 2; }
+  .s1 h1 { font-size: 96px; }
+  .s1 .sub { margin: 24px auto 0; width: 780px; font-size: 30px; }
+  .s1 .chips { position: absolute; top: 1690px; right: 0; left: 0; display: flex; justify-content: center; gap: 12px; z-index: 5; }
+  .s1 .phone-wrap { position: absolute; top: 820px; right: 0; left: 0; height: 860px; z-index: 2; }
+  .s1 .halo { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); width: 760px; height: 760px; border-radius: 50%; background: radial-gradient(circle, rgba(194,65,12,.16), rgba(194,65,12,0) 68%); }
+  .phone { position: absolute; top: 0; left: 50%; transform: translateX(-50%) rotate(-3deg); width: 390px; height: 817px; background: #2b2119; border-radius: 58px; padding: 11px; box-shadow: 0 40px 100px rgba(56,31,16,.32); z-index: 2; }
+  .phone::before { content: ''; position: absolute; top: 20px; left: 50%; transform: translateX(-50%); width: 100px; height: 26px; background: #2b2119; border-radius: 999px; z-index: 3; }
+  .phone-screen { width: 100%; height: 100%; border-radius: 48px; overflow: hidden; background: #fffaf3; position: relative; }
+  .phone-screen img { width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; }
+  .phone-screen::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(43,33,25,.18) 0%, transparent 18%, transparent 70%, rgba(43,33,25,.30) 100%); }
+  .float { position: absolute; z-index: 4; background: rgba(255,250,243,.96); border: 1px solid rgba(233,220,201,.9); border-radius: 20px; padding: 16px 20px; box-shadow: 0 18px 44px rgba(56,31,16,.20); display: flex; align-items: center; gap: 12px; }
+  .float .dot { width: 11px; height: 11px; border-radius: 50%; background: #2f9e62; box-shadow: 0 0 0 5px rgba(47,158,98,.13); flex: none; }
+  .float .t { font-size: 15px; color: var(--muted); font-weight: 500; }
+  .float .v { font-size: 21px; font-weight: 700; margin-top: 2px; }
+  .float-a { top: 58px; right: 210px; transform: rotate(2deg); }
+  .float-b { bottom: 90px; left: 74px; transform: rotate(-2deg); }
+  .float-b .icon { width: 21px; height: 21px; color: #2f9e62; stroke-width: 2.6; }
+
+  /* scene 2 */
+  .s2 .head { position: absolute; top: 210px; right: 64px; left: 64px; text-align: center; z-index: 2; }
+  .s2 h2 { font-size: 118px; }
+  .s2 .head .sub { margin: 22px auto 0; width: 820px; font-size: 29px; }
+  .s2 .big-20 { position: absolute; top: 340px; left: 40px; font-size: 420px; font-weight: 800; color: rgba(194,65,12,.05); line-height: 1; z-index: 0; letter-spacing: -.06em; }
+  .s2 .chat { position: absolute; top: 620px; right: 110px; left: 110px; background: var(--surface); border: 1px solid var(--border); border-radius: 34px; box-shadow: var(--shadow); overflow: hidden; z-index: 2; }
+  .s2 .quote { position: absolute; bottom: 420px; right: 64px; left: 64px; text-align: center; font-size: 38px; font-weight: 800; z-index: 3; }
+  .s2 .quote .accent { color: var(--accent); }
+  .chat-head { display: flex; align-items: center; gap: 14px; padding: 22px 28px; border-bottom: 1px solid #f0e4d4; background: #fffdf9; }
+  .avatar { width: 50px; height: 50px; border-radius: 50%; flex: none; background: linear-gradient(135deg, #e9b38a, #c2410c); display: grid; place-items: center; color: #fff7ee; font-weight: 700; font-size: 21px; }
+  .chat-head .name { font-size: 23px; font-weight: 700; }
+  .chat-head .status { font-size: 14px; color: var(--green); font-weight: 500; margin-top: 2px; }
+  .chat-head .menu { margin-right: auto; color: var(--muted); font-size: 24px; letter-spacing: 2px; }
+  .chat-body { padding: 24px 28px 22px; background: #f7ecdf; }
+  .bubble { max-width: 78%; padding: 15px 20px; border-radius: 20px; font-size: 22px; line-height: 1.45; margin-bottom: 12px; box-shadow: 0 4px 10px rgba(74,44,22,.05); }
+  .bubble.in { background: #fffdf9; border-top-right-radius: 6px; margin-right: 0; }
+  .bubble.out { background: #d9e7d4; border-top-left-radius: 6px; margin-right: auto; }
+  .bubble .time { display: block; font-size: 12px; color: #9b8877; margin-top: 4px; text-align: left; }
+  .typing { display: inline-flex; gap: 5px; padding: 14px 18px; background: #fffdf9; border-radius: 20px; border-top-right-radius: 6px; }
+  .typing i { width: 7px; height: 7px; border-radius: 50%; background: #b7a493; animation: blink 1.2s infinite; }
+  .typing i:nth-child(2) { animation-delay: .2s; } .typing i:nth-child(3) { animation-delay: .4s; }
+  @keyframes blink { 0%,100% { opacity: .35; transform: translateY(0); } 50% { opacity: 1; transform: translateY(-3px); } }
+  .pains { position: absolute; bottom: 260px; right: 80px; left: 80px; display: flex; gap: 14px; z-index: 3; }
+  .pain { flex: 1; background: rgba(255,250,243,.82); border: 1px solid var(--border); border-radius: 22px; padding: 20px 16px; text-align: center; }
+  .pain .icon { width: 26px; height: 26px; color: var(--accent); margin-bottom: 8px; }
+  .pain .t { font-size: 19px; font-weight: 700; }
+  .pain .d { font-size: 14px; color: var(--muted); margin-top: 3px; }
+
+  /* scene 3 */
+  .s3 .head { position: absolute; top: 200px; right: 64px; left: 64px; text-align: center; z-index: 2; }
+  .s3 h2 { font-size: 94px; }
+  .s3 .head .sub { margin: 20px auto 0; width: 820px; font-size: 29px; }
+  .s3 .grid { position: absolute; top: 610px; right: 64px; left: 64px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .feature { background: rgba(255,250,243,.84); border: 1px solid var(--border); border-radius: 24px; padding: 26px 24px; min-height: 250px; box-shadow: 0 10px 26px rgba(74,44,22,.045); display: flex; flex-direction: column; justify-content: center; }
+  .feature .ic { width: 54px; height: 54px; border-radius: 16px; background: #f8e7d8; color: var(--accent); display: grid; place-items: center; margin-bottom: 14px; }
+  .feature .ic .icon { width: 27px; height: 27px; }
+  .feature .t { font-size: 25px; font-weight: 700; }
+  .feature .d { font-size: 17px; line-height: 1.5; color: var(--muted); margin-top: 5px; }
+  .s3 .chips { position: absolute; bottom: 380px; right: 64px; left: 64px; display: flex; align-items: center; justify-content: center; gap: 12px; }
+  .s3 .chips .chip { font-size: 20px; padding: 12px 20px; }
+  .s3 .note { position: absolute; bottom: 240px; right: 64px; left: 64px; display: flex; align-items: center; justify-content: center; gap: 12px; color: var(--ink); font-size: 23px; font-weight: 500; background: var(--green-soft); border: 1px solid #d6e2d0; border-radius: 18px; padding: 19px 24px; }
+  .s3 .note .icon { width: 24px; height: 24px; color: var(--green); stroke-width: 2.4; }
+
+  /* scene 4 */
+  .s4 .head { position: absolute; top: 200px; right: 64px; left: 64px; text-align: center; z-index: 2; }
+  .s4 h2 { font-size: 92px; }
+  .s4 .head .sub { margin: 20px auto 0; width: 820px; font-size: 28px; }
+  .shot-card { position: absolute; border: 1px solid var(--border); border-radius: 20px; overflow: hidden; box-shadow: 0 24px 56px rgba(56,31,16,.17); background: #fffdf9; }
+  .shot-card img { width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; }
+  .c-main { top: 630px; right: 64px; left: 64px; height: 595px; z-index: 2; }
+  .c-store { top: 1270px; right: 64px; width: 430px; height: 269px; z-index: 3; }
+  .c-analytics { top: 1270px; left: 64px; width: 430px; height: 269px; z-index: 3; }
+  .shot-label { position: absolute; z-index: 6; display: inline-flex; align-items: center; gap: 8px; background: var(--ink); color: #fff7ee; border-radius: 999px; font-size: 16px; font-weight: 500; padding: 9px 15px; box-shadow: 0 8px 20px rgba(43,33,25,.22); }
+  .shot-label .icon { width: 16px; height: 16px; stroke-width: 2.4; }
+  .l-main { top: 580px; right: 64px; }
+  .l-store { top: 1218px; right: 64px; }
+  .l-analytics { top: 1218px; left: 64px; }
+  .s4 .foot { position: absolute; bottom: 250px; right: 64px; left: 64px; text-align: center; font-size: 24px; font-weight: 500; z-index: 5; }
+  .s4 .foot b { color: var(--accent); }
+
+  /* scene 5 */
+  .s5 .head { position: absolute; top: 200px; right: 64px; left: 64px; text-align: center; z-index: 2; }
+  .s5 h2 { font-size: 94px; }
+  .s5 .head .sub { margin: 20px auto 0; width: 820px; font-size: 29px; }
+  .s5 .grid { position: absolute; top: 640px; right: 64px; left: 64px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .module { background: rgba(255,250,243,.84); border: 1px solid var(--border); border-radius: 22px; padding: 24px; min-height: 232px; box-shadow: 0 12px 30px rgba(74,44,22,.05); }
+  .module .row { display: flex; align-items: center; gap: 12px; }
+  .module .ic { width: 46px; height: 46px; border-radius: 14px; background: #f8e7d8; color: var(--accent); display: grid; place-items: center; flex: none; }
+  .module .ic .icon { width: 23px; height: 23px; }
+  .module .t { font-size: 22px; font-weight: 700; }
+  .module .d { font-size: 16px; color: var(--muted); line-height: 1.5; margin-top: 10px; }
+  .bars { display: flex; align-items: flex-end; gap: 7px; height: 64px; margin-top: 16px; }
+  .bars i { flex: 1; border-radius: 6px 6px 3px 3px; background: linear-gradient(180deg, #d97742, #c2410c); opacity: .85; }
+  .plan { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed #eadbc8; font-size: 16px; }
+  .plan:last-child { border-bottom: 0; padding-bottom: 0; }
+  .plan b { font-size: 17px; }
+  .plan .pill { font-size: 12px; font-weight: 700; color: var(--accent); background: #f8e7d8; padding: 3px 9px; border-radius: 999px; }
+  .s5 .flow { position: absolute; bottom: 420px; right: 64px; left: 64px; display: flex; align-items: center; gap: 10px; background: var(--ink); color: #fff7ee; border-radius: 20px; padding: 20px 26px; font-size: 20px; font-weight: 500; }
+  .s5 .flow span { flex: 1; text-align: center; }
+  .s5 .flow .sep { flex: none; color: #a98d75; font-size: 17px; }
+  .s5 .flow .end { color: #ffd7b8; font-weight: 700; }
+  .s5 .quote { position: absolute; bottom: 290px; right: 64px; left: 64px; text-align: center; font-size: 22px; color: var(--muted); font-weight: 500; }
+
+  /* scene 6 */
+  .s6 .head { position: absolute; top: 230px; right: 64px; left: 64px; text-align: center; z-index: 2; }
+  .s6 h2 { font-size: 98px; }
+  .s6 .head .sub { margin: 24px auto 0; width: 820px; font-size: 30px; }
+  .s6 .card { position: absolute; top: 820px; right: 90px; left: 90px; background: var(--surface); border: 1px solid var(--border); border-radius: 36px; box-shadow: var(--shadow); padding: 40px 46px 34px; text-align: center; }
+  .s6 .wa { width: 96px; height: 96px; border-radius: 50%; background: #25d366; color: #fff; display: grid; place-items: center; margin: 0 auto 18px; box-shadow: 0 16px 34px rgba(37,211,102,.30); }
+  .s6 .wa .icon { width: 50px; height: 50px; stroke: none; fill: currentColor; }
+  .s6 .card .k { font-size: 20px; color: var(--muted); font-weight: 500; }
+  .s6 .num { font-size: 46px; font-weight: 800; direction: ltr; letter-spacing: .01em; margin-top: 4px; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .s6 .card .hint { font-size: 22px; color: var(--muted); margin-top: 12px; }
+  .s6 .card .hint b { color: var(--accent); }
+  .s6 .cta { margin-top: 24px; display: inline-flex; align-items: center; justify-content: center; gap: 12px; background: var(--accent); color: #fff7ee; border-radius: 16px; padding: 19px 38px; font-size: 26px; font-weight: 700; box-shadow: 0 16px 32px rgba(194,65,12,.22); }
+  .s6 .cta .icon { width: 25px; height: 25px; }
+  .s6 .trust { display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 24px; }
+  .s6 .trust span { display: inline-flex; align-items: center; gap: 6px; font-size: 16px; color: var(--muted); font-weight: 500; background: #fbf3e9; border: 1px solid var(--border); border-radius: 999px; padding: 8px 13px; }
+  .s6 .trust .icon { width: 15px; height: 15px; color: var(--green); stroke-width: 2.6; }
+  .s6 .steps { position: absolute; bottom: 400px; right: 64px; left: 64px; display: flex; gap: 14px; }
+  .s6 .step { flex: 1; background: rgba(255,250,243,.86); border: 1px solid var(--border); border-radius: 20px; padding: 20px 18px; text-align: center; box-shadow: 0 10px 24px rgba(74,44,22,.05); }
+  .s6 .step .n { width: 38px; height: 38px; border-radius: 50%; background: #f8e7d8; color: var(--accent); display: grid; place-items: center; font-size: 18px; font-weight: 800; margin: 0 auto 10px; }
+  .s6 .step .t { font-size: 20px; font-weight: 700; }
+  .s6 .step .d { font-size: 15px; color: var(--muted); margin-top: 4px; }
+  .s6 .sign { position: absolute; bottom: 240px; right: 64px; left: 64px; text-align: center; color: var(--ink); font-size: 22px; font-weight: 700; }
+  .s6 .sign small { color: var(--muted); font-size: 17px; font-weight: 400; }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute">
+  <symbol id="i-cart" viewBox="0 0 24 24"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+  <symbol id="i-card" viewBox="0 0 24 24"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></symbol>
+  <symbol id="i-message" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></symbol>
+  <symbol id="i-layers" viewBox="0 0 24 24"><path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/></symbol>
+  <symbol id="i-whatsapp" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></symbol>
+</svg>
+
+<!-- SCENE 1 -->
+<section class="scene s1" data-scene="1">
+  <div class="bg"></div>
+  <div class="ring" style="width:800px;height:800px;top:-320px;left:-260px"></div>
+  <header class="top">
+    <div class="brand"><div class="mark">د</div><div><div class="brand-name">دكاني</div><div class="brand-latin">DUKKANI</div></div></div>
+    <div class="tag">متجر • لوحة تحكم • SaaS</div>
+  </header>
+  <div class="copy">
+    <div class="eyebrow">للمشاريع المنزلية والمتاجر</div>
+    <h1>زبونك بدو يشتري<br><span class="underline">بضغطة</span>…<br>مش يدوّر عليك<br>بالخاص.</h1>
+    <p class="sub">أبني لك <b>متجر أونلاين عربي وباسمك</b>، مع لوحة طلبات تدير شغلك كله من مكان واحد.</p>
+  </div>
+  <div class="phone-wrap">
+    <div class="halo"></div>
+    <div class="phone"><div class="phone-screen"><img src="../../../docs/screenshots/19-storefront-home-mobile.jpg" alt=""></div></div>
+    <div class="float float-a"><span class="dot"></span><div><div class="t">طلب جديد</div><div class="v">كيكة العسل • 22.000 د.أ</div></div></div>
+    <div class="float float-b"><svg class="icon"><use href="#i-check"/></svg><div><div class="t">تم تأكيد الطلب</div><div class="v">توصيل الخميس • 5:00 م</div></div></div>
+  </div>
+  <div class="chips">
+    <span class="chip"><svg class="icon"><use href="#i-check"/></svg> باسمك</span>
+    <span class="chip"><svg class="icon"><use href="#i-check"/></svg> بالعربي</span>
+    <span class="chip"><svg class="icon"><use href="#i-check"/></svg> بدون عمولة</span>
+  </div>
+  <footer class="bottom"><div>dukkani-demo.onrender.com</div><div class="pager"><b>01</b><span class="line"></span>06</div></footer>
+</section>
+
+<!-- SCENE 2 -->
+<section class="scene s2" data-scene="2">
+  <div class="bg"></div>
+  <div class="big-20">20</div>
+  <header class="top">
+    <div class="brand"><div class="mark">د</div><div><div class="brand-name">دكاني</div><div class="brand-latin">DUKKANI</div></div></div>
+    <div class="tag">المشكلة</div>
+  </header>
+  <div class="head">
+    <div class="eyebrow">كل طلب…</div>
+    <h2><span class="accent">20</span> رسالة؟</h2>
+    <p class="sub">السؤال نفسه يتكرر كل يوم: بكم؟ بتوصلوا؟ وين العربون؟ وكم موعد؟</p>
+  </div>
+  <div class="chat">
+    <div class="chat-head"><div class="avatar">ز</div><div><div class="name">زبونة</div><div class="status">متصل الآن</div></div><div class="menu">•••</div></div>
+    <div class="chat-body">
+      <div class="bubble in">مرحبا، بكم كيكة العسل؟ <span class="time">10:12 ص</span></div>
+      <div class="bubble in">بتوصلوا لعمان؟ وكم التوصيل؟ <span class="time">10:13 ص</span></div>
+      <div class="bubble out">أهلين! الكيكة 22 د.أ، والتوصيل 2 د.أ <span class="time">10:18 ص</span></div>
+      <div class="bubble in">بدي 2، وين أدفع العربون؟ <span class="time">10:24 ص</span></div>
+      <div class="bubble in">وممكن تأكيد الموعد؟ <span class="time">10:31 ص</span></div>
+      <div class="typing"><i></i><i></i><i></i></div>
+    </div>
+  </div>
+  <div class="quote">كل هالحكي… <span class="accent">ولسا ما في طلب مؤكد.</span></div>
+  <div class="pains">
+    <div class="pain"><svg class="icon"><use href="#i-clock"/></svg><div class="t">وقتك يضيع</div><div class="d">نسخ ولصق طول اليوم</div></div>
+    <div class="pain"><svg class="icon"><use href="#i-message"/></svg><div class="t">طلبات ضايعة</div><div class="d">بين الستوريز والخاص</div></div>
+    <div class="pain"><svg class="icon"><use href="#i-users"/></svg><div class="t">زبون ما بيرجع</div><div class="d">ما في سجل ولا متابعة</div></div>
+  </div>
+  <footer class="bottom"><div>dukkani-demo.onrender.com</div><div class="pager"><b>02</b><span class="line"></span>06</div></footer>
+</section>
+
+<!-- SCENE 3 -->
+<section class="scene s3" data-scene="3">
+  <div class="bg"></div>
+  <div class="ring" style="width:700px;height:700px;top:-300px;right:-260px"></div>
+  <header class="top">
+    <div class="brand"><div class="mark">د</div><div><div class="brand-name">دكاني</div><div class="brand-latin">DUKKANI</div></div></div>
+    <div class="tag">الحل</div>
+  </header>
+  <div class="head">
+    <div class="eyebrow">متجرك…</div>
+    <h2>شغّال بدل عنك <span class="accent">24/7</span></h2>
+    <p class="sub">رابط واحد، منيو، سلة، مواعيد، وعربون — كل شي بالعربي وبدون عمولة.</p>
+  </div>
+  <div class="grid">
+    <div class="feature"><div class="ic"><svg class="icon"><use href="#i-link"/></svg></div><div class="t">رابط خاص فيك</div><div class="d">متجرك على رابط بسيط، جاهز للمشاركة على الإنستغرام والواتساب.</div></div>
+    <div class="feature"><div class="ic"><svg class="icon"><use href="#i-cart"/></svg></div><div class="t">منيو ومنتجات</div><div class="d">صور، خيارات، وأسعار — تعرضها وتبدّلها وقت ما بدك.</div></div>
+    <div class="feature"><div class="ic"><svg class="icon"><use href="#i-card"/></svg></div><div class="t">طلب أونلاين</div><div class="d">سلة وشيك أوت بخطوات، بدون ما يفتح الزبون محادثة.</div></div>
+    <div class="feature"><div class="ic"><svg class="icon"><use href="#i-calendar"/></svg></div><div class="t">مواعيد وتوصيل</div><div class="d">استلام أو توصيل، مع أوقات متاحة حسب شغل المحل.</div></div>
+    <div class="feature"><div class="ic"><svg class="icon"><use href="#i-shield"/></svg></div><div class="t">عربون ودفع</div><div class="d">CliQ، تحويل بنكي، أو عند الاستلام — أنت بتحدد.</div></div>
+    <div class="feature"><div class="ic"><svg class="icon"><use href="#i-whatsapp"/></svg></div><div class="t">واتساب جاهز</div><div class="d">رسائل تأكيد وتذكير بضغطة، وسجل لكل طلب.</div></div>
+  </div>
+  <div class="chips">
+    <span class="chip"><svg class="icon"><use href="#i-check"/></svg> بالعربي</span>
+    <span class="chip"><svg class="icon"><use href="#i-check"/></svg> بدون عمولة</span>
+    <span class="chip"><svg class="icon"><use href="#i-check"/></svg> باسمك</span>
+  </div>
+  <div class="note"><svg class="icon"><use href="#i-check"/></svg> كل شي من لوحة وحدة: الطلبات، الزباين، المنتجات، والتقارير.</div>
+  <footer class="bottom"><div>dukkani-demo.onrender.com</div><div class="pager"><b>03</b><span class="line"></span>06</div></footer>
+</section>
+
+<!-- SCENE 4 -->
+<section class="scene s4" data-scene="4">
+  <div class="bg"></div>
+  <div class="ring" style="width:620px;height:620px;top:-260px;left:-200px"></div>
+  <header class="top">
+    <div class="brand"><div class="mark">د</div><div><div class="brand-name">دكاني</div><div class="brand-latin">DUKKANI</div></div></div>
+    <div class="tag">الدليل</div>
+  </header>
+  <div class="head">
+    <div class="eyebrow">أثبت لك، مش بس كلام</div>
+    <h2>هذا «دكاني» —<br><span class="accent">بنيته من الصفر</span></h2>
+    <p class="sub">نموذج حقيقي لمخبز أمل بيكنز في عمّان: متجر + لوحة تحكم + تقارير.</p>
+  </div>
+  <div class="shot-card c-main"><img src="../assets/orders.jpg" alt="لوحة الطلبات"></div>
+  <div class="shot-card c-store"><img src="../assets/storefront.jpg" alt="واجهة المتجر"></div>
+  <div class="shot-card c-analytics"><img src="../assets/analytics.jpg" alt="التحليلات"></div>
+  <div class="shot-label l-main"><svg class="icon"><use href="#i-layers"/></svg> لوحة الطلبات</div>
+  <div class="shot-label l-store"><svg class="icon"><use href="#i-cart"/></svg> واجهة المتجر</div>
+  <div class="shot-label l-analytics"><svg class="icon"><use href="#i-chart"/></svg> التحليلات</div>
+  <div class="foot">نفس النظام بكون <b>باسمك</b>، بمنتجاتك، وبألوانك.</div>
+  <footer class="bottom"><div>dukkani-demo.onrender.com</div><div class="pager"><b>04</b><span class="line"></span>06</div></footer>
+</section>
+
+<!-- SCENE 5 -->
+<section class="scene s5" data-scene="5">
+  <div class="bg"></div>
+  <div class="ring" style="width:700px;height:700px;bottom:-320px;left:-240px"></div>
+  <header class="top">
+    <div class="brand"><div class="mark">د</div><div><div class="brand-name">دكاني</div><div class="brand-latin">DUKKANI</div></div></div>
+    <div class="tag">SaaS</div>
+  </header>
+  <div class="head">
+    <div class="eyebrow">وعندك فكرة SaaS؟</div>
+    <h2>من الفكرة…<br><span class="accent">لمنتج بيشتغل</span></h2>
+    <p class="sub">نفس الأساس اللي بنيت عليه دكاني: تسجيل، اشتراكات، لوحة تحكم، وتقارير — بس لفكرتك أنت.</p>
+  </div>
+  <div class="grid">
+    <div class="module"><div class="row"><div class="ic"><svg class="icon"><use href="#i-users"/></svg></div><div class="t">تسجيل ودخول</div></div><div class="d">حسابات، صلاحيات، وعزل بيانات كل عميل عن الثاني.</div></div>
+    <div class="module"><div class="row"><div class="ic"><svg class="icon"><use href="#i-card"/></svg></div><div class="t">باقات واشتراكات</div></div><div class="d">خطط، تجربة مجانية، وتجديد تلقائي.</div><div class="plan"><b>Starter</b><span class="pill">شهري</span></div><div class="plan"><b>Pro</b><span class="pill">سنوي</span></div></div>
+    <div class="module"><div class="row"><div class="ic"><svg class="icon"><use href="#i-chart"/></svg></div><div class="t">لوحة تحكم</div></div><div class="d">الإيراد، النمو، والاستخدام — قدامك.</div><div class="bars"><i style="height:38%"></i><i style="height:56%"></i><i style="height:44%"></i><i style="height:72%"></i><i style="height:64%"></i><i style="height:92%"></i><i style="height:78%"></i></div></div>
+    <div class="module"><div class="row"><div class="ic"><svg class="icon"><use href="#i-layers"/></svg></div><div class="t">تقارير وتكاملات</div></div><div class="d">تصدير، إشعارات، وربط مع واتساب أو الدفع.</div></div>
+    <div class="module"><div class="row"><div class="ic"><svg class="icon"><use href="#i-card"/></svg></div><div class="t">دفع إلكتروني</div></div><div class="d">اشتراكات متكررة، فواتير، وتحصيل أونلاين.</div></div>
+    <div class="module"><div class="row"><div class="ic"><svg class="icon"><use href="#i-message"/></svg></div><div class="t">إشعارات ذكية</div></div><div class="d">بريد، واتساب، وتنبيهات داخل التطبيق.</div></div>
+  </div>
+  <div class="flow"><span>فكرة</span><span class="sep">←</span><span>تصميم</span><span class="sep">←</span><span>بناء</span><span class="sep">←</span><span class="end">إطلاق</span></div>
+  <div class="quote">مش لازم تكون تقني — احكي الفكرة، وأنا أترجمها لمنتج.</div>
+  <footer class="bottom"><div>dukkani-demo.onrender.com</div><div class="pager"><b>05</b><span class="line"></span>06</div></footer>
+</section>
+
+<!-- SCENE 6 -->
+<section class="scene s6" data-scene="6">
+  <div class="bg"></div>
+  <div class="ring" style="width:1000px;height:1000px;top:-420px;left:50%;transform:translateX(-50%)"></div>
+  <div class="ring" style="width:560px;height:560px;bottom:-280px;right:-200px"></div>
+  <header class="top">
+    <div class="brand"><div class="mark">د</div><div><div class="brand-name">دكاني</div><div class="brand-latin">DUKKANI</div></div></div>
+    <div class="tag">الخطوة الجاية</div>
+  </header>
+  <div class="head">
+    <div class="eyebrow">خلّينا نبدأ</div>
+    <h2>احكي معي…<br>وخلال <span class="accent">24 ساعة</span><br>عندك خطة وسعر.</h2>
+    <p class="sub">ابعث كلمة <b>«متجر»</b> أو <b>«SaaS»</b> على الواتساب، وبجاوبك بخطة واضحة — بدون التزام.</p>
+  </div>
+  <div class="card">
+    <div class="wa"><svg class="icon"><use href="#i-whatsapp"/></svg></div>
+    <div class="k">واتساب مباشر</div>
+    <div class="num">wa.me/970569991081</div>
+    <div class="hint">مكالمة <b>15 دقيقة</b> — بدون التزام</div>
+    <div class="cta"><svg class="icon"><use href="#i-message"/></svg> ابعث رسالتك الآن</div>
+    <div class="trust"><span><svg class="icon"><use href="#i-check"/></svg> خطة واضحة</span><span><svg class="icon"><use href="#i-check"/></svg> بدون التزام</span><span><svg class="icon"><use href="#i-check"/></svg> رد خلال 24 ساعة</span></div>
+  </div>
+  <div class="steps">
+    <div class="step"><div class="n">1</div><div class="t">ابعث رسالة</div><div class="d">كلمة «متجر» أو «SaaS»</div></div>
+    <div class="step"><div class="n">2</div><div class="t">مكالمة قصيرة</div><div class="d">15 دقيقة نفهم فكرتك</div></div>
+    <div class="step"><div class="n">3</div><div class="t">خطة وسعر</div><div class="d">خلال 24 ساعة</div></div>
+  </div>
+  <div class="sign">مهند <small>— مهندس برمجيات · باني دكاني</small></div>
+  <footer class="bottom"><div>dukkani-demo.onrender.com</div><div class="pager"><b>06</b><span class="line"></span>06</div></footer>
+</section>
+
+<script>
+  const n = new URLSearchParams(location.search).get('scene') || '1';
+  document.querySelectorAll('.scene').forEach(s => s.classList.toggle('active', s.dataset.scene === n));
+</script>
+</body>
+</html>
