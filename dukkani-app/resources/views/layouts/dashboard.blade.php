@@ -171,7 +171,7 @@
                             @endif
                         </button>
 
-                        <div x-show="open" x-transition.origin.top.end x-cloak class="absolute end-0 top-full z-50 mt-2 w-[21rem] overflow-hidden rounded-3xl border border-line bg-surface shadow-[var(--shadow-lift)]">
+                        <div x-show="open" x-transition.origin.top.end x-cloak class="fixed inset-x-4 top-[4.75rem] z-50 overflow-hidden rounded-3xl border border-line bg-surface shadow-[var(--shadow-lift)] sm:absolute sm:inset-x-auto sm:end-0 sm:top-full sm:mt-2 sm:w-[21rem]">
                             <div class="flex items-center justify-between border-b border-line/70 px-4 py-3">
                                 <p class="text-xs font-bold text-ink">الإشعارات</p>
                                 @if ($unreadCount > 0)
