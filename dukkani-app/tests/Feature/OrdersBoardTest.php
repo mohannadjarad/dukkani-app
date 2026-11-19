@@ -53,10 +53,29 @@ class OrdersBoardTest extends TestCase
         $delivered = Order::where('status', OrderStatus::Delivered)->firstOrFail();
 
         $this->actingAs($this->owner)
-            ->get(route('orders.index', ['status' => 'new']))
+            ->get(route('orders.index', ['view' => 'list', 'status' => 'new']))
             ->assertOk()
             ->assertSee($new->number)
             ->assertDontSee($delivered->number);
+    }
+
+    public function test_the_board_is_the_default_orders_view(): void
+    {
+        $this->actingAs($this->owner)
+            ->get(route('orders.index'))
+            ->assertOk()
+            ->assertSee('قيد التحضير')
+            ->assertSee('تم التسليم')
+            ->assertDontSee('table-base');
+    }
+
+    public function test_the_compact_list_stays_available_on_request(): void
+    {
+        $this->actingAs($this->owner)
+            ->get(route('orders.index', ['view' => 'list']))
+            ->assertOk()
+            ->assertSee('table-base')
+            ->assertSee('العميل');
     }
 
     public function test_orders_can_be_searched_by_customer_name(): void

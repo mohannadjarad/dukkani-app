@@ -21,7 +21,8 @@ class OrderController extends Controller
     public function index(Request $request): View
     {
         $store = $this->store();
-        $view = $request->string('view')->toString() === 'board' ? 'board' : 'list';
+        // The board is the default working view; the compact list stays one tap away.
+        $view = $request->string('view')->toString() === 'list' ? 'list' : 'board';
 
         $filters = [
             'status' => $this->safeStatus($request->string('status')->toString()),
