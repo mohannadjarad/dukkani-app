@@ -28,8 +28,8 @@ self.addEventListener('push', (event) => {
     const title = payload.title || FALLBACK.title;
     const options = {
         body: payload.body || FALLBACK.body,
-        icon: '/icons/icon-192.png',
-        badge: '/icons/icon-192.png',
+        icon: '/pwa/icon-192.png',
+        badge: '/pwa/icon-192.png',
         dir: 'rtl',
         lang: 'ar',
         tag: payload.tag || FALLBACK.tag,

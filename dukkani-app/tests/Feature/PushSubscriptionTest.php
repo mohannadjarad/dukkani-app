@@ -112,6 +112,22 @@ class PushSubscriptionTest extends TestCase
             ->assertJson(['ok' => false, 'sent' => 0]);
     }
 
+    public function test_the_pwa_icons_exist_where_the_manifest_points(): void
+    {
+        $manifest = json_decode(file_get_contents(public_path('manifest.webmanifest')), true);
+
+        $this->assertIsArray($manifest);
+        $this->assertNotEmpty($manifest['icons'] ?? []);
+
+        foreach ($manifest['icons'] as $icon) {
+            $this->assertFileExists(public_path(ltrim($icon['src'], '/')));
+        }
+
+        // Apache ships an /icons/ alias that shadows public/icons, so the app
+        // must keep its own icons under a path it controls.
+        $this->assertStringNotContainsString("'/icons/", file_get_contents(public_path('sw.js')));
+    }
+
     public function test_the_dashboard_exposes_push_settings_only_when_configured(): void
     {
         config(['webpush.public_key' => null]);
