@@ -216,3 +216,44 @@
         background-size: 18px 18px;
     }
 }
+
+/*
+ * Tailwind v4 interpolates gradients in oklab ("to left in oklab"). Browsers
+ * before Chrome 111 / Safari 16.4 reject that whole value, so the gradient
+ * never paints and the dark shading over hero photos disappears. The colour
+ * stops already have rgba/hex fallbacks from Lightning CSS; keep the plain
+ * direction for those browsers too.
+ */
+@supports not (background-image: linear-gradient(to right in oklab, #000, #fff)) {
+    .bg-gradient-to-t {
+        --tw-gradient-position: to top !important;
+    }
+
+    .bg-gradient-to-tr {
+        --tw-gradient-position: to top right !important;
+    }
+
+    .bg-gradient-to-r {
+        --tw-gradient-position: to right !important;
+    }
+
+    .bg-gradient-to-br {
+        --tw-gradient-position: to bottom right !important;
+    }
+
+    .bg-gradient-to-b {
+        --tw-gradient-position: to bottom !important;
+    }
+
+    .bg-gradient-to-bl {
+        --tw-gradient-position: to bottom left !important;
+    }
+
+    .bg-gradient-to-l {
+        --tw-gradient-position: to left !important;
+    }
+
+    .bg-gradient-to-tl {
+        --tw-gradient-position: to top left !important;
+    }
+}
