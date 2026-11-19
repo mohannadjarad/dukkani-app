@@ -119,7 +119,7 @@ class CheckoutController extends StorefrontController
 
         return redirect()
             ->route('track.show', $order->public_token)
-            ->with('status', 'وصلنا طلبك! احتفظي برابط المتابعة لمتابعة التحضير.');
+            ->with('status', 'وصلنا طلبك! احتفظي برابط المتابعة، أو ارجعي له من «متابعة طلبي» برقم هاتفك.');
     }
 
     /**

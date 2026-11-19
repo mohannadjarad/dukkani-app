@@ -49,6 +49,7 @@
             <nav class="hidden items-center gap-0.5 lg:flex">
                 <a href="{{ route('storefront.home', $store) }}" class="rounded-full px-3.5 py-2 text-[13px] font-bold transition {{ request()->routeIs('storefront.home') ? 'bg-brand-soft text-brand-dark' : 'text-ink-soft hover:bg-white hover:text-ink' }}">الرئيسية</a>
                 <a href="{{ route('storefront.menu', $store) }}" class="rounded-full px-3.5 py-2 text-[13px] font-bold transition {{ request()->routeIs('storefront.menu', 'storefront.product') ? 'bg-brand-soft text-brand-dark' : 'text-ink-soft hover:bg-white hover:text-ink' }}">المنيو</a>
+                <a href="{{ route('storefront.track.lookup', $store) }}" class="rounded-full px-3.5 py-2 text-[13px] font-bold transition {{ request()->routeIs('storefront.track.lookup', 'track.show') ? 'bg-brand-soft text-brand-dark' : 'text-ink-soft hover:bg-white hover:text-ink' }}">متابعة طلبي</a>
                 <a href="{{ route('storefront.home', $store) }}#about" class="rounded-full px-3.5 py-2 text-[13px] font-bold text-ink-soft transition hover:bg-white hover:text-ink">عن المتجر</a>
                 <a href="{{ route('storefront.home', $store) }}#contact" class="rounded-full px-3.5 py-2 text-[13px] font-bold text-ink-soft transition hover:bg-white hover:text-ink">تواصلي معنا</a>
             </nav>
@@ -77,6 +78,7 @@
             <nav class="mx-auto flex max-w-6xl flex-col gap-1 px-5 py-4 sm:px-8">
                 <a href="{{ route('storefront.home', $store) }}" @click="mobile = false" class="sidebar-link">الرئيسية</a>
                 <a href="{{ route('storefront.menu', $store) }}" @click="mobile = false" class="sidebar-link">المنيو</a>
+                <a href="{{ route('storefront.track.lookup', $store) }}" @click="mobile = false" class="sidebar-link">متابعة طلبي</a>
                 <a href="{{ route('storefront.home', $store) }}#about" @click="mobile = false" class="sidebar-link">عن المتجر</a>
                 <a href="{{ route('storefront.home', $store) }}#contact" @click="mobile = false" class="sidebar-link">تواصلي معنا</a>
                 <div class="my-1 border-t border-line/70"></div>
@@ -119,6 +121,7 @@
                         <a href="{{ route('storefront.home', $store) }}" class="transition hover:text-brand">الرئيسية</a>
                         <a href="{{ route('storefront.menu', $store) }}" class="transition hover:text-brand">المنيو الكامل</a>
                         <a href="{{ route('storefront.cart', $store) }}" class="transition hover:text-brand">سلة الطلب</a>
+                        <a href="{{ route('storefront.track.lookup', $store) }}" class="transition hover:text-brand">متابعة طلبي</a>
                         <a href="{{ auth()->check() ? route('dashboard') : route('login') }}" class="transition hover:text-brand">{{ auth()->check() ? 'لوحة التحكم' : 'دخول البائعة' }}</a>
                     </div>
                 </div>

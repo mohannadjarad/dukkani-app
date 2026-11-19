@@ -295,7 +295,9 @@
                 </div>
 
                 <div class="rounded-2xl border border-line/70 bg-surface px-4 py-3 text-[10px] leading-5 text-muted">
-                    <span class="font-bold text-ink">رابط المتابعة:</span> احتفظي بهذا الرابط لمعرفة حالة طلبك في أي وقت.@if (config('app.demo_mode')) هذا عرض تجريبي، والبيانات وهمية.@endif
+                    <span class="font-bold text-ink">رابط المتابعة:</span> احتفظي بهذا الرابط لمعرفة حالة طلبك في أي وقت، أو ارجعي له من
+                    <a href="{{ route('storefront.track.lookup', $store) }}" class="font-bold text-brand transition hover:text-brand-dark">متابعة طلبي</a>
+                    برقم هاتفك.@if (config('app.demo_mode')) هذا عرض تجريبي، والبيانات وهمية.@endif
                 </div>
             </div>
         </div>

@@ -52,6 +52,12 @@ Route::prefix('s/{store:slug}')->name('storefront.')->middleware('store.active')
     Route::post('/checkout', [CheckoutController::class, 'store'])
         ->middleware('throttle:checkout')
         ->name('checkout.store');
+
+    // Customers can come back to their orders with the phone used at checkout.
+    Route::get('/track', [OrderTrackingController::class, 'lookup'])->name('track.lookup');
+    Route::post('/track', [OrderTrackingController::class, 'find'])
+        ->middleware('throttle:10,1')
+        ->name('track.find');
 });
 
 Route::get('/orders/{order:public_token}', [OrderTrackingController::class, 'show'])->name('track.show');
