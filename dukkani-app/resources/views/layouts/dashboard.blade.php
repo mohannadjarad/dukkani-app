@@ -39,8 +39,8 @@
 
     <div class="flex min-h-screen">
         <aside
-            class="no-scrollbar fixed inset-y-0 start-0 z-50 flex w-[18rem] max-w-[86vw] shrink-0 flex-col overflow-y-auto overscroll-contain border-e border-line/80 bg-surface px-4 py-5 transition-transform duration-300 lg:sticky lg:top-0 lg:h-screen lg:translate-x-0"
-            :class="sidebar ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'"
+            class="offcanvas-sidebar no-scrollbar fixed inset-y-0 start-0 z-50 flex w-[18rem] max-w-[86vw] shrink-0 flex-col overflow-y-auto overscroll-contain border-e border-line/80 bg-surface px-4 py-5 transition-transform duration-300 lg:sticky lg:top-0 lg:h-screen"
+            :class="{ 'is-open': sidebar }"
             aria-label="قائمة التنقل"
         >
             <div class="flex items-center justify-between px-2">

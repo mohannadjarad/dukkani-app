@@ -27,10 +27,10 @@
         </a>
     </div>
 
-    <div x-data="{ tab: '{{ $activeTab }}' }" class="mt-6 grid gap-4 lg:grid-cols-[1.4fr_0.6fr] lg:items-start">
+    <div x-data="{ tab: '{{ $activeTab }}' }" class="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-[1.4fr_0.6fr] lg:items-start">
         <div class="space-y-4">
             {{-- Tabs --}}
-            <div class="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
+            <div class="flex flex-wrap gap-2 pb-1">
                 @foreach ([
                     ['key' => 'profile', 'label' => 'معلومات المتجر', 'icon' => 'M13.5 21v-7.5a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349M3.75 21V9.349m0 0a3.001 3.001 0 0 0 3.75-.615A2.993 2.993 0 0 0 9.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 0 0 2.25 1.016c.896 0 1.7-.393 2.25-1.015a3.001 3.001 0 0 0 3.75.614m-16.5 0a3.004 3.004 0 0 1-.621-4.72l1.189-1.19A1.5 1.5 0 0 1 5.378 3h13.243a1.5 1.5 0 0 1 1.06.44l1.19 1.189a3 3 0 0 1-.621 4.72M6.75 18h3.75a.75.75 0 0 0 .75-.75V13.5a.75.75 0 0 0-.75-.75H6.75a.75.75 0 0 0-.75.75v3.75c0 .414.336.75.75.75Z'],
                     ['key' => 'delivery', 'label' => 'التوصيل والدفع', 'icon' => 'M8.25 18.75a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 0 1-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 0 0-3.213-9.193 2.056 2.056 0 0 0-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 0 0-10.026 0 1.106 1.106 0 0 0-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12'],
@@ -56,7 +56,7 @@
                     <h2 class="text-sm font-bold text-ink">معلومات المتجر</h2>
                     <p class="mt-1 text-[10px] text-muted">تظهر هذه المعلومات في الصفحة الرئيسية لمتجرك.</p>
 
-                    <div class="mt-4 grid gap-4 sm:grid-cols-2">
+                    <div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
                         <div>
                             <label class="label" for="name">اسم المتجر</label>
                             <input id="name" type="text" name="name" value="{{ old('name', $store->name) }}" class="input" maxlength="100" required>
@@ -119,7 +119,7 @@
                     <div class="mt-5 border-t border-line/60 pt-5">
                         <h3 class="text-sm font-bold text-ink">الشعار والغلاف</h3>
 
-                        <div class="mt-4 grid gap-4 sm:grid-cols-2"
+                        <div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2"
                              x-data="{
                                  logo: @js($store->logoUrl() ?? ''),
                                  cover: @js($store->coverUrl() ?? ''),
@@ -194,7 +194,7 @@
                     <h2 class="text-sm font-bold text-ink">التوصيل والدفع</h2>
                     <p class="mt-1 text-[10px] text-muted">تتحكم هذه الإعدادات بخيارات العميل عند إتمام الطلب.</p>
 
-                    <div class="mt-4 grid gap-3 sm:grid-cols-2">
+                    <div class="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
                         <label class="flex items-start gap-3 rounded-2xl border border-line/70 bg-canvas/40 p-3.5">
                             <input type="hidden" name="pickup_enabled" value="0">
                             <input type="checkbox" name="pickup_enabled" value="1" @checked($store->pickup_enabled) class="mt-0.5 size-4 rounded border-line text-brand focus:ring-brand/30">
@@ -215,7 +215,7 @@
                     </div>
                     @error('delivery_enabled') <p class="field-error">{{ $message }}</p> @enderror
 
-                    <div class="mt-4 grid gap-4 sm:grid-cols-2">
+                    <div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
                         <div>
                             <label class="label" for="delivery_fee">رسوم التوصيل ({{ $store->currencySymbol() }})</label>
                             <input id="delivery_fee" type="number" name="delivery_fee" value="{{ old('delivery_fee', $feeValue) }}" step="0.001" min="0" max="100" class="input" required>
@@ -237,7 +237,7 @@
                         <h3 class="text-[11px] font-bold text-ink">بيانات الحوالة البنكية</h3>
                         <p class="mt-1 text-[10px] text-muted">تظهر للعميل عند اختيار الحوالة البنكية لتحويل المبلغ كاملاً. لتفعيل الخيار، أدخلي اسم البنك والآيبان على الأقل.</p>
 
-                        <div class="mt-3 grid gap-4 sm:grid-cols-2">
+                        <div class="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-2">
                             <div>
                                 <label class="label" for="bank_name">اسم البنك</label>
                                 <input id="bank_name" type="text" name="bank_name" value="{{ old('bank_name', $store->bank_name) }}" class="input" maxlength="100" placeholder="مثلاً: {{ $bankExample['bank'] }}">
@@ -287,10 +287,10 @@
                                     مغلق
                                 </label>
 
-                                <div class="flex items-center gap-2" :class="closed && 'opacity-40'">
-                                    <input type="time" name="hours[{{ $day }}][open_time]" value="{{ $hour->open_time ? substr($hour->open_time, 0, 5) : '' }}" :disabled="closed" class="input w-[7.5rem] !py-1.5 !text-xs" dir="ltr">
+                                <div class="flex w-full items-center gap-2 sm:w-auto" :class="closed && 'opacity-40'">
+                                    <input type="time" name="hours[{{ $day }}][open_time]" value="{{ $hour->open_time ? substr($hour->open_time, 0, 5) : '' }}" :disabled="closed" class="input min-w-0 flex-1 !py-1.5 !text-xs sm:w-[7.5rem] sm:flex-none" dir="ltr">
                                     <span class="text-muted/60">—</span>
-                                    <input type="time" name="hours[{{ $day }}][close_time]" value="{{ $hour->close_time ? substr($hour->close_time, 0, 5) : '' }}" :disabled="closed" class="input w-[7.5rem] !py-1.5 !text-xs" dir="ltr">
+                                    <input type="time" name="hours[{{ $day }}][close_time]" value="{{ $hour->close_time ? substr($hour->close_time, 0, 5) : '' }}" :disabled="closed" class="input min-w-0 flex-1 !py-1.5 !text-xs sm:w-[7.5rem] sm:flex-none" dir="ltr">
                                 </div>
                             </div>
                         @endforeach
@@ -381,7 +381,7 @@
                         </div>
                     @endif
 
-                    <dl class="mt-4 grid gap-3 sm:grid-cols-2">
+                    <dl class="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
                         <div class="rounded-2xl border border-line/70 bg-canvas/40 p-3.5">
                             <dt class="text-[10px] font-bold text-muted">طلبات الشهر</dt>
                             <dd class="mt-1 font-display text-lg font-bold text-ink">
@@ -425,7 +425,7 @@
                             <span class="rounded-full bg-violet-50 px-2.5 py-0.5 text-[10px] font-bold text-violet-600">قريباً</span>
                         </div>
                         <p class="mt-1 text-[10px] text-muted">هذي المزايا قيد التطوير — ما منبيع شي مش شغال.</p>
-                        <ul class="mt-3 grid gap-2 sm:grid-cols-2">
+                        <ul class="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
                             @foreach ($comingSoon as $feature)
                                 <li class="flex items-center gap-2 rounded-xl border border-line/60 bg-canvas/30 px-3 py-2 text-[11px] text-ink-soft">
                                     <span class="size-1.5 rounded-full bg-violet-400"></span>
@@ -454,7 +454,7 @@
                         <h2 class="text-sm font-bold text-ink">كلمة المرور</h2>
                         <p class="mt-1 text-[10px] text-muted">استخدمي كلمة مرور قوية لا تقل عن 8 أحرف.</p>
 
-                        <div class="mt-4 grid gap-4 sm:grid-cols-2">
+                        <div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
                             <div class="sm:col-span-2">
                                 <label class="label" for="current_password">كلمة المرور الحالية</label>
                                 <input id="current_password" type="password" name="current_password" class="input" dir="ltr" autocomplete="current-password" required>

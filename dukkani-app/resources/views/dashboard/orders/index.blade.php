@@ -95,7 +95,7 @@
     </div>
 
     @if ($view === 'list')
-        <div class="mt-5 flex gap-2 overflow-x-auto pb-1 no-scrollbar">
+        <div class="mt-5 flex flex-wrap gap-2 pb-1">
             @foreach ($tabs as $tab)
                 @php
                     $active = $filters['status'] === $tab['key'];

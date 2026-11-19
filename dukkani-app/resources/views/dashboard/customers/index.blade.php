@@ -63,7 +63,7 @@
 
     {{-- Tag chips --}}
     @if ($allTags->isNotEmpty())
-        <div class="mt-5 flex gap-2 overflow-x-auto pb-1 no-scrollbar">
+        <div class="mt-5 flex flex-wrap gap-2 pb-1">
             <a href="{{ route('customers.index', $queryFor(['tag' => null, 'page' => null])) }}"
                class="inline-flex shrink-0 items-center rounded-full border px-3.5 py-2 text-[11px] font-bold transition {{ $filters['tag'] === '' ? 'border-brand bg-brand text-white' : 'border-line bg-surface text-ink-soft hover:border-brand/30 hover:text-ink' }}">
                 كل الوسوم

@@ -27,7 +27,7 @@
 
         <div class="mt-7 rounded-3xl border border-line/80 bg-surface p-4 sm:p-5">
             <div class="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-                <div class="no-scrollbar -mx-1 flex gap-1.5 overflow-x-auto px-1 pb-1">
+                <div class="flex flex-wrap gap-1.5 pb-1">
                     <a href="{{ route('storefront.menu', $store) }}"
                        class="shrink-0 rounded-full px-3.5 py-2 text-[11px] font-bold transition {{ $categoryId === 0 ? 'bg-brand text-white shadow-[0_8px_18px_-12px_rgba(142,68,37,0.9)]' : 'bg-canvas text-ink-soft hover:bg-brand-soft hover:text-brand-dark' }}">
                         الكل

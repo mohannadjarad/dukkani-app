@@ -34,12 +34,14 @@
     html {
         scroll-behavior: smooth;
         /* Keep off-canvas panels from widening the mobile layout viewport. */
+        overflow-x: hidden;
         overflow-x: clip;
     }
 
     body {
         @apply bg-canvas text-ink antialiased;
         font-feature-settings: 'kern';
+        overflow-x: hidden;
         overflow-x: clip;
     }
 
@@ -146,6 +148,8 @@
 
     .table-wrap {
         @apply overflow-x-auto;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior-x: contain;
     }
 
     .table-base {
@@ -174,6 +178,22 @@
 }
 
 @layer utilities {
+    /* Off-canvas drawer that stays hidden without JS and on older browsers.
+       Uses plain `transform` instead of Tailwind v4's `translate` property. */
+    .offcanvas-sidebar {
+        transform: translateX(100%);
+    }
+
+    .offcanvas-sidebar.is-open {
+        transform: translateX(0);
+    }
+
+    @media (min-width: 64rem) {
+        .offcanvas-sidebar {
+            transform: none;
+        }
+    }
+
     .text-balance {
         text-wrap: balance;
     }
