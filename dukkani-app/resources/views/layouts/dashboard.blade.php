@@ -5,8 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#f8f3ea">
     <meta name="robots" content="noindex">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    @if (filled(config('webpush.public_key')))
+        <meta name="vapid-public-key" content="{{ config('webpush.public_key') }}">
+        <meta name="push-subscribe-url" content="{{ route('push.subscribe') }}">
+        <meta name="push-unsubscribe-url" content="{{ route('push.unsubscribe') }}">
+        <meta name="push-test-url" content="{{ route('push.test') }}">
+    @endif
     <title>@yield('title', 'لوحة التحكم') — {{ $brandName }}</title>
     <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
+    <link rel="manifest" href="{{ asset('manifest.webmanifest') }}">
+    <link rel="apple-touch-icon" href="{{ asset('icons/icon-192.png') }}">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="دكّاني">
     @include('partials.money-script')
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
@@ -163,6 +176,13 @@
                         </span>
                     @endif
 
+                    @if (filled(config('webpush.public_key')))
+                        <button type="button" id="push-toggle" class="icon-btn relative hidden" aria-label="تفعيل إشعارات الطلبات" aria-pressed="false" title="تفعيل إشعارات الطلبات">
+                            <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke-width="1.6" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 0 0 6 3.75v16.5a2.25 2.25 0 0 0 2.25 2.25h7.5A2.25 2.25 0 0 0 18 20.25V3.75a2.25 2.25 0 0 0-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3"/></svg>
+                            <span id="push-dot" class="absolute end-1.5 top-1.5 hidden size-2 rounded-full bg-brand ring-2 ring-canvas"></span>
+                        </button>
+                    @endif
+
                     <div class="relative" x-data="{ open: false }" @click.outside="open = false">
                         <button class="icon-btn relative" @click="open = !open" aria-label="الإشعارات">
                             <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke-width="1.6" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0"/></svg>
@@ -201,6 +221,10 @@
                                 @endforelse
                             </div>
                             <a href="{{ route('orders.index') }}" class="block border-t border-line/70 bg-canvas/50 px-4 py-2.5 text-center text-[10px] font-bold text-muted/80 transition hover:text-brand">عرض كل الطلبات</a>
+                            <button type="button" id="push-disable" class="hidden w-full items-center justify-center gap-1.5 border-t border-line/70 px-4 py-2.5 text-center text-[10px] font-bold text-muted/70 transition hover:text-danger">
+                                <svg class="size-3.5" fill="none" viewBox="0 0 24 24" stroke-width="1.7" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 9.75 14.25 14.25m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>
+                                إيقاف إشعارات الطلبات على هذا الجهاز
+                            </button>
                         </div>
                     </div>
 
@@ -214,6 +238,24 @@
             <main class="mx-auto w-full max-w-[1440px] flex-1 px-5 py-7 sm:px-8 lg:py-9">
                 @if ($planUsage)
                     @include('dashboard.partials.plan-banner', ['usage' => $planUsage, 'upgradeLink' => $planUpgradeLink])
+                @endif
+
+                @if (filled(config('webpush.public_key')))
+                    <div id="push-banner" class="mb-5 hidden flex-wrap items-center gap-3 rounded-2xl border border-brand/20 bg-brand-soft/60 px-4 py-3.5">
+                        <span class="flex size-9 shrink-0 items-center justify-center rounded-xl bg-white text-brand shadow-sm">
+                            <svg class="size-4.5" fill="none" viewBox="0 0 24 24" stroke-width="1.7" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0"/></svg>
+                        </span>
+                        <div class="min-w-0 flex-1">
+                            <p class="text-xs font-bold text-ink">خلّي الطلبات توصلك على جوالك</p>
+                            <p id="push-banner-text" class="mt-0.5 text-[10px] leading-5 text-muted">
+                                فعّل الإشعارات مرة واحدة، ورح يوصلك تنبيه كل ما يجي طلب جديد حتى لو اللوحة مسكّرة.
+                            </p>
+                        </div>
+                        <div class="flex shrink-0 items-center gap-3">
+                            <button type="button" id="push-enable" class="btn-primary btn-sm">تفعيل الإشعارات</button>
+                            <button type="button" id="push-dismiss" class="text-[10px] font-bold text-muted transition hover:text-ink">لاحقاً</button>
+                        </div>
+                    </div>
                 @endif
 
                 @yield('content')
@@ -243,6 +285,37 @@
             </button>
         </div>
     @endif
+
+    @if (filled(config('webpush.public_key')))
+        <div id="push-prompt" class="fixed inset-0 z-[80] hidden items-center justify-center bg-ink/45 px-5 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="push-prompt-title">
+            <div class="w-full max-w-sm rounded-[2rem] border border-line bg-surface p-6 shadow-[var(--shadow-lift)]">
+                <div class="flex items-start gap-4">
+                    <span class="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-brand-soft text-brand">
+                        <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.6" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0"/></svg>
+                    </span>
+                    <div class="min-w-0">
+                        <h3 id="push-prompt-title" class="font-display text-lg font-bold leading-snug text-ink">فعّل إشعارات الطلبات</h3>
+                        <p class="mt-1.5 text-[11px] leading-6 text-muted">
+                            خلّي طلباتك توصلك على جوالك لحظة وصولها، حتى لو اللوحة مسكّرة. بنطلب منك إذن الإشعارات مرة واحدة بس.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="mt-5 flex flex-col gap-2">
+                    <button type="button" id="push-prompt-enable" class="btn-primary w-full">تفعيل الإشعارات</button>
+                    <button type="button" id="push-prompt-later" class="w-full rounded-xl px-3 py-2 text-[11px] font-bold text-muted transition hover:text-ink">لاحقاً</button>
+                </div>
+
+                <p class="mt-3 text-center text-[9px] leading-5 text-muted/60">
+                    إذا ما ظهر إذن النظام، افتح إعدادات الموقع في المتصفح واسمح بالإشعارات.
+                </p>
+            </div>
+        </div>
+    @endif
+
+    <div id="push-toast" class="pointer-events-none fixed inset-x-4 bottom-20 z-[70] hidden justify-center">
+        <p class="max-w-sm rounded-2xl bg-ink px-4 py-2.5 text-center text-[11px] font-bold leading-5 text-white shadow-[var(--shadow-lift)]"></p>
+    </div>
 
     @stack('scripts')
 </body>

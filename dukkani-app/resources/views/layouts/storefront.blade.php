@@ -8,6 +8,11 @@
     <meta name="description" content="{{ $store->tagline ?? $store->name }}">
     <title>@yield('title', $store->name) — {{ $store->name }}</title>
     <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
+    <link rel="manifest" href="{{ asset('manifest.webmanifest') }}">
+    <link rel="apple-touch-icon" href="{{ asset('icons/icon-192.png') }}">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
     @include('partials.money-script')
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>

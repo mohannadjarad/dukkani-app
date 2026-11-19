@@ -9,6 +9,7 @@ use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\NotificationController;
 use App\Http\Controllers\Dashboard\OrderController;
 use App\Http\Controllers\Dashboard\ProductController;
+use App\Http\Controllers\Dashboard\PushSubscriptionController;
 use App\Http\Controllers\Dashboard\SettingsController;
 use App\Http\Controllers\Storefront\CartController;
 use App\Http\Controllers\Storefront\CheckoutController;
@@ -87,6 +88,13 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/dashboard/notifications/read', [NotificationController::class, 'markAllRead'])->name('notifications.read');
     Route::post('/dashboard/notifications/{notification}', [NotificationController::class, 'markRead'])->name('notifications.open');
+
+    // Web Push: one row per browser/device, so an owner can enable several.
+    Route::prefix('push')->name('push.')->middleware('throttle:20,1')->group(function () {
+        Route::post('/subscribe', [PushSubscriptionController::class, 'subscribe'])->name('subscribe');
+        Route::post('/unsubscribe', [PushSubscriptionController::class, 'unsubscribe'])->name('unsubscribe');
+        Route::post('/test', [PushSubscriptionController::class, 'test'])->name('test');
+    });
 
     Route::prefix('dashboard/products')->name('products.')->group(function () {
         Route::get('/', [ProductController::class, 'index'])->name('index');

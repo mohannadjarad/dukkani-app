@@ -95,6 +95,15 @@ services:
       - key: APP_MAINTENANCE_DRIVER
         value: file
 
+      # Web Push (VAPID). The same key pair can serve both services; only the
+      # subject URL differs. Rotating the keys drops every saved device.
+      - key: VAPID_PUBLIC_KEY
+        sync: false
+      - key: VAPID_PRIVATE_KEY
+        sync: false
+      - key: VAPID_SUBJECT
+        value: https://dukkani-demo.onrender.com
+
     # APP_KEY is generated once and stored under /var/data by the entrypoint.
     # APP_URL is taken from Render's RENDER_EXTERNAL_URL automatically.
     # Set either variable here if you prefer to manage them yourself.
@@ -172,6 +181,14 @@ services:
 
       - key: CLOUDINARY_URL
         sync: false
+
+      # Web Push (VAPID). Generate once and keep stable.
+      - key: VAPID_PUBLIC_KEY
+        sync: false
+      - key: VAPID_PRIVATE_KEY
+        sync: false
+      - key: VAPID_SUBJECT
+        value: https://dukkani-prod.onrender.com
 
       - key: SESSION_DRIVER
         value: database

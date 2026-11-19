@@ -106,6 +106,10 @@ class OrderService
 
             $this->cart->clear($store);
 
+            // Push after commit so a rolled-back order never reaches the owner's
+            // phone. Queues are not running on the free plan, so send inline.
+            DB::afterCommit(fn () => app(WebPushService::class)->notifyNewOrder($order));
+
             return $order;
         });
     }
