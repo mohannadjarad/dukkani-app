@@ -89,7 +89,7 @@
 
         <div class="flex items-center justify-between pt-1">
             <label class="flex cursor-pointer items-center gap-2.5 text-xs font-medium text-muted">
-                <input type="checkbox" name="remember" class="size-4 rounded border-line text-brand focus:ring-brand/20">
+                <input type="checkbox" name="remember" @checked(old('remember', true)) class="size-4 rounded border-line text-brand focus:ring-brand/20">
                 تذكّرني على هذا الجهاز
             </label>
             <span class="text-[11px] text-muted/60">نسيتِ كلمة المرور؟</span>

@@ -24,6 +24,27 @@ class AuthAndDashboardTest extends TestCase
             ->assertSee('عرض تجريبي');
     }
 
+    public function test_login_keeps_the_owner_signed_in_by_default(): void
+    {
+        $html = $this->get('/login')->getContent();
+
+        $this->assertMatchesRegularExpression('/name="remember"[^>]*checked/', $html);
+    }
+
+    public function test_login_with_remember_sets_a_remember_token(): void
+    {
+        $this->seed(DemoSeeder::class);
+
+        $this->post('/login', [
+            'email' => 'demo@dukkani.jo',
+            'password' => 'demo1234',
+            'remember' => '1',
+        ])->assertRedirect(route('dashboard'));
+
+        $this->assertAuthenticated();
+        $this->assertNotNull(User::where('email', 'demo@dukkani.jo')->firstOrFail()->remember_token);
+    }
+
     public function test_demo_login_authenticates_the_demo_owner(): void
     {
         $this->seed(DemoSeeder::class);

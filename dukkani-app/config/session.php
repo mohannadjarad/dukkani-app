@@ -32,7 +32,10 @@ return [
     |
     */
 
-    'lifetime' => (int) env('SESSION_LIFETIME', 120),
+    // A store owner usually checks her shop from a phone between other
+    // errands. An idle session that dies after two hours feels like the app
+    // logged her out for no reason, so keep it for a month.
+    'lifetime' => (int) env('SESSION_LIFETIME', 60 * 24 * 30),
 
     'expire_on_close' => env('SESSION_EXPIRE_ON_CLOSE', false),
 
