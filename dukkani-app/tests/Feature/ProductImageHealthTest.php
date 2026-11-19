@@ -69,8 +69,16 @@ class ProductImageHealthTest extends TestCase
             ->assertSee(Product::placeholderUrl());
     }
 
-    public function test_a_signed_report_marks_the_image_as_broken(): void
+    public function test_a_signed_report_marks_a_dead_image_as_broken(): void
     {
+        $this->product->forceFill([
+            'image_path' => 'https://cdn.example.com/missing.jpg',
+        ])->save();
+
+        Http::fake([
+            'cdn.example.com/*' => Http::response('', 404),
+        ]);
+
         $url = URL::temporarySignedRoute('storefront.image-problem', now()->addHour(), [
             'store' => $this->store,
             'product' => $this->product,
@@ -79,6 +87,20 @@ class ProductImageHealthTest extends TestCase
         $this->post($url)->assertNoContent();
 
         $this->assertNotNull($this->product->fresh()->image_broken_at);
+    }
+
+    public function test_a_signed_report_keeps_a_healthy_image_visible(): void
+    {
+        // The seed image is a real file in public/images; one flaky mobile
+        // request must not permanently hide it.
+        $url = URL::temporarySignedRoute('storefront.image-problem', now()->addHour(), [
+            'store' => $this->store,
+            'product' => $this->product,
+        ]);
+
+        $this->post($url)->assertNoContent();
+
+        $this->assertNull($this->product->fresh()->image_broken_at);
     }
 
     public function test_an_unsigned_report_is_rejected(): void

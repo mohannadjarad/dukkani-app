@@ -161,7 +161,15 @@ class Product extends Model
         }
 
         if (str_starts_with($this->image_path, 'http')) {
-            return app(ImageService::class)->url($this->image_path, $transform);
+            $images = app(ImageService::class);
+
+            // Legacy local uploads stored an APP_URL-based link. Resolve it
+            // against the host the visitor is actually using.
+            if ($local = $images->localStoragePath($this->image_path)) {
+                return asset('storage/'.$local);
+            }
+
+            return $images->url($this->image_path, $transform);
         }
 
         return str_starts_with($this->image_path, 'images/')

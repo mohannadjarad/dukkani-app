@@ -47,7 +47,8 @@ class ImageServiceTest extends TestCase
         );
 
         $this->assertNull($result['public_id']);
-        $this->assertStringContainsString('/storage/', $result['url']);
+        $this->assertStringStartsWith('products/', $result['url']);
+        $this->assertTrue(Storage::disk('public')->exists($result['url']));
     }
 
     public function test_uploads_are_rejected_outside_local_and_testing(): void
@@ -76,7 +77,26 @@ class ImageServiceTest extends TestCase
         );
 
         $this->assertNull($result['public_id']);
-        $this->assertStringContainsString('/storage/', $result['url']);
+        $this->assertStringStartsWith('products/', $result['url']);
+    }
+
+    public function test_legacy_local_storage_urls_use_the_current_host(): void
+    {
+        config(['app.url' => 'http://localhost:8000']);
+
+        $cloudinary = 'https://res.cloudinary.com/demo/image/upload/v123/products/cake.jpg';
+
+        $product = new Product(['image_path' => 'http://localhost:8000/storage/products/cake.jpg']);
+        $this->assertSame(asset('storage/products/cake.jpg'), $product->imageUrl());
+
+        $store = new Store(['logo_path' => 'http://localhost:8000/storage/stores/logos/logo.jpg']);
+        $this->assertSame(asset('storage/stores/logos/logo.jpg'), $store->logoUrl());
+
+        // External /storage/ URLs are left alone.
+        $product = new Product(['image_path' => 'https://cdn.example.com/storage/products/cake.jpg']);
+        $this->assertSame('https://cdn.example.com/storage/products/cake.jpg', $product->imageUrl());
+
+        $this->assertStringContainsString('/upload/f_auto,q_auto,w_800/', (new Product(['image_path' => $cloudinary]))->imageUrl());
     }
 
     public function test_product_and_store_models_apply_cloudinary_transformations(): void

@@ -99,7 +99,13 @@ class Store extends Model
         }
 
         if (str_starts_with($path, 'http')) {
-            return app(ImageService::class)->url($path, $transform);
+            $images = app(ImageService::class);
+
+            if ($local = $images->localStoragePath($path)) {
+                return asset('storage/'.$local);
+            }
+
+            return $images->url($path, $transform);
         }
 
         return str_starts_with($path, 'images/')

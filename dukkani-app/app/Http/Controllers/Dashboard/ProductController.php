@@ -183,6 +183,7 @@ class ProductController extends Controller
         $store = $this->authorizeProduct($product);
         $data = $this->validated($request, $store, $product);
         $oldPublicId = $product->image_public_id;
+        $oldPath = $product->image_path;
         $image = $this->resolveImage($request, $product);
 
         try {
@@ -215,7 +216,10 @@ class ProductController extends Controller
             throw $exception;
         }
 
-        if ($oldPublicId && $oldPublicId !== $image['public_id']) {
+        // Never delete an asset that the product still points at. This is what
+        // used to erase photos when the prefilled Cloudinary URL was submitted
+        // back unchanged (public_id became null, so the guard alone passed).
+        if ($oldPublicId && $oldPublicId !== $image['public_id'] && $oldPath !== $image['path']) {
             $this->images->delete($oldPublicId);
         }
 
@@ -389,9 +393,18 @@ class ProductController extends Controller
             return ['path' => null, 'public_id' => null];
         }
 
-        $url = trim($request->input('image_url', ''));
+        $url = trim((string) $request->input('image_url', ''));
 
         if ($url !== '') {
+            // The edit form prefills the current URL. Submitting it unchanged
+            // must keep the managed Cloudinary asset and its public id.
+            if ($product && $url === $product->image_path) {
+                return [
+                    'path' => $product->image_path,
+                    'public_id' => $product->image_public_id,
+                ];
+            }
+
             return ['path' => $url, 'public_id' => null];
         }
 

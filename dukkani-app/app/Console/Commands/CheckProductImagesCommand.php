@@ -3,10 +3,8 @@
 namespace App\Console\Commands;
 
 use App\Models\Product;
+use App\Services\ImageHealthService;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Storage;
-use Throwable;
 
 /**
  * Walks every stored product image and makes sure it still loads, then keeps
@@ -21,7 +19,7 @@ class CheckProductImagesCommand extends Command
 
     protected $description = 'Flag product images that no longer load and clear the ones that recovered';
 
-    public function handle(): int
+    public function handle(ImageHealthService $health): int
     {
         $query = Product::query()->whereNotNull('image_path');
 
@@ -33,11 +31,11 @@ class CheckProductImagesCommand extends Command
         $broken = 0;
         $recovered = 0;
 
-        $query->chunkById(100, function ($products) use (&$checked, &$broken, &$recovered) {
+        $query->chunkById(100, function ($products) use ($health, &$checked, &$broken, &$recovered) {
             foreach ($products as $product) {
                 $checked++;
 
-                if ($this->loads($product)) {
+                if ($health->loads($product)) {
                     $recovered += (int) $product->markImageHealthy();
 
                     continue;
@@ -50,35 +48,5 @@ class CheckProductImagesCommand extends Command
         $this->components->info("Checked {$checked} product images: {$broken} newly broken, {$recovered} back online.");
 
         return self::SUCCESS;
-    }
-
-    protected function loads(Product $product): bool
-    {
-        $path = (string) $product->image_path;
-
-        if (! str_starts_with($path, 'http')) {
-            return str_starts_with($path, 'images/')
-                ? is_file(public_path($path))
-                : Storage::disk('public')->exists($path);
-        }
-
-        try {
-            $response = Http::timeout(8)->head($path);
-        } catch (Throwable) {
-            return false;
-        }
-
-        // 405 means the host refuses HEAD but the asset is there.
-        if ($response->status() === 405) {
-            return true;
-        }
-
-        if (! $response->successful()) {
-            return false;
-        }
-
-        $type = (string) $response->header('Content-Type');
-
-        return $type === '' || str_starts_with($type, 'image/');
     }
 }

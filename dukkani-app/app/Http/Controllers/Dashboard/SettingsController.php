@@ -111,6 +111,8 @@ class SettingsController extends Controller
 
         $oldLogoPublicId = $store->logo_public_id;
         $oldCoverPublicId = $store->cover_public_id;
+        $oldLogoPath = $store->logo_path;
+        $oldCoverPath = $store->cover_path;
         $logo = $this->resolveAsset($request, 'logo', $store);
 
         try {
@@ -151,11 +153,13 @@ class SettingsController extends Controller
             throw $exception;
         }
 
-        if ($oldLogoPublicId && $oldLogoPublicId !== $logo['public_id']) {
+        // Keep the asset when the store still points at it. Submitting the
+        // prefilled Cloudinary URL back unchanged used to delete the logo.
+        if ($oldLogoPublicId && $oldLogoPublicId !== $logo['public_id'] && $oldLogoPath !== $logo['path']) {
             $this->images->delete($oldLogoPublicId);
         }
 
-        if ($oldCoverPublicId && $oldCoverPublicId !== $cover['public_id']) {
+        if ($oldCoverPublicId && $oldCoverPublicId !== $cover['public_id'] && $oldCoverPath !== $cover['path']) {
             $this->images->delete($oldCoverPublicId);
         }
 
@@ -323,9 +327,21 @@ class SettingsController extends Controller
             return ['path' => null, 'public_id' => null];
         }
 
-        $url = trim($request->input($key.'_url', ''));
+        $url = trim((string) $request->input($key.'_url', ''));
 
         if ($url !== '') {
+            $currentPath = $store->{$key.'_path'};
+
+            // The profile form prefills the current URL. Saving the form
+            // without changing the image must not turn the managed asset into
+            // an unmanaged one.
+            if ($url === $currentPath) {
+                return [
+                    'path' => $currentPath,
+                    'public_id' => $key === 'logo' ? $store->logo_public_id : $store->cover_public_id,
+                ];
+            }
+
             return ['path' => $url, 'public_id' => null];
         }
 

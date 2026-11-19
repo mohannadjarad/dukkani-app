@@ -6,7 +6,6 @@ use App\Exceptions\ImageServiceNotConfiguredException;
 use Cloudinary\Cloudinary;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 use RuntimeException;
 use Throwable;
 
@@ -49,7 +48,9 @@ class ImageService
         }
 
         try {
-            $this->cloudinary()->uploadApi()->destroy($publicId);
+            // Invalidate the CDN copy too; otherwise a deleted asset can keep
+            // loading from cache for weeks and make the next bug invisible.
+            $this->cloudinary()->uploadApi()->destroy($publicId, ['invalidate' => true]);
         } catch (Throwable $exception) {
             Log::warning('Cloudinary image deletion failed.', [
                 'public_id' => $publicId,
@@ -84,7 +85,13 @@ class ImageService
         return $prefix.'/image/upload/'.$transform.'/'.$path;
     }
 
-    /** @return array{url: string, public_id: null} */
+    /**
+     * Local uploads are stored as disk-relative paths, not absolute URLs. The
+     * model builds the public URL from the current request host, so an upload
+     * made through the dashboard works on localhost, a LAN IP, and Render alike.
+     *
+     * @return array{url: string, public_id: null}
+     */
     protected function uploadLocally(UploadedFile $file, string $folder): array
     {
         $path = $file->store(trim($folder, '/'), 'public');
@@ -93,16 +100,41 @@ class ImageService
             throw new RuntimeException('Unable to store the uploaded image.');
         }
 
-        $url = Storage::disk('public')->url($path);
-
-        if (! preg_match('~^https?://~i', $url)) {
-            $url = url($url);
-        }
-
         return [
-            'url' => $url,
+            'url' => $path,
             'public_id' => null,
         ];
+    }
+
+    /**
+     * Return the public-disk path when an absolute URL points at this app's own
+     * /storage prefix. Older uploads stored APP_URL-based links, which broke
+     * when the same image was opened through a phone's LAN address.
+     */
+    public function localStoragePath(string $url): ?string
+    {
+        if (! preg_match('~^https?://~i', $url)) {
+            return null;
+        }
+
+        $path = (string) parse_url($url, PHP_URL_PATH);
+
+        if (! str_starts_with($path, '/storage/')) {
+            return null;
+        }
+
+        $host = strtolower(trim((string) parse_url($url, PHP_URL_HOST), '[]'));
+        $appHost = strtolower(trim((string) parse_url((string) config('app.url'), PHP_URL_HOST), '[]'));
+        $requestHost = strtolower(trim((string) request()->getHost(), '[]'));
+        $localHosts = ['localhost', '127.0.0.1', '::1'];
+
+        if ($host !== '' && $host !== $appHost && $host !== $requestHost && ! in_array($host, $localHosts, true)) {
+            return null;
+        }
+
+        $relative = ltrim(substr($path, strlen('/storage/')), '/');
+
+        return $relative === '' ? null : $relative;
     }
 
     protected function configured(): bool
