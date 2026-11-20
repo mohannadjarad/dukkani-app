@@ -227,6 +227,13 @@ async function enable() {
     }
 
     if (state === 'on') {
+        if (Notification.permission !== 'granted') {
+            setState(Notification.permission === 'denied' ? 'blocked' : 'off');
+            flash('الإشعارات موقوفة من إعدادات المتصفح. اسمح بها وبعدها جرّب مرة ثانية.');
+
+            return;
+        }
+
         await sendTest();
 
         return;
@@ -285,6 +292,18 @@ async function enable() {
 }
 
 async function sendTest(quiet = false) {
+    const permission = 'Notification' in window ? Notification.permission : 'default';
+
+    if (permission !== 'granted') {
+        setState(permission === 'denied' ? 'blocked' : 'off');
+
+        if (!quiet) {
+            flash('لازم تسمح بالإشعارات من المتصفح أول.');
+        }
+
+        return;
+    }
+
     setBusy(true);
 
     try {
@@ -338,17 +357,28 @@ async function init() {
         return;
     }
 
-    setState(Notification.permission === 'denied' ? 'blocked' : 'off');
+    const permission = Notification.permission;
+
+    setState(permission === 'denied' ? 'blocked' : 'off');
 
     try {
         const registration = await navigator.serviceWorker.getRegistration();
         const subscription = registration ? await registration.pushManager.getSubscription() : null;
 
-        setState(subscription ? 'on' : Notification.permission === 'denied' ? 'blocked' : 'off');
+        if (subscription && permission === 'granted') {
+            setState('on');
 
-        if (subscription) {
             // Keep the server in sync if a previous save was interrupted.
             api(meta('push-subscribe-url'), subscription.toJSON()).catch(() => {});
+        } else if (subscription && permission === 'denied') {
+            // The browser can keep a subscription after the permission is
+            // revoked. Remove it so the server stops pushing to a device that
+            // cannot display anything.
+            const endpoint = subscription.endpoint;
+
+            await subscription.unsubscribe().catch(() => {});
+            api(meta('push-unsubscribe-url'), { endpoint }).catch(() => {});
+            setState('blocked');
         }
     } catch {
         // Keep the optimistic state; enabling will surface the real error.
