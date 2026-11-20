@@ -92,6 +92,7 @@ return [
     'countries' => [
         '962' => ['name' => 'الأردن', 'currency' => 'JOD', 'timezone' => 'Asia/Amman'],
         '970' => ['name' => 'فلسطين', 'currency' => 'ILS', 'timezone' => 'Asia/Hebron'],
+        '972' => ['name' => 'فلسطين', 'currency' => 'ILS', 'timezone' => 'Asia/Hebron'],
         '963' => ['name' => 'سوريا', 'currency' => 'SYP', 'timezone' => 'Asia/Damascus'],
         '961' => ['name' => 'لبنان', 'currency' => 'LBP', 'timezone' => 'Asia/Beirut'],
         '20' => ['name' => 'مصر', 'currency' => 'EGP', 'timezone' => 'Africa/Cairo'],

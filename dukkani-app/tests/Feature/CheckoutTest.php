@@ -53,7 +53,8 @@ class CheckoutTest extends TestCase
             ->assertOk()
             ->assertSee('name="phone_country"', false)
             ->assertSee('الأردن +962')
-            ->assertSee('فلسطين +970');
+            ->assertSee('فلسطين +970')
+            ->assertSee('فلسطين +972');
     }
 
     public function test_the_customer_country_code_is_used_for_the_saved_whatsapp_number(): void
@@ -71,6 +72,21 @@ class CheckoutTest extends TestCase
         // the store's country.
         $this->assertSame('970599123456', $order->customer->phone);
         $this->assertSame('https://wa.me/970599123456', $order->customer->whatsappLink());
+    }
+
+    public function test_both_palestinian_dial_codes_are_accepted(): void
+    {
+        $this->addToCart();
+
+        $this->post(route('storefront.checkout.store', $this->store), $this->payload([
+            'phone' => '0599123456',
+            'phone_country' => '972',
+        ]))->assertRedirect();
+
+        $order = Order::latest('id')->firstOrFail();
+
+        $this->assertSame('972599123456', $order->customer->phone);
+        $this->assertSame('https://wa.me/972599123456', $order->customer->whatsappLink());
     }
 
     public function test_an_unsupported_country_code_is_rejected(): void
