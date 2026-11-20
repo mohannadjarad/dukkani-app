@@ -51,7 +51,7 @@ RUN apt-get update \
         libpq-dev \
         libsqlite3-dev \
         unzip \
-    && docker-php-ext-install -j"$(nproc)" intl mbstring opcache pdo_pgsql pdo_sqlite \
+    && docker-php-ext-install -j"$(nproc)" bcmath intl mbstring opcache pdo_pgsql pdo_sqlite \
     && a2enmod rewrite headers \
     && rm -rf /var/lib/apt/lists/*
 

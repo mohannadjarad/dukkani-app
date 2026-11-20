@@ -128,6 +128,18 @@ class PushSubscriptionTest extends TestCase
         $this->assertStringNotContainsString("'/icons/", file_get_contents(public_path('sw.js')));
     }
 
+    public function test_the_production_image_installs_bcmath_for_web_push(): void
+    {
+        // Without GMP or BCMath, web-push raises a notice and Laravel turns it
+        // into an exception, so every notification fails on a correct setup.
+        $dockerfile = file_get_contents(base_path('Dockerfile'));
+
+        $this->assertMatchesRegularExpression(
+            '/docker-php-ext-install[^\n]*\bbcmath\b/',
+            $dockerfile,
+        );
+    }
+
     public function test_the_dashboard_exposes_push_settings_only_when_configured(): void
     {
         config(['webpush.public_key' => null]);
