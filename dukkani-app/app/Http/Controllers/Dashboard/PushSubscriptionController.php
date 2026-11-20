@@ -48,7 +48,9 @@ class PushSubscriptionController extends Controller
             'title' => 'إشعارات دكّاني مفعّلة',
             'body' => 'رح يوصلك إشعار هون كل ما يجي طلب جديد.',
             'url' => route('dashboard'),
-            'tag' => 'push-test',
+            // A fresh tag each time: some Android builds silently replace a
+            // notification that already uses the same tag instead of alerting.
+            'tag' => 'push-test-'.now()->timestamp,
         ]);
 
         return response()->json(['ok' => $sent > 0, 'sent' => $sent]);

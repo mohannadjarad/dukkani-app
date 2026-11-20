@@ -221,6 +221,12 @@
                                 @endforelse
                             </div>
                             <a href="{{ route('orders.index') }}" class="block border-t border-line/70 bg-canvas/50 px-4 py-2.5 text-center text-[10px] font-bold text-muted/80 transition hover:text-brand">عرض كل الطلبات</a>
+                            @if (filled(config('webpush.public_key')))
+                                <button type="button" id="push-diagnose" class="hidden w-full items-center justify-center gap-1.5 border-t border-line/70 px-4 py-2.5 text-center text-[10px] font-bold text-muted/70 transition hover:text-brand">
+                                    <svg class="size-3.5" fill="none" viewBox="0 0 24 24" stroke-width="1.7" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0"/></svg>
+                                    فحص الإشعارات على هذا الجهاز
+                                </button>
+                            @endif
                             <button type="button" id="push-disable" class="hidden w-full items-center justify-center gap-1.5 border-t border-line/70 px-4 py-2.5 text-center text-[10px] font-bold text-muted/70 transition hover:text-danger">
                                 <svg class="size-3.5" fill="none" viewBox="0 0 24 24" stroke-width="1.7" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 9.75 14.25 14.25m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>
                                 إيقاف إشعارات الطلبات على هذا الجهاز

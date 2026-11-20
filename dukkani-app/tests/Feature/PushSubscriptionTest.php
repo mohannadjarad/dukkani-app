@@ -128,6 +128,43 @@ class PushSubscriptionTest extends TestCase
         $this->assertStringNotContainsString("'/icons/", file_get_contents(public_path('sw.js')));
     }
 
+    public function test_the_notification_badge_is_a_png_the_old_browser_accepts(): void
+    {
+        $badge = public_path('pwa/badge.png');
+
+        $this->assertFileExists($badge);
+        $this->assertSame('PNG', strtoupper(substr((string) file_get_contents($badge), 1, 3)));
+        $this->assertStringContainsString('/pwa/badge.png', file_get_contents(public_path('sw.js')));
+    }
+
+    public function test_a_test_push_uses_a_fresh_tag_each_time(): void
+    {
+        // Some Android builds replace an existing notification with the same
+        // tag without alerting, which looked like "sent but never shown".
+        $fake = new class extends WebPushService
+        {
+            /** @var array<int, array<string, mixed>> */
+            public array $payloads = [];
+
+            public function send(User $user, array $payload): int
+            {
+                $this->payloads[] = $payload;
+
+                return 1;
+            }
+        };
+
+        $this->app->instance(WebPushService::class, $fake);
+
+        $this->actingAs($this->owner)
+            ->postJson(route('push.test'))
+            ->assertOk()
+            ->assertJson(['ok' => true, 'sent' => 1]);
+
+        $this->assertCount(1, $fake->payloads);
+        $this->assertStringStartsWith('push-test-', $fake->payloads[0]['tag']);
+    }
+
     public function test_the_production_image_installs_bcmath_for_web_push(): void
     {
         // Without GMP or BCMath, web-push raises a notice and Laravel turns it
@@ -148,7 +185,8 @@ class PushSubscriptionTest extends TestCase
             ->get(route('dashboard'))
             ->assertOk()
             ->assertDontSee('name="vapid-public-key"', false)
-            ->assertDontSee('id="push-prompt"', false);
+            ->assertDontSee('id="push-prompt"', false)
+            ->assertDontSee('id="push-diagnose"', false);
 
         config(['webpush.public_key' => 'test-vapid-public-key']);
 
@@ -158,6 +196,7 @@ class PushSubscriptionTest extends TestCase
             ->assertSee('name="vapid-public-key"', false)
             ->assertSee('test-vapid-public-key')
             ->assertSee('id="push-prompt"', false)
-            ->assertSee('id="push-banner"', false);
+            ->assertSee('id="push-banner"', false)
+            ->assertSee('id="push-diagnose"', false);
     }
 }

@@ -101,10 +101,12 @@ function flash(message) {
     toast.classList.add('flex');
 
     window.clearTimeout(flash.timer);
+    // Longer instructions need more time to read than a one-line confirmation.
+    const duration = Math.min(12000, 4200 + message.length * 70);
     flash.timer = window.setTimeout(() => {
         toast.classList.add('hidden');
         toast.classList.remove('flex');
-    }, 4200);
+    }, duration);
 }
 
 let state = 'off';
@@ -163,6 +165,7 @@ function setState(next) {
     const banner = $('#push-banner');
     const enable = $('#push-enable');
     const disable = $('#push-disable');
+    const diagnose = $('#push-diagnose');
     const note = $('#push-banner-text');
 
     if (next === 'unsupported') {
@@ -170,6 +173,8 @@ function setState(next) {
         banner?.classList.add('hidden');
         banner?.classList.remove('flex');
         disable?.classList.add('hidden');
+        diagnose?.classList.add('hidden');
+        diagnose?.classList.remove('inline-flex');
 
         return;
     }
@@ -189,6 +194,11 @@ function setState(next) {
     if (disable) {
         disable.classList.toggle('hidden', next !== 'on');
         disable.classList.toggle('inline-flex', next === 'on');
+    }
+
+    if (diagnose) {
+        diagnose.classList.remove('hidden');
+        diagnose.classList.add('inline-flex');
     }
 
     if (!banner) {
@@ -215,10 +225,57 @@ function setState(next) {
 function setBusy(value) {
     busy = value;
 
-    document.querySelectorAll('#push-enable, #push-toggle, #push-prompt-enable').forEach((button) => {
+    document.querySelectorAll('#push-enable, #push-toggle, #push-diagnose, #push-prompt-enable').forEach((button) => {
         button.disabled = value;
         button.classList.toggle('opacity-60', value);
     });
+}
+
+function pushErrorMessage(error) {
+    const name = String(error?.name || '');
+    const message = String(error?.message || '');
+
+    // "Registration failed - push service error" comes from the browser, not
+    // from our server: Chrome could not reach Google's FCM push service.
+    if (name === 'AbortError' || /push service|Registration failed/i.test(message)) {
+        return 'المتصفح ما قدر يتصل بخدمة إشعارات جوجل. تأكد من الإنترنت، وأوقف VPN ومانع الإعلانات، وحدّث خدمات Google Play، وبعدها جرّب مرة ثانية.';
+    }
+
+    if (name === 'NotAllowedError' || /permission|denied/i.test(message)) {
+        return 'المتصفح رفض إذن الإشعارات. اسمح بها من إعدادات الموقع وجرّب مرة ثانية.';
+    }
+
+    if (name === 'InvalidAccessError' || /applicationServerKey/i.test(message)) {
+        return 'إعدادات الإشعارات على الخادم غير صحيحة. راسلنا.';
+    }
+
+    return message || 'ما قدرنا نفعل الإشعارات. جرّب مرة ثانية.';
+}
+
+async function subscribeForPush(registration, key) {
+    const options = { userVisibleOnly: true, applicationServerKey: key };
+
+    try {
+        return await withTimeout(registration.pushManager.subscribe(options), 20000);
+    } catch (error) {
+        const retriable = error?.name === 'AbortError'
+            || /push service|Registration failed/i.test(String(error?.message || ''));
+
+        if (!retriable) {
+            throw error;
+        }
+
+        console.warn('First push subscription attempt failed', error);
+
+        // Old Android builds often keep a broken FCM registration that keeps
+        // failing until it is cleared, and transient push-service errors tend
+        // to succeed on a second try.
+        const existing = await registration.pushManager.getSubscription().catch(() => null);
+        await existing?.unsubscribe().catch(() => {});
+        await new Promise((resolve) => window.setTimeout(resolve, 1500));
+
+        return withTimeout(registration.pushManager.subscribe(options), 20000);
+    }
 }
 
 async function enable() {
@@ -271,10 +328,7 @@ async function enable() {
         let subscription = await registration.pushManager.getSubscription();
 
         if (!subscription) {
-            subscription = await withTimeout(registration.pushManager.subscribe({
-                userVisibleOnly: true,
-                applicationServerKey: key,
-            }), 20000);
+            subscription = await subscribeForPush(registration, key);
         }
 
         await api(meta('push-subscribe-url'), subscription.toJSON());
@@ -284,8 +338,9 @@ async function enable() {
         flash('تم تفعيل إشعارات الطلبات ✅');
         await sendTest(true);
     } catch (error) {
+        console.warn('Push could not be enabled', error);
         hidePrompt();
-        flash(error.message || 'ما قدرنا نفعل الإشعارات. جرّب مرة ثانية.');
+        flash(pushErrorMessage(error));
     } finally {
         setBusy(false);
     }
@@ -316,6 +371,53 @@ async function sendTest(quiet = false) {
         if (!quiet) {
             flash(error.message || 'ما قدرنا نرسل الإشعار التجريبي.');
         }
+    } finally {
+        setBusy(false);
+    }
+}
+
+// Shows a notification from the page's own service worker, with no server or
+// push service involved. If this one appears, the device can display our
+// notifications and any missing order alert came from the push path instead.
+async function diagnose() {
+    if (!('Notification' in window) || !('serviceWorker' in navigator)) {
+        flash('هذا المتصفح ما بيدعم إشعارات النظام.');
+
+        return;
+    }
+
+    if (Notification.permission !== 'granted') {
+        setState(Notification.permission === 'denied' ? 'blocked' : 'off');
+        flash(Notification.permission === 'denied'
+            ? 'الإشعارات محظورة من إعدادات المتصفح. اسمح بها وبعدها جرّب.'
+            : 'لازم تسمح بالإشعارات من المتصفح أول.');
+
+        return;
+    }
+
+    setBusy(true);
+
+    try {
+        let registration = await navigator.serviceWorker.getRegistration();
+
+        if (!registration) {
+            await navigator.serviceWorker.register('/sw.js');
+            registration = await withTimeout(navigator.serviceWorker.ready, 20000);
+        }
+
+        await registration.showNotification('فحص الإشعارات ✅', {
+            body: 'إذا شفت هالإشعار، المتصفح قادر يعرض إشعارات الموقع.',
+            icon: '/pwa/icon-192.png',
+            badge: '/pwa/badge.png',
+            dir: 'rtl',
+            lang: 'ar',
+            tag: 'push-diagnose-'.concat(Date.now()),
+            data: { url: '/dashboard' },
+        });
+
+        flash('أرسلنا إشعار من المتصفح نفسه. إذا ما ظهر، المشكلة بإعدادات الجهاز مش بالسيرفر.');
+    } catch (error) {
+        flash('المتصفح رفض يعرض الإشعار: '.concat(error.message || 'خطأ غير معروف'));
     } finally {
         setBusy(false);
     }
@@ -403,7 +505,7 @@ document.addEventListener('click', (event) => {
         return;
     }
 
-    const target = event.target.closest('#push-enable, #push-toggle, #push-disable, #push-dismiss, #push-prompt-enable, #push-prompt-later');
+    const target = event.target.closest('#push-enable, #push-toggle, #push-disable, #push-diagnose, #push-dismiss, #push-prompt-enable, #push-prompt-later');
 
     if (!target) {
         return;
@@ -415,6 +517,8 @@ document.addEventListener('click', (event) => {
         enable();
     } else if (target.id === 'push-disable') {
         disable();
+    } else if (target.id === 'push-diagnose') {
+        diagnose();
     } else if (target.id === 'push-prompt-later') {
         closePrompt(true);
     } else {
