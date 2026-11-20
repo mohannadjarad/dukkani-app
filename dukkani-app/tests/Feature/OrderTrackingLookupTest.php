@@ -74,6 +74,33 @@ class OrderTrackingLookupTest extends TestCase
             ->assertSee($customer->orders()->first()->number);
     }
 
+    public function test_a_customer_whose_country_differs_from_the_store_can_still_find_her_order(): void
+    {
+        // Checkout now lets customers pick their own WhatsApp country code, so
+        // a number may be stored with 970 while the store is in Jordan (962).
+        $customer = Customer::create([
+            'store_id' => $this->store->id,
+            'name' => 'عميلة من فلسطين',
+            'phone' => '970599123456',
+        ]);
+
+        $order = Order::create([
+            'store_id' => $this->store->id,
+            'customer_id' => $customer->id,
+            'number' => 'AB-TEST-970',
+            'status' => OrderStatus::New,
+            'fulfillment_type' => FulfillmentType::Pickup,
+            'scheduled_at' => now()->addDay(),
+            'subtotal_fils' => 1500,
+            'total_fils' => 1500,
+            'payment_method' => PaymentMethod::Cash,
+            'balance_due_fils' => 1500,
+        ]);
+
+        $this->post(route('storefront.track.find', $this->store), ['phone' => '0599123456'])
+            ->assertRedirect(route('track.show', $order->public_token));
+    }
+
     public function test_an_unknown_phone_shows_a_friendly_error(): void
     {
         $this->from(route('storefront.track.lookup', $this->store))

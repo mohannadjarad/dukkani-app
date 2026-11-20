@@ -74,9 +74,20 @@
                         </div>
                         <div>
                             <label for="phone" class="label">رقم الهاتف / واتساب</label>
-                            <input id="phone" name="phone" type="tel" dir="ltr" x-model="phone" value="{{ old('phone') }}"
-                                   autocomplete="tel" required class="input text-left" placeholder="07 9111 1001">
+                            <div class="flex gap-2">
+                                <select id="phone_country" name="phone_country" x-model="phoneCountry"
+                                        aria-label="رمز دولة الواتساب" class="select w-[8.5rem] shrink-0 text-xs sm:w-[9.5rem]">
+                                    @foreach ($countries as $dial => $label)
+                                        <option value="{{ $dial }}" @selected((string) old('phone_country', $store->dialCode()) === (string) $dial)>{{ $label }}</option>
+                                    @endforeach
+                                </select>
+                                <input id="phone" name="phone" type="tel" dir="ltr" x-model="phone" value="{{ old('phone') }}"
+                                       autocomplete="tel" required class="input min-w-0 flex-1 text-left" placeholder="0599 123 456"
+                                       aria-describedby="phone-help">
+                            </div>
+                            <p id="phone-help" class="mt-1.5 text-[9px] leading-4 text-muted/60">اختاري رمز دولتك، واكتبي رقم الواتساب كما هو (مع الصفر أو بدونه).</p>
                             @error('phone') <p class="field-error">{{ $message }}</p> @enderror
+                            @error('phone_country') <p class="field-error">{{ $message }}</p> @enderror
                         </div>
                     </div>
                 </div>

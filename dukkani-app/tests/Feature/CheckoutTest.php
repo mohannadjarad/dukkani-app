@@ -45,6 +45,47 @@ class CheckoutTest extends TestCase
             ->assertSee('كيكة العسل واللوز');
     }
 
+    public function test_checkout_offers_a_whatsapp_country_code_selector(): void
+    {
+        $this->addToCart();
+
+        $this->get(route('storefront.checkout', $this->store))
+            ->assertOk()
+            ->assertSee('name="phone_country"', false)
+            ->assertSee('الأردن +962')
+            ->assertSee('فلسطين +970');
+    }
+
+    public function test_the_customer_country_code_is_used_for_the_saved_whatsapp_number(): void
+    {
+        $this->addToCart();
+
+        $this->post(route('storefront.checkout.store', $this->store), $this->payload([
+            'phone' => '0599123456',
+            'phone_country' => '970',
+        ]))->assertRedirect();
+
+        $order = Order::latest('id')->firstOrFail();
+
+        // The local zero is replaced with the country the customer picked, not
+        // the store's country.
+        $this->assertSame('970599123456', $order->customer->phone);
+        $this->assertSame('https://wa.me/970599123456', $order->customer->whatsappLink());
+    }
+
+    public function test_an_unsupported_country_code_is_rejected(): void
+    {
+        $this->addToCart();
+
+        $before = Order::count();
+
+        $this->post(route('storefront.checkout.store', $this->store), $this->payload([
+            'phone_country' => '999',
+        ]))->assertSessionHasErrors('phone_country');
+
+        $this->assertSame($before, Order::count());
+    }
+
     public function test_cash_delivery_order_is_created_and_updates_the_dashboard(): void
     {
         $this->addToCart();
@@ -65,6 +106,7 @@ class CheckoutTest extends TestCase
         $this->assertSame(20500, $order->balance_due_fils);
         $this->assertSame(1, $order->items()->count());
         $this->assertStringStartsWith('AB-', $order->number);
+        $this->assertSame('962791111001', $order->customer->phone);
         $this->assertNull(session('cart.'.$this->store->id));
 
         $this->get(route('track.show', $order->public_token))

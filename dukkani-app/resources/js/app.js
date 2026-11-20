@@ -281,6 +281,7 @@ function checkoutPage(config) {
         earliestTime: config.earliestTime || '',
         name: config.name || '',
         phone: config.phone || '',
+        phoneCountry: config.phoneCountry || '',
         address: config.address || '',
         notes: config.notes || '',
         consent: false,

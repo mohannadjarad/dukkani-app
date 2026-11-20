@@ -90,17 +90,17 @@ return [
     */
 
     'countries' => [
-        '962' => ['currency' => 'JOD', 'timezone' => 'Asia/Amman'],
-        '970' => ['currency' => 'ILS', 'timezone' => 'Asia/Hebron'],
-        '963' => ['currency' => 'SYP', 'timezone' => 'Asia/Damascus'],
-        '961' => ['currency' => 'LBP', 'timezone' => 'Asia/Beirut'],
-        '20' => ['currency' => 'EGP', 'timezone' => 'Africa/Cairo'],
-        '966' => ['currency' => 'SAR', 'timezone' => 'Asia/Riyadh'],
-        '971' => ['currency' => 'AED', 'timezone' => 'Asia/Dubai'],
-        '974' => ['currency' => 'QAR', 'timezone' => 'Asia/Qatar'],
-        '973' => ['currency' => 'BHD', 'timezone' => 'Asia/Bahrain'],
-        '965' => ['currency' => 'KWD', 'timezone' => 'Asia/Kuwait'],
-        '968' => ['currency' => 'OMR', 'timezone' => 'Asia/Muscat'],
+        '962' => ['name' => 'الأردن', 'currency' => 'JOD', 'timezone' => 'Asia/Amman'],
+        '970' => ['name' => 'فلسطين', 'currency' => 'ILS', 'timezone' => 'Asia/Hebron'],
+        '963' => ['name' => 'سوريا', 'currency' => 'SYP', 'timezone' => 'Asia/Damascus'],
+        '961' => ['name' => 'لبنان', 'currency' => 'LBP', 'timezone' => 'Asia/Beirut'],
+        '20' => ['name' => 'مصر', 'currency' => 'EGP', 'timezone' => 'Africa/Cairo'],
+        '966' => ['name' => 'السعودية', 'currency' => 'SAR', 'timezone' => 'Asia/Riyadh'],
+        '971' => ['name' => 'الإمارات', 'currency' => 'AED', 'timezone' => 'Asia/Dubai'],
+        '974' => ['name' => 'قطر', 'currency' => 'QAR', 'timezone' => 'Asia/Qatar'],
+        '973' => ['name' => 'البحرين', 'currency' => 'BHD', 'timezone' => 'Asia/Bahrain'],
+        '965' => ['name' => 'الكويت', 'currency' => 'KWD', 'timezone' => 'Asia/Kuwait'],
+        '968' => ['name' => 'عُمان', 'currency' => 'OMR', 'timezone' => 'Asia/Muscat'],
     ],
 
     /*

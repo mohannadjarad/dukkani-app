@@ -6,6 +6,7 @@ use App\Models\Store;
 use App\Services\OrderService;
 use App\Services\PlanService;
 use App\Services\ScheduleService;
+use App\Support\Country;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -46,6 +47,7 @@ class CheckoutController extends StorefrontController
                 'pickupEnabled' => (bool) $store->pickup_enabled,
                 'name' => old('name'),
                 'phone' => old('phone'),
+                'phoneCountry' => old('phone_country', $store->dialCode()),
                 'address' => old('delivery_address'),
                 'notes' => old('customer_notes'),
             ]);
@@ -57,6 +59,7 @@ class CheckoutController extends StorefrontController
             'defaultTime' => $defaultTime,
             'schedule' => $payload,
             'checkoutConfig' => $checkoutConfig,
+            'countries' => Country::options($store->dialCode()),
         ]);
     }
 
@@ -75,6 +78,7 @@ class CheckoutController extends StorefrontController
         $data = $request->validate([
             'name' => ['required', 'string', 'min:2', 'max:80'],
             'phone' => ['required', 'string', 'min:7', 'max:20', 'regex:/^[0-9+\s\-()]+$/'],
+            'phone_country' => ['nullable', 'string', Rule::in(array_map('strval', array_keys((array) config('app.countries', []))))],
             'fulfillment_type' => ['required', Rule::in(['delivery', 'pickup'])],
             'delivery_address' => ['nullable', 'required_if:fulfillment_type,delivery', 'string', 'min:8', 'max:300'],
             'scheduled_date' => ['required', 'date_format:Y-m-d'],
@@ -87,6 +91,7 @@ class CheckoutController extends StorefrontController
             'name.min' => 'الاسم قصير جداً.',
             'phone.required' => 'رقم الهاتف مطلوب للتواصل وتأكيد الطلب.',
             'phone.regex' => 'رقم الهاتف يحتوي رموزاً غير مسموحة.',
+            'phone_country.in' => 'رمز الدولة المختار غير مدعوم.',
             'fulfillment_type.required' => 'اختاري طريقة الاستلام.',
             'fulfillment_type.in' => 'طريقة الاستلام غير متاحة.',
             'delivery_address.required_if' => 'عنوان التوصيل مطلوب عند اختيار التوصيل.',

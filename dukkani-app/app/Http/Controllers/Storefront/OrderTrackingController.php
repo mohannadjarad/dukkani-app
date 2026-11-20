@@ -45,14 +45,18 @@ class OrderTrackingController extends StorefrontController
             return back()->withErrors(['phone' => 'رقم الهاتف غير صحيح.'])->withInput();
         }
 
-        // Numbers may be stored with or without the country code, so narrow the
-        // query by the last 7 digits and compare the full normalized value here.
-        $tail = substr($normalized, -7);
+        // Numbers may be stored with or without a country code, and customers can
+        // now pick a country that differs from the store's, so compare the
+        // national part of the number instead of the whole international value.
+        $tail = substr($normalized, -9);
 
         $customers = $store->customers()
             ->where('phone', 'like', '%'.$tail.'%')
             ->get()
-            ->filter(fn ($customer) => Phone::normalize($customer->phone, $store->dialCode()) === $normalized);
+            ->filter(fn ($customer) => str_ends_with(
+                (string) Phone::normalize($customer->phone, $store->dialCode()),
+                $tail,
+            ));
 
         if ($customers->isEmpty()) {
             return back()

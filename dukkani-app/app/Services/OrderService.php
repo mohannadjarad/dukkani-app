@@ -10,6 +10,7 @@ use App\Models\Order;
 use App\Models\Store;
 use App\Models\StoreNotification;
 use App\Models\User;
+use App\Support\Country;
 use App\Support\Phone;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -37,7 +38,11 @@ class OrderService
         $total = $subtotal + $deliveryFee;
 
         return DB::transaction(function () use ($store, $data, $items, $fulfillment, $payment, $subtotal, $deliveryFee, $total) {
-            $phone = Phone::normalize($data['phone'], $store->dialCode()) ?? $data['phone'];
+            $country = $data['phone_country'] ?? null;
+            $phone = Phone::normalize(
+                $data['phone'],
+                Country::isSupported($country) ? (string) $country : $store->dialCode(),
+            ) ?? $data['phone'];
 
             $customer = Customer::firstOrCreate(
                 ['store_id' => $store->id, 'phone' => $phone],
