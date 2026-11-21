@@ -89,6 +89,38 @@ class CheckoutTest extends TestCase
         $this->assertSame('https://wa.me/972599123456', $order->customer->whatsappLink());
     }
 
+    public function test_the_phone_example_follows_the_store_country(): void
+    {
+        // Sweets City is an Egyptian store: the field should look Egyptian,
+        // not show a Jordanian-style number.
+        $this->store->update(['country_code' => '20', 'currency' => 'EGP']);
+        $this->addToCart();
+
+        $this->get(route('storefront.checkout', $this->store))
+            ->assertOk()
+            ->assertSee('مصر +20')
+            ->assertSee('placeholder="10 1234 5678"', false)
+            ->assertSee('رمز الدولة +20');
+    }
+
+    public function test_an_egyptian_customer_number_is_saved_with_the_egypt_code(): void
+    {
+        $this->store->update(['country_code' => '20', 'currency' => 'EGP']);
+        $this->addToCart();
+
+        // The customer types her local number without the trunk zero; the
+        // country code she picked completes it.
+        $this->post(route('storefront.checkout.store', $this->store), $this->payload([
+            'phone' => '1012345678',
+            'phone_country' => '20',
+        ]))->assertRedirect();
+
+        $order = Order::latest('id')->firstOrFail();
+
+        $this->assertSame('201012345678', $order->customer->phone);
+        $this->assertSame('https://wa.me/201012345678', $order->customer->whatsappLink());
+    }
+
     public function test_an_unsupported_country_code_is_rejected(): void
     {
         $this->addToCart();

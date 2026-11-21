@@ -33,8 +33,14 @@
 
             <label for="phone" class="label">رقم الهاتف</label>
             <div class="flex flex-col gap-3 sm:flex-row">
-                <input id="phone" name="phone" type="tel" dir="ltr" required autocomplete="tel"
-                       value="{{ old('phone') }}" class="input text-left" placeholder="07 9111 1001">
+                <div class="input flex min-w-0 flex-1 items-center gap-2 focus-within:border-brand/60 focus-within:ring-4 focus-within:ring-brand/10"
+                     dir="ltr">
+                    <span class="shrink-0 text-xs font-bold text-muted/80" dir="ltr">+{{ $store->dialCode() }}</span>
+                    <input id="phone" name="phone" type="tel" dir="ltr" required autocomplete="tel"
+                           value="{{ old('phone') }}"
+                           class="min-w-0 flex-1 border-0 bg-transparent p-0 text-sm text-ink placeholder:text-muted/55 focus:outline-none focus:ring-0"
+                           placeholder="{{ \App\Support\Country::example($store->dialCode()) }}">
+                </div>
                 <button class="btn-primary shrink-0">
                     <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"/></svg>
                     عرض طلباتي
@@ -43,7 +49,7 @@
             @error('phone') <p class="field-error">{{ $message }}</p> @enderror
 
             <p class="mt-2.5 text-[10px] leading-5 text-muted/70">
-                استخدمي نفس الرقم اللي أدخلتيه وقت الطلب. بنعرض طلبات هالمتجر بس.
+                استخدمي نفس الرقم اللي أدخلتيه وقت الطلب (مع رمز الدولة +{{ $store->dialCode() }} أو بدونه). بنعرض طلبات هالمتجر بس.
             </p>
         </form>
 

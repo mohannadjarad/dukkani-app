@@ -37,20 +37,21 @@ class CheckoutController extends StorefrontController
 
         $payload = $schedule->payload($store);
         $checkoutConfig = array_merge($payload, [
-                'fulfillment' => $fulfillment,
-                'payment' => old('payment_method', 'cash'),
-                'date' => old('scheduled_date', $defaultDate),
-                'time' => old('scheduled_time', $defaultTime),
-                'subtotal' => $subtotal,
-                'deliveryFee' => $store->delivery_enabled ? (int) $store->delivery_fee_fils : 0,
-                'deliveryEnabled' => (bool) $store->delivery_enabled,
-                'pickupEnabled' => (bool) $store->pickup_enabled,
-                'name' => old('name'),
-                'phone' => old('phone'),
-                'phoneCountry' => old('phone_country', $store->dialCode()),
-                'address' => old('delivery_address'),
-                'notes' => old('customer_notes'),
-            ]);
+            'fulfillment' => $fulfillment,
+            'payment' => old('payment_method', 'cash'),
+            'date' => old('scheduled_date', $defaultDate),
+            'time' => old('scheduled_time', $defaultTime),
+            'subtotal' => $subtotal,
+            'deliveryFee' => $store->delivery_enabled ? (int) $store->delivery_fee_fils : 0,
+            'deliveryEnabled' => (bool) $store->delivery_enabled,
+            'pickupEnabled' => (bool) $store->pickup_enabled,
+            'name' => old('name'),
+            'phone' => old('phone'),
+            'phoneCountry' => old('phone_country', $store->dialCode()),
+            'phoneExamples' => Country::examples(),
+            'address' => old('delivery_address'),
+            'notes' => old('customer_notes'),
+        ]);
 
         return $this->render($store, 'storefront.checkout', [
             'items' => $items,

@@ -150,6 +150,26 @@ class CurrencyAndCountryTest extends TestCase
         $this->assertSame('970599112233', $order->customer->phone);
     }
 
+    public function test_an_egyptian_number_keeps_the_egypt_country_code(): void
+    {
+        // Sweets City is an Egyptian store, so a local number typed with the
+        // trunk zero or with the +20 code already lands on the same form, and a
+        // bare national number is completed by the country the customer picked.
+        $this->assertSame('201012345678', Phone::normalize('01012345678', '20'));
+        $this->assertSame('201012345678', Phone::internationalize('1012345678', '20'));
+        $this->assertSame('201012345678', Phone::normalize('+20 10 1234 5678', '20'));
+        $this->assertSame('201012345678', Phone::normalize('00201012345678', '20'));
+
+        $this->store->update([
+            'country_code' => '20',
+            'currency' => 'EGP',
+            'phone' => '01012345678',
+            'whatsapp' => null,
+        ]);
+
+        $this->assertSame('https://wa.me/201012345678', $this->store->whatsappLink());
+    }
+
     private function addToCart(int $quantity = 1): void
     {
         $product = Product::where('slug', 'honey-almond-cake')->firstOrFail();

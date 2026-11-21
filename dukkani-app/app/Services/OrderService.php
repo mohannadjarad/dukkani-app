@@ -39,7 +39,7 @@ class OrderService
 
         return DB::transaction(function () use ($store, $data, $items, $fulfillment, $payment, $subtotal, $deliveryFee, $total) {
             $country = $data['phone_country'] ?? null;
-            $phone = Phone::normalize(
+            $phone = Phone::internationalize(
                 $data['phone'],
                 Country::isSupported($country) ? (string) $country : $store->dialCode(),
             ) ?? $data['phone'];

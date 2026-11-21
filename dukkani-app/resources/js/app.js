@@ -282,6 +282,7 @@ function checkoutPage(config) {
         name: config.name || '',
         phone: config.phone || '',
         phoneCountry: config.phoneCountry || '',
+        phoneExamples: config.phoneExamples || {},
         address: config.address || '',
         notes: config.notes || '',
         consent: false,
@@ -359,9 +360,15 @@ function checkoutPage(config) {
             return this.subtotal + this.fee;
         },
 
+        // Example number in the selected country's own format, so a store in
+        // Egypt shows an Egyptian-looking number, not a Jordanian one.
+        get phonePlaceholder() {
+            return this.phoneExamples[this.phoneCountry] || '';
+        },
+
         fillDemo() {
             this.name = 'نور الخالدي';
-            this.phone = '0791111001';
+            this.phone = this.phonePlaceholder.replace(/\s+/g, '') || '0791111001';
             this.address = 'عمّان، عبدون، شارع الأمير هاشم، بناية ١٤، الطابق الثاني';
             this.notes = this.notes || 'مناسبة عائلية صغيرة، ويا ريت التغليف يكون هدية.';
             this.consent = true;

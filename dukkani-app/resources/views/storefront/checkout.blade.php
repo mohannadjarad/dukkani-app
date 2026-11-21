@@ -81,11 +81,21 @@
                                         <option value="{{ $dial }}" @selected((string) old('phone_country', $store->dialCode()) === (string) $dial)>{{ $label }}</option>
                                     @endforeach
                                 </select>
-                                <input id="phone" name="phone" type="tel" dir="ltr" x-model="phone" value="{{ old('phone') }}"
-                                       autocomplete="tel" required class="input min-w-0 flex-1 text-left" placeholder="0599 123 456"
-                                       aria-describedby="phone-help">
+                                <div class="input flex min-w-0 flex-1 items-center gap-2 focus-within:border-brand/60 focus-within:ring-4 focus-within:ring-brand/10"
+                                     dir="ltr">
+                                    <span class="shrink-0 text-xs font-bold text-muted/80" dir="ltr"
+                                          x-text="'+' + phoneCountry">+{{ $store->dialCode() }}</span>
+                                    <input id="phone" name="phone" type="tel" dir="ltr" x-model="phone" value="{{ old('phone') }}"
+                                           autocomplete="tel" required
+                                           class="min-w-0 flex-1 border-0 bg-transparent p-0 text-sm text-ink placeholder:text-muted/55 focus:outline-none focus:ring-0"
+                                           :placeholder="phonePlaceholder"
+                                           placeholder="{{ \App\Support\Country::example($store->dialCode()) }}"
+                                           aria-describedby="phone-help">
+                                </div>
                             </div>
-                            <p id="phone-help" class="mt-1.5 text-[9px] leading-4 text-muted/60">اختاري رمز دولتك، واكتبي رقم الواتساب كما هو (مع الصفر أو بدونه).</p>
+                            <p id="phone-help" class="mt-1.5 text-[9px] leading-4 text-muted/60">
+                                اكتبي رقم واتساب {{ \App\Support\Country::name($store->dialCode()) ?? 'المتجر' }} كما هو (مع الصفر أو بدونه)، ونضيف رمز الدولة +{{ $store->dialCode() }} تلقائياً.
+                            </p>
                             @error('phone') <p class="field-error">{{ $message }}</p> @enderror
                             @error('phone_country') <p class="field-error">{{ $message }}</p> @enderror
                         </div>

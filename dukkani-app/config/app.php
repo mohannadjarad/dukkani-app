@@ -90,18 +90,18 @@ return [
     */
 
     'countries' => [
-        '962' => ['name' => 'الأردن', 'currency' => 'JOD', 'timezone' => 'Asia/Amman'],
-        '970' => ['name' => 'فلسطين', 'currency' => 'ILS', 'timezone' => 'Asia/Hebron'],
-        '972' => ['name' => 'فلسطين', 'currency' => 'ILS', 'timezone' => 'Asia/Hebron'],
-        '963' => ['name' => 'سوريا', 'currency' => 'SYP', 'timezone' => 'Asia/Damascus'],
-        '961' => ['name' => 'لبنان', 'currency' => 'LBP', 'timezone' => 'Asia/Beirut'],
-        '20' => ['name' => 'مصر', 'currency' => 'EGP', 'timezone' => 'Africa/Cairo'],
-        '966' => ['name' => 'السعودية', 'currency' => 'SAR', 'timezone' => 'Asia/Riyadh'],
-        '971' => ['name' => 'الإمارات', 'currency' => 'AED', 'timezone' => 'Asia/Dubai'],
-        '974' => ['name' => 'قطر', 'currency' => 'QAR', 'timezone' => 'Asia/Qatar'],
-        '973' => ['name' => 'البحرين', 'currency' => 'BHD', 'timezone' => 'Asia/Bahrain'],
-        '965' => ['name' => 'الكويت', 'currency' => 'KWD', 'timezone' => 'Asia/Kuwait'],
-        '968' => ['name' => 'عُمان', 'currency' => 'OMR', 'timezone' => 'Asia/Muscat'],
+        '962' => ['name' => 'الأردن', 'currency' => 'JOD', 'timezone' => 'Asia/Amman', 'example' => '07 9111 1001'],
+        '970' => ['name' => 'فلسطين', 'currency' => 'ILS', 'timezone' => 'Asia/Hebron', 'example' => '059 911 2233'],
+        '972' => ['name' => 'فلسطين', 'currency' => 'ILS', 'timezone' => 'Asia/Hebron', 'example' => '059 911 2233'],
+        '963' => ['name' => 'سوريا', 'currency' => 'SYP', 'timezone' => 'Asia/Damascus', 'example' => '09 1234 567'],
+        '961' => ['name' => 'لبنان', 'currency' => 'LBP', 'timezone' => 'Asia/Beirut', 'example' => '03 123 456'],
+        '20' => ['name' => 'مصر', 'currency' => 'EGP', 'timezone' => 'Africa/Cairo', 'example' => '10 1234 5678'],
+        '966' => ['name' => 'السعودية', 'currency' => 'SAR', 'timezone' => 'Asia/Riyadh', 'example' => '05 1234 5678'],
+        '971' => ['name' => 'الإمارات', 'currency' => 'AED', 'timezone' => 'Asia/Dubai', 'example' => '05 123 4567'],
+        '974' => ['name' => 'قطر', 'currency' => 'QAR', 'timezone' => 'Asia/Qatar', 'example' => '3312 3456'],
+        '973' => ['name' => 'البحرين', 'currency' => 'BHD', 'timezone' => 'Asia/Bahrain', 'example' => '3612 3456'],
+        '965' => ['name' => 'الكويت', 'currency' => 'KWD', 'timezone' => 'Asia/Kuwait', 'example' => '5123 4567'],
+        '968' => ['name' => 'عُمان', 'currency' => 'OMR', 'timezone' => 'Asia/Muscat', 'example' => '9123 4567'],
     ],
 
     /*
