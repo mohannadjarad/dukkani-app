@@ -33,6 +33,8 @@
 @layer base {
     html {
         scroll-behavior: smooth;
+        /* Stop section links (#about, #contact) landing under the sticky header. */
+        scroll-padding-top: 5rem;
         /* Keep off-canvas panels from widening the mobile layout viewport. */
         overflow-x: hidden;
         overflow-x: clip;
@@ -255,5 +257,22 @@
 
     .bg-gradient-to-tl {
         --tw-gradient-position: to top left !important;
+    }
+}
+
+/*
+ * Firefox repaints every visible backdrop-filter element on each scroll frame,
+ * which makes our sticky headers (and the home hero) stutter while scrolling.
+ * The blur only ever sits over near-solid surfaces, so on Firefox we drop it
+ * and give the sticky headers the opaque colour that lay underneath.
+ */
+@supports (-moz-appearance: none) {
+    [class*='backdrop-blur'] {
+        -webkit-backdrop-filter: none;
+        backdrop-filter: none;
+    }
+
+    header.backdrop-blur-xl {
+        background-color: var(--color-canvas);
     }
 }
