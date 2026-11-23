@@ -307,9 +307,15 @@ and Pro (unlimited).
   screen instead.
 
 The admin panel at `/admin/stores` (admin users only) lists every store with its
-owner, plan, monthly usage, and last login, and lets you change the plan,
-grant extra orders (`order_limit_override`, added on top of the free base),
-suspend, or reopen a store.
+owner, plan, monthly usage, and last login. It can:
+
+- create a store and its owner login in one form (email + password), with the
+  country's currency/timezone and the default opening hours;
+- assign Free or Starter with an exact end date (or no expiry), including a
+  timed Starter trial;
+- extend a plan or trial by 1/3/6/12 months from its current end date;
+- grant extra orders (`order_limit_override`, added on top of the free base),
+  suspend a store (its storefront returns 404), or reopen it.
 
 ## 11. Local development
 

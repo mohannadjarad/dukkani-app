@@ -166,7 +166,14 @@ A store has a plan that caps what it can do each month. `PlanService` is the sin
 - **Starter / Pro:** unlimited orders and products; Pro adds the features that are still being built, each shown with a "قريباً" badge.
 - **Trials:** a 3-day Starter trial; paid plans keep a 7-day grace period after expiry. `order_limit_override` adds orders on top of a finite base.
 
-Platform admins (`users.is_admin`) reach `/admin/stores` to list every store with its owner, plan, monthly usage, and last login, and to change the plan, grant extra orders, suspend, or reopen a store. Grant admin with:
+Platform admins (`users.is_admin`) reach `/admin/stores` to list every store with its owner, plan, monthly usage, and last login. From there an admin can:
+
+- **Create a store** with its owner login (name, email, password), country-derived currency/timezone, default opening hours, and an optional 3-day Starter trial.
+- **Set the plan and its exact end date**, or leave the date empty for a plan with no expiry. Starter can also be granted as a timed trial.
+- **Extend** a paid plan or trial by 1/3/6/12 months; the extension counts from the existing end date when it is still in the future.
+- **Grant extra orders** (`order_limit_override`), **suspend** a store (storefront returns 404), or **reopen** it.
+
+Grant admin with:
 
 ```bash
 php artisan dukkani:admin:grant owner@example.com

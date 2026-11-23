@@ -303,6 +303,48 @@ class PlanService
         return $store;
     }
 
+    /**
+     * Assign a plan with an exact end date, as chosen from the admin panel.
+     * Unlike activate(), no first-month bonus days are added: the date the
+     * admin typed is the date the plan ends. A null date means no expiry.
+     * A paid plan can also be granted as a timed trial.
+     */
+    public function setPlan(Store $store, string $plan, ?Carbon $expiresAt = null, bool $isTrial = false): Store
+    {
+        $paid = in_array($plan, ['starter', 'pro'], true);
+
+        $store->forceFill([
+            'plan' => $plan,
+            'plan_expires_at' => $paid ? $expiresAt : null,
+            'is_trial' => $paid && $isTrial,
+            'order_limit_override' => null,
+            'first_paid_at' => ($paid && ! $isTrial)
+                ? ($store->first_paid_at ?? now())
+                : $store->first_paid_at,
+        ])->save();
+
+        return $store;
+    }
+
+    /**
+     * Extend the current period by whole months. The new end date is counted
+     * from the existing expiry when it is still in the future, otherwise from
+     * today, so extending an expired plan does not silently lose the days the
+     * owner already paid for.
+     */
+    public function extend(Store $store, int $months): Store
+    {
+        $base = $store->plan_expires_at !== null && $store->plan_expires_at->isFuture()
+            ? $store->plan_expires_at->copy()
+            : now();
+
+        $store->forceFill([
+            'plan_expires_at' => $base->addMonths($months)->endOfDay(),
+        ])->save();
+
+        return $store;
+    }
+
     /** Put a brand-new store on the free full-feature Starter trial. */
     public function startTrial(Store $store, ?int $days = null): Store
     {

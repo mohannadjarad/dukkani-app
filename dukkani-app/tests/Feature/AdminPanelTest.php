@@ -3,8 +3,12 @@
 namespace Tests\Feature;
 
 use App\Models\Store;
+use App\Models\StoreHour;
 use App\Models\User;
+use App\Services\PlanService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 
@@ -73,6 +77,84 @@ class AdminPanelTest extends TestCase
             ->assertSee('المجانية');
     }
 
+    public function test_the_admin_can_create_a_store_with_an_owner_login(): void
+    {
+        $this->actingAs($this->admin)
+            ->post(route('admin.stores.store'), [
+                'store_name' => 'مخبز الياسمين',
+                'slug' => 'Yasmin-Bakery',
+                'owner_name' => 'ليلى حسن',
+                'email' => 'Layla@Example.com',
+                'password' => 'secret-pass',
+                'password_confirmation' => 'secret-pass',
+                'phone' => '0599888777',
+                'whatsapp' => '970599888777',
+                'city' => 'نابلس',
+                'country_code' => '970',
+                'start_trial' => '1',
+            ])
+            ->assertRedirect(route('admin.stores.index'));
+
+        $user = User::where('email', 'layla@example.com')->firstOrFail();
+        $store = Store::where('slug', 'yasmin-bakery')->firstOrFail();
+
+        $this->assertTrue(Hash::check('secret-pass', $user->password));
+        $this->assertSame($user->id, $store->owner_id);
+        $this->assertSame('مخبز الياسمين', $store->name);
+        $this->assertSame('active', $store->status);
+        $this->assertSame('ILS', $store->currency);
+        $this->assertSame('Asia/Hebron', $store->timezone);
+        $this->assertNotNull($store->onboarding_completed_at);
+        $this->assertSame(7, StoreHour::where('store_id', $store->id)->count());
+        $this->assertSame('starter', $store->plan);
+        $this->assertTrue($store->is_trial);
+        $this->assertTrue($store->plan_expires_at->between(now()->addDays(2), now()->addDays(4)));
+    }
+
+    public function test_the_admin_can_create_a_store_without_a_trial(): void
+    {
+        $this->actingAs($this->admin)
+            ->post(route('admin.stores.store'), [
+                'store_name' => 'متجر بلا تجربة',
+                'slug' => 'no-trial-store',
+                'owner_name' => 'مالك جديد',
+                'email' => 'new-owner@dukkani.test',
+                'password' => 'secret-pass',
+                'password_confirmation' => 'secret-pass',
+                'phone' => '0790000000',
+                'city' => 'عمّان',
+                'country_code' => '962',
+            ])
+            ->assertRedirect(route('admin.stores.index'));
+
+        $store = Store::where('slug', 'no-trial-store')->firstOrFail();
+
+        $this->assertSame('free', $store->plan);
+        $this->assertFalse($store->is_trial);
+        $this->assertNull($store->plan_expires_at);
+        $this->assertSame(15, app(PlanService::class)->orderLimit($store));
+    }
+
+    public function test_store_creation_rejects_duplicate_email_and_slug(): void
+    {
+        $this->actingAs($this->admin)
+            ->post(route('admin.stores.store'), [
+                'store_name' => 'متجر مكرر',
+                'slug' => $this->store->slug,
+                'owner_name' => 'مالك مكرر',
+                'email' => $this->owner->email,
+                'password' => 'secret-pass',
+                'password_confirmation' => 'secret-pass',
+                'phone' => '0790000000',
+                'city' => 'عمّان',
+                'country_code' => '962',
+            ])
+            ->assertSessionHasErrors(['slug', 'email']);
+
+        $this->assertSame(1, Store::count());
+        $this->assertSame(2, User::count());
+    }
+
     public function test_the_admin_can_activate_starter_for_three_months(): void
     {
         $this->actingAs($this->admin)
@@ -93,7 +175,7 @@ class AdminPanelTest extends TestCase
             now()->addMonths(3)->addDays(6),
             now()->addMonths(3)->addDays(8),
         ));
-        $this->assertNull(app(\App\Services\PlanService::class)->orderLimit($this->store));
+        $this->assertNull(app(PlanService::class)->orderLimit($this->store));
     }
 
     public function test_the_admin_cannot_assign_pro_because_it_is_not_for_sale(): void
@@ -108,6 +190,98 @@ class AdminPanelTest extends TestCase
         $this->assertSame('free', $this->store->refresh()->plan);
     }
 
+    public function test_the_admin_can_set_an_exact_plan_end_date(): void
+    {
+        $this->store->forceFill([
+            'plan' => 'starter',
+            'plan_expires_at' => now()->addDays(5),
+            'is_trial' => true,
+            'order_limit_override' => 7,
+        ])->save();
+
+        $endsAt = now()->addDays(10)->toDateString();
+
+        $this->actingAs($this->admin)
+            ->post(route('admin.stores.plan', $this->store), [
+                'plan' => 'starter',
+                'ends_at' => $endsAt,
+            ])
+            ->assertRedirect();
+
+        $this->store->refresh();
+
+        $this->assertSame('starter', $this->store->plan);
+        $this->assertFalse($this->store->is_trial);
+        $this->assertNotNull($this->store->first_paid_at);
+        $this->assertSame($endsAt, $this->store->plan_expires_at->toDateString());
+        $this->assertNull($this->store->order_limit_override);
+        $this->assertNull(app(PlanService::class)->orderLimit($this->store));
+    }
+
+    public function test_the_admin_can_put_a_store_on_a_timed_trial(): void
+    {
+        $endsAt = now()->addDays(2)->toDateString();
+
+        $this->actingAs($this->admin)
+            ->post(route('admin.stores.plan', $this->store), [
+                'plan' => 'starter',
+                'ends_at' => $endsAt,
+                'is_trial' => '1',
+            ])
+            ->assertRedirect();
+
+        $this->store->refresh();
+
+        $this->assertSame('starter', $this->store->plan);
+        $this->assertTrue($this->store->is_trial);
+        $this->assertSame($endsAt, $this->store->plan_expires_at->toDateString());
+        $this->assertNull($this->store->first_paid_at);
+        $this->assertNull(app(PlanService::class)->orderLimit($this->store));
+    }
+
+    public function test_the_admin_cannot_set_a_plan_end_date_in_the_past(): void
+    {
+        $this->actingAs($this->admin)
+            ->post(route('admin.stores.plan', $this->store), [
+                'plan' => 'starter',
+                'ends_at' => now()->subDay()->toDateString(),
+            ])
+            ->assertSessionHasErrors('ends_at');
+
+        $this->assertSame('free', $this->store->refresh()->plan);
+    }
+
+    public function test_the_admin_can_extend_a_plan_from_its_current_end_date(): void
+    {
+        $expiry = Carbon::now()->addDays(10)->startOfDay();
+
+        $this->store->forceFill([
+            'plan' => 'starter',
+            'plan_expires_at' => $expiry,
+            'is_trial' => false,
+        ])->save();
+
+        $this->actingAs($this->admin)
+            ->post(route('admin.stores.extend', $this->store), ['extend_months' => 3])
+            ->assertRedirect();
+
+        $this->store->refresh();
+
+        $this->assertSame(
+            $expiry->copy()->addMonths(3)->toDateString(),
+            $this->store->plan_expires_at->toDateString(),
+        );
+    }
+
+    public function test_the_admin_cannot_extend_a_free_plan(): void
+    {
+        $this->actingAs($this->admin)
+            ->post(route('admin.stores.extend', $this->store), ['extend_months' => 3])
+            ->assertSessionHasErrors('extend_months');
+
+        $this->assertNull($this->store->refresh()->plan_expires_at);
+    }
+
     public function test_the_admin_can_grant_an_order_override(): void
     {
         $this->actingAs($this->admin)
@@ -115,7 +289,7 @@ class AdminPanelTest extends TestCase
             ->assertRedirect();
 
         $this->assertSame(5, $this->store->refresh()->order_limit_override);
-        $this->assertSame(20, app(\App\Services\PlanService::class)->orderLimit($this->store));
+        $this->assertSame(20, app(PlanService::class)->orderLimit($this->store));
     }
 
     public function test_the_admin_can_suspend_and_reopen_a_store(): void

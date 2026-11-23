@@ -129,7 +129,10 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/stores', [AdminStoreController::class, 'index'])->name('stores.index');
+    Route::get('/stores/create', [AdminStoreController::class, 'create'])->name('stores.create');
+    Route::post('/stores', [AdminStoreController::class, 'store'])->name('stores.store');
     Route::post('/stores/{store}/plan', [AdminStoreController::class, 'updatePlan'])->name('stores.plan');
+    Route::post('/stores/{store}/extend', [AdminStoreController::class, 'extend'])->name('stores.extend');
     Route::post('/stores/{store}/override', [AdminStoreController::class, 'updateOverride'])->name('stores.override');
     Route::post('/stores/{store}/suspend', [AdminStoreController::class, 'suspend'])->name('stores.suspend');
     Route::post('/stores/{store}/activate', [AdminStoreController::class, 'activate'])->name('stores.activate');
